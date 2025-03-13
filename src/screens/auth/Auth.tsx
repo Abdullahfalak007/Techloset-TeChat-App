@@ -7,7 +7,7 @@ import {ICONS} from '../../constants';
 import {useAuth} from './useAuth';
 
 const Auth: React.FC = () => {
-  const {navigateToLogin, handleGoogleSignIn} = useAuth();
+  const {navigateToLogin, handleGoogleSignIn, navigateToSignup} = useAuth();
 
   return (
     <LinearGradient
@@ -38,7 +38,9 @@ const Auth: React.FC = () => {
         </View>
 
         {/* Sign Up with Mail Button */}
-        <TouchableOpacity style={authStyle.signUpButton} onPress={() => {}}>
+        <TouchableOpacity
+          style={authStyle.signUpButton}
+          onPress={navigateToSignup}>
           <Text style={authStyle.signUpButtonText}>Sign up with mail</Text>
         </TouchableOpacity>
 

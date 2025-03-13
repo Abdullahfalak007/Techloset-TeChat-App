@@ -1,10 +1,11 @@
-// src/styles/loginStyle.ts
+// src/styles/signupStyle.ts
 import {StyleSheet} from 'react-native';
 import {COLORS} from '../constants/colors';
 
-export const loginStyle = StyleSheet.create({
+export const signupStyle = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.white,
   },
   backButton: {
     position: 'absolute',
@@ -17,9 +18,10 @@ export const loginStyle = StyleSheet.create({
     height: 24,
     tintColor: COLORS.black,
   },
-  topContainer: {
+  middleContainer: {
+    flex: 1,
+    justifyContent: 'center',
     paddingHorizontal: 24,
-    marginTop: 80,
   },
   heading: {
     fontSize: 24,
@@ -34,34 +36,6 @@ export const loginStyle = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'center',
   },
-  googleButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: COLORS.transparentWhite,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-    alignSelf: 'center',
-  },
-  googleIcon: {
-    width: 60,
-    height: 60,
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 16,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#ccc',
-  },
-  orText: {
-    color: '#666',
-    marginHorizontal: 8,
-  },
   label: {
     fontSize: 14,
     color: COLORS.textColor,
@@ -73,28 +47,27 @@ export const loginStyle = StyleSheet.create({
     paddingVertical: 8,
     fontSize: 14,
     color: COLORS.black,
-    marginBottom: 16,
+  },
+  errorText: {
+    fontSize: 12,
+    color: 'red',
+    marginTop: 4,
   },
   bottomContainer: {
-    paddingHorizontal: 24,
-    marginBottom: 20,
+    position: 'absolute',
+    left: 24,
+    right: 24,
+    bottom: 20,
   },
   gradientButton: {
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
   },
   buttonText: {
     color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
-  },
-  forgotPasswordText: {
-    fontSize: 14,
-    color: COLORS.textColor,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
   },
 });

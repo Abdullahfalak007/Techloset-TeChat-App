@@ -30,7 +30,7 @@ export const forgotPasswordStyle = StyleSheet.create({
   },
   subheading: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.transparentWhite,
     marginBottom: 24,
     textAlign: 'center',
   },
@@ -41,7 +41,7 @@ export const forgotPasswordStyle = StyleSheet.create({
   },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: COLORS.black,
     paddingVertical: 8,
     fontSize: 14,
     color: COLORS.black,

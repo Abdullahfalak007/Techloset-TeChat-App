@@ -10,6 +10,9 @@ export const useAuth = () => {
   const navigateToLogin = () => {
     navigation.navigate('Login');
   };
+  const navigateToSignup = () => {
+    navigation.navigate('Signup');
+  };
 
   const handleGoogleSignIn = () => {
     // TODO: Implement Google sign-in logic
@@ -19,5 +22,6 @@ export const useAuth = () => {
   return {
     navigateToLogin,
     handleGoogleSignIn,
+    navigateToSignup,
   };
 };

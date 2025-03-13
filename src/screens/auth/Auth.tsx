@@ -1,15 +1,17 @@
-// src/screens/auth/Auth.tsx
 import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient'; // yarn add react-native-linear-gradient
+import LinearGradient from 'react-native-linear-gradient';
 import {authStyle} from '../../styles/authStyle';
-import {colors} from '../../constants/colors';
-import {icons} from '../../constants'; // or wherever your icons are exported
+import {COLORS} from '../../constants/colors';
+import {ICONS} from '../../constants';
+import {useAuth} from './useAuth';
 
 const Auth: React.FC = () => {
+  const {navigateToLogin, handleGoogleSignIn} = useAuth();
+
   return (
     <LinearGradient
-      colors={[colors.gradientStart, colors.gradientEnd]}
+      colors={[COLORS.gradientStart, COLORS.gradientEnd]}
       style={authStyle.container}>
       <View style={authStyle.contentContainer}>
         {/* Title */}
@@ -21,24 +23,29 @@ const Auth: React.FC = () => {
           family.
         </Text>
 
-        {/* Google Sign In Button */}
-        <TouchableOpacity style={authStyle.googleButton} onPress={() => {}}>
-          <Image source={icons.google} style={authStyle.googleIcon} />
-          <Text>Continue with Google</Text>
+        {/* Circular Google Button */}
+        <TouchableOpacity
+          style={authStyle.googleButton}
+          onPress={handleGoogleSignIn}>
+          <Image source={ICONS.google} style={authStyle.googleIcon} />
         </TouchableOpacity>
 
-        {/* OR Divider */}
-        <Text style={authStyle.dividerText}>OR</Text>
+        {/* Divider with OR */}
+        <View style={authStyle.dividerContainer}>
+          <View style={authStyle.dividerLine} />
+          <Text style={authStyle.orText}>OR</Text>
+          <View style={authStyle.dividerLine} />
+        </View>
 
         {/* Sign Up with Mail Button */}
         <TouchableOpacity style={authStyle.signUpButton} onPress={() => {}}>
           <Text style={authStyle.signUpButtonText}>Sign up with mail</Text>
         </TouchableOpacity>
 
-        {/* Existing Account? Login */}
+        {/* Existing Account? Log in */}
         <View style={authStyle.existingAccountContainer}>
           <Text style={authStyle.existingAccountText}>Existing account?</Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={navigateToLogin}>
             <Text style={authStyle.loginText}>Log in</Text>
           </TouchableOpacity>
         </View>

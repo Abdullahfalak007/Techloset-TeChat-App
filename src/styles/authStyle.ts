@@ -1,6 +1,5 @@
-// src/styles/authStyle.ts
 import {StyleSheet} from 'react-native';
-import {colors} from '../constants/colors';
+import {COLORS} from '../constants/colors';
 
 export const authStyle = StyleSheet.create({
   container: {
@@ -12,57 +11,73 @@ export const authStyle = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    fontFamily: 'Poppins',
     fontWeight: '400',
     fontSize: 68,
-    color: colors.white,
+    color: COLORS.white,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: colors.white,
+    color: COLORS.transparentWhite,
     marginBottom: 32,
   },
+
+  /* Google Button (Icon Only) */
   googleButton: {
-    flexDirection: 'row',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.transparentWhite,
     alignItems: 'center',
-    backgroundColor: colors.white,
-    borderRadius: 8,
-    paddingVertical: 12,
     justifyContent: 'center',
-    marginBottom: 12,
+    alignSelf: 'center',
+    marginBottom: 24,
   },
   googleIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 8,
+    width: 60,
+    height: 60,
   },
-  dividerText: {
-    textAlign: 'center',
-    color: colors.white,
-    marginVertical: 8,
+
+  /* Divider Container */
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
   },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: COLORS.signupButtonBackground,
+  },
+  orText: {
+    marginHorizontal: 8,
+    color: COLORS.white,
+  },
+
+  /* Sign Up Button */
   signUpButton: {
-    borderColor: colors.white,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 12,
+    backgroundColor: COLORS.signupButtonBackground,
+    borderRadius: 20,
+    paddingVertical: 16,
     alignItems: 'center',
     marginBottom: 16,
   },
   signUpButtonText: {
-    color: colors.white,
+    color: COLORS.white,
     fontSize: 16,
+    fontWeight: 'bold',
   },
+
+  /* Existing Account? Log in */
   existingAccountContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
   existingAccountText: {
-    color: colors.white,
+    color: COLORS.white,
   },
   loginText: {
-    color: colors.white,
+    color: COLORS.white,
     fontWeight: 'bold',
     marginLeft: 4,
   },

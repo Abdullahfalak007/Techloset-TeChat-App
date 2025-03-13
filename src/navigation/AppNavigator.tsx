@@ -10,13 +10,13 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Auth">
       <Stack.Screen
-        name="Login"
-        component={Login}
+        name="Auth"
+        component={Auth}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Auth"
-        component={Auth}
+        name="Login"
+        component={Login}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

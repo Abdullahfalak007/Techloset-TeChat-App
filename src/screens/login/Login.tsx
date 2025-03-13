@@ -1,28 +1,16 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {loginStyle} from '../../styles/loginStyle';
 
-const Login = () => {
+const Login: React.FC = () => {
   return (
-    <View>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
-      <Text>Login</Text>
+    <View style={loginStyle.container}>
+      <Text style={loginStyle.title}>Login Screen</Text>
+      <TouchableOpacity
+        style={loginStyle.button}
+        onPress={() => console.log('Login pressed')}>
+        <Text style={loginStyle.buttonText}>Proceed</Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -1,8 +1,9 @@
 // src/constants/colors.ts
-export const colors = {
+export const COLORS = {
   white: '#FFFFFF',
+  transparentWhite: 'f0f0f0',
   black: '#000000',
-  gradientStart: '#3b2a7e', // Example gradient start
-  gradientEnd: '#2f1655', // Example gradient end
-  // Add any other colors you need
+  gradientStart: '#445386',
+  gradientEnd: '#2c1753',
+  signupButtonBackground: 'rgba(255, 255, 255, 0.5)',
 };

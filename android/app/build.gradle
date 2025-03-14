@@ -78,7 +78,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.techat"
+    namespace "com.abdullah.techat"
     defaultConfig {
         applicationId "com.techat"
         minSdkVersion rootProject.ext.minSdkVersion

@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "874432653724",
-    "project_id": "techat-8b261",
-    "storage_bucket": "techat-8b261.firebasestorage.app"
+    "project_number": "287690999584",
+    "project_id": "abdullah-techat",
+    "storage_bucket": "abdullah-techat.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:874432653724:android:0a1cfcc488df8bd4484059",
+        "mobilesdk_app_id": "1:287690999584:android:26eabc83b004fc3978b945",
         "android_client_info": {
-          "package_name": "com.techat"
+          "package_name": "com.abdullah.techat"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "287690999584-fakcfpb729klnqongrt7b523gthlo8s0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abdullah.techat",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "287690999584-gdaqla49itrpncinochvuafmulvlvcv5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAKe_bZItzda1jbGWPWD7TFAs1dGUs-oeo"
+          "current_key": "AIzaSyCphtU1LmrBvIcGdilNQBjiEo1XFrW1GQY"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287690999584-gdaqla49itrpncinochvuafmulvlvcv5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

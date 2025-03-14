@@ -80,7 +80,7 @@ android {
 
     namespace "com.abdullah.techat"
     defaultConfig {
-        applicationId "com.techat"
+        applicationId "com.abdullah.techat"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

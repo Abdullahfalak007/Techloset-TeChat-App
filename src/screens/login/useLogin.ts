@@ -1,6 +1,47 @@
+// // src/screens/login/useLogin.ts
+// import {useNavigation} from '@react-navigation/native';
+// import {StackNavigationProp} from '@react-navigation/stack';
+// import {AuthStackParamList} from '../../constants/types';
+// import {useAppDispatch} from '../../hooks/useStore';
+// import {loginWithEmail, signInWithGoogle} from '../../store/slices/authSlice';
+
+// type LoginScreenNavigationProp = StackNavigationProp<
+//   AuthStackParamList,
+//   'Login'
+// >;
+
+// export const useLogin = () => {
+//   const navigation = useNavigation<LoginScreenNavigationProp>();
+//   const dispatch = useAppDispatch();
+
+//   const handleGoogleSignIn = () => {
+//     dispatch(signInWithGoogle());
+//   };
+
+//   const handleLogin = (email: string, password: string) => {
+//     dispatch(loginWithEmail({email, password}));
+//   };
+
+//   const handleForgotPassword = () => {
+//     navigation.navigate('ForgotPassword');
+//   };
+
+//   return {
+//     navigation,
+//     handleGoogleSignIn,
+//     handleLogin,
+//     handleForgotPassword,
+//   };
+// };
+
+// src/screens/login/useLogin.ts
+import {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthStackParamList} from '../../constants/types';
+import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
+import {loginWithEmail, signInWithGoogle} from '../../store/slices/authSlice';
+import Toast from 'react-native-toast-message';
 
 type LoginScreenNavigationProp = StackNavigationProp<
   AuthStackParamList,
@@ -9,14 +50,33 @@ type LoginScreenNavigationProp = StackNavigationProp<
 
 export const useLogin = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();
+  const dispatch = useAppDispatch();
+  const {user, error} = useAppSelector(state => state.auth);
+
+  useEffect(() => {
+    if (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Login Failed',
+        text2: error,
+      });
+    }
+    if (user) {
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful',
+      });
+      // Navigate to your main screen (ensure that route exists in your navigator)
+      navigation.replace('Home'); // Replace 'Home' with the actual route name
+    }
+  }, [error, user, navigation]);
 
   const handleGoogleSignIn = () => {
-    console.log('Google Sign-In pressed');
+    dispatch(signInWithGoogle());
   };
 
   const handleLogin = (email: string, password: string) => {
-    console.log('Login pressed with email:', email, 'password:', password);
-    // Add your login logic here (e.g., Firebase, API call)
+    dispatch(loginWithEmail({email, password}));
   };
 
   const handleForgotPassword = () => {

@@ -1,4 +1,4 @@
-package com.techat
+package com.abdullah.techat
 
 import android.os.Bundle
 import com.facebook.react.ReactActivity

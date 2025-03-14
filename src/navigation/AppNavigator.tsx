@@ -5,12 +5,18 @@ import Login from '../screens/login/Login';
 import Auth from '../screens/auth/Auth';
 import ForgotPassword from '../screens/forgotPassword/ForgotPassword';
 import Signup from '../screens/signup/Signup';
+import Home from '../screens/home/Home';
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Auth">
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="Auth"
         component={Auth}

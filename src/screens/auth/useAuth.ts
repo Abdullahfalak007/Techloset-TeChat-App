@@ -1,39 +1,11 @@
-// import {useNavigation} from '@react-navigation/native';
-// import {StackNavigationProp} from '@react-navigation/stack';
-// import {AuthStackParamList} from '../../constants/types';
-
-// type AuthNavigationProp = StackNavigationProp<AuthStackParamList, 'Auth'>;
-
-// export const useAuth = () => {
-//   const navigation = useNavigation<AuthNavigationProp>();
-
-//   const navigateToLogin = () => {
-//     navigation.navigate('Login');
-//   };
-//   const navigateToSignup = () => {
-//     navigation.navigate('Signup');
-//   };
-
-//   const handleGoogleSignIn = () => {
-//     // TODO: Implement Google sign-in logic
-//     console.log('Google Sign-In Pressed');
-//   };
-
-//   return {
-//     navigateToLogin,
-//     handleGoogleSignIn,
-//     navigateToSignup,
-//   };
-// };
-
 // src/screens/auth/useAuth.ts
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthStackParamList} from '../../constants/types';
 import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
 import {signInWithGoogle} from '../../store/slices/authSlice';
-import {useEffect} from 'react';
 import Toast from 'react-native-toast-message';
+import {useEffect} from 'react';
 
 type AuthNavigationProp = StackNavigationProp<AuthStackParamList, 'Auth'>;
 
@@ -71,7 +43,6 @@ export const useAuth = () => {
   const handleGoogleSignIn = () => {
     // Dispatch the Google sign-in thunk
     dispatch(signInWithGoogle());
-    navigation.navigate('Home');
   };
 
   return {

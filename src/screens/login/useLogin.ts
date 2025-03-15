@@ -1,39 +1,3 @@
-// // src/screens/login/useLogin.ts
-// import {useNavigation} from '@react-navigation/native';
-// import {StackNavigationProp} from '@react-navigation/stack';
-// import {AuthStackParamList} from '../../constants/types';
-// import {useAppDispatch} from '../../hooks/useStore';
-// import {loginWithEmail, signInWithGoogle} from '../../store/slices/authSlice';
-
-// type LoginScreenNavigationProp = StackNavigationProp<
-//   AuthStackParamList,
-//   'Login'
-// >;
-
-// export const useLogin = () => {
-//   const navigation = useNavigation<LoginScreenNavigationProp>();
-//   const dispatch = useAppDispatch();
-
-//   const handleGoogleSignIn = () => {
-//     dispatch(signInWithGoogle());
-//   };
-
-//   const handleLogin = (email: string, password: string) => {
-//     dispatch(loginWithEmail({email, password}));
-//   };
-
-//   const handleForgotPassword = () => {
-//     navigation.navigate('ForgotPassword');
-//   };
-
-//   return {
-//     navigation,
-//     handleGoogleSignIn,
-//     handleLogin,
-//     handleForgotPassword,
-//   };
-// };
-
 // src/screens/login/useLogin.ts
 import {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';

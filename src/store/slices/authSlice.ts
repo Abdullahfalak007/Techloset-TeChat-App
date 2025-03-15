@@ -2,15 +2,15 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-// import { AxiosError } from 'axios'; // if needed in other contexts
-// import {WEB_CLIENT_ID} from '@env';
+import Toast from 'react-native-toast-message';
+import {ToastAndroid} from 'react-native';
 
 // Define your authentication state shape
 interface AuthState {
-  user: any | null; // You can later replace 'any' with your own AuthUser type
+  user: any | null;
   loading: boolean;
   error: string | null;
-  idToken: null;
+  idToken: string | null;
 }
 
 const initialState: AuthState = {
@@ -19,7 +19,6 @@ const initialState: AuthState = {
   error: null,
   idToken: null,
 };
-
 // Async thunk for logging in with email/password
 export const loginWithEmail = createAsyncThunk(
   'auth/loginWithEmail',
@@ -71,23 +70,35 @@ export const signInWithGoogle = createAsyncThunk(
   'auth/signInWithGoogle',
   async (_, {rejectWithValue}) => {
     try {
-      await GoogleSignin.hasPlayServices();
-      // Cast the sign-in response 'any' to access idToken
-      const googleResponse = (await GoogleSignin.signIn()) as any;
-      const {idToken} = googleResponse;
-      if (!idToken) {
-        throw new Error('No idToken returned from Google Sign-In');
+      // Check for Play Services and show update dialog if needed.
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      // Ensure a fresh sign-in by signing out any previously signed-in user.
+      await GoogleSignin.signOut();
+
+      // Attempt to sign in.
+      const signInResponse = await GoogleSignin.signIn();
+      // Destructure the response to get data (which should contain the idToken)
+      const {data} = signInResponse;
+
+      if (!data?.idToken) {
+        throw new Error('Google Sign-In failed: idToken is null.');
       }
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      const userCredential = await auth().signInWithCredential(
-        googleCredential,
-      );
-      return userCredential.user;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue('An unknown error occurred');
+
+      // Create a Firebase credential with the idToken.
+      const googleCredential = auth.GoogleAuthProvider.credential(data.idToken);
+      const response = await auth().signInWithCredential(googleCredential);
+      const {uid, email, displayName, photoURL} = response.user;
+
+      // Return the desired user properties.
+      return {uid, email, displayName, photoURL};
+    } catch (err: any) {
+      console.error('signInWithGoogle error:', err);
+      Toast.show({
+        type: 'error',
+        text1: 'Google login failed. Please try again.',
+        text2: err.message || 'An unknown error occurred',
+      });
+      return rejectWithValue(err.message || 'An unknown error occurred');
     }
   },
 );
@@ -112,7 +123,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // To sign out the user or manually set user state if needed
     signOut(state) {
       state.user = null;
       state.error = null;

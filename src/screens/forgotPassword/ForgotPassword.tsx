@@ -48,9 +48,7 @@ const ForgotPassword: React.FC = () => {
           end={{x: 0, y: 0}}
           style={forgotPasswordStyle.gradientButton}>
           <TouchableOpacity onPress={() => handlePasswordReset(email)}>
-            <Text style={forgotPasswordStyle.buttonText}>
-              Create an account
-            </Text>
+            <Text style={forgotPasswordStyle.buttonText}>Reset Password</Text>
           </TouchableOpacity>
         </LinearGradient>
       </View>

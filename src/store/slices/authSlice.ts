@@ -31,7 +31,16 @@ export const loginWithEmail = createAsyncThunk(
         email,
         password,
       );
-      return userCredential.user;
+      // return userCredential.user;
+
+      // Extract only serializable fields
+      const {
+        uid,
+        email: userEmail,
+        displayName,
+        photoURL,
+      } = userCredential.user;
+      return {uid, email: userEmail, displayName, photoURL};
     } catch (error) {
       if (error instanceof Error) {
         return rejectWithValue(error.message);
@@ -55,7 +64,16 @@ export const signupWithEmail = createAsyncThunk(
       );
       // Optionally update the user's display name
       await userCredential.user.updateProfile({displayName: name});
-      return userCredential.user;
+      // return userCredential.user;
+
+      // Extract only serializable fields
+      const {
+        uid,
+        email: userEmail,
+        displayName,
+        photoURL,
+      } = userCredential.user;
+      return {uid, email: userEmail, displayName, photoURL};
     } catch (error) {
       if (error instanceof Error) {
         return rejectWithValue(error.message);

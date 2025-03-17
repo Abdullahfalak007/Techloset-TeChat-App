@@ -30,6 +30,9 @@ export const useAuth = () => {
     navigation.navigate('Signup');
   };
 
+  const handleForgotPassword = () => {
+    navigation.navigate('ForgotPassword');
+  };
   const handleGoogleSignIn = () => {
     dispatch(signInWithGoogle());
   };
@@ -43,7 +46,7 @@ export const useAuth = () => {
     navigation,
     handleGoogleSignIn,
     handleLogin,
-    handleForgotPassword: () => navigation.navigate('ForgotPassword'),
+    handleForgotPassword,
     navigateToLogin,
     navigateToSignup,
   };

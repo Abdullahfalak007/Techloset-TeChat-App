@@ -1,25 +1,25 @@
 // src/navigation/tabs/BottomTabNavigator.tsx
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
+import {Image} from 'react-native';
 import {BottomTabParamList} from '../../constants/types';
 import {ICONS} from '../../constants';
 import {COLORS} from '../../constants/colors';
-import {Image} from 'react-native';
+import ChatList from '../../screens/chatList/ChatList'; // Use ChatList as the Messages screen
 import Contacts from '../../screens/contacts/Contacts';
 import Settings from '../../screens/settings/Settings';
-import Message from '../../screens/messages/Messages';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
+      initialRouteName="Messages"
       screenOptions={({route}) => ({
         headerShown: false,
         tabBarIcon: ({focused, color, size}) => {
           let iconSource;
-          if (route.name === 'Message') {
+          if (route.name === 'Messages') {
             iconSource = ICONS.message;
           } else if (route.name === 'Contacts') {
             iconSource = ICONS.contacts;
@@ -36,21 +36,9 @@ const BottomTabNavigator = () => {
         tabBarActiveTintColor: COLORS.textColor,
         tabBarInactiveTintColor: COLORS.black,
       })}>
-      <Tab.Screen
-        name="Message"
-        component={Message}
-        options={{tabBarLabel: 'Message'}}
-      />
-      <Tab.Screen
-        name="Contacts"
-        component={Contacts}
-        options={{tabBarLabel: 'Contacts'}}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{tabBarLabel: 'Settings'}}
-      />
+      <Tab.Screen name="Messages" component={ChatList} />
+      <Tab.Screen name="Contacts" component={Contacts} />
+      <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
 };

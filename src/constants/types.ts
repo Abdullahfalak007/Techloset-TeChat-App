@@ -8,11 +8,14 @@ export type AuthStackParamList = {
 };
 
 export type MainStackParamList = {
-  Home: undefined;
+  MainTabs: undefined; // The bottom tab navigator
+  ChatListScreen: undefined;
+  Conversation: {conversationId: string};
+  BottomTabs: undefined;
 };
 
 export type BottomTabParamList = {
-  Message: undefined;
+  Messages: undefined;
   Contacts: undefined;
   Settings: undefined;
 };

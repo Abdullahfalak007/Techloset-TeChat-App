@@ -31,7 +31,7 @@ export const useLogin = () => {
         text1: 'Login Successful',
       });
       // Navigate to your main screen (ensure that route exists in your navigator)
-      navigation.replace('Home'); // Replace 'Home' with the actual route name
+      // Replace 'Home' with the actual route name
     }
   }, [error, user, navigation]);
 

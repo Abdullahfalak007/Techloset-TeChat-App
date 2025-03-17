@@ -5,7 +5,6 @@ import {AuthStackParamList} from '../../constants/types';
 import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
 import {signInWithGoogle} from '../../store/slices/authSlice';
 import Toast from 'react-native-toast-message';
-import {useEffect} from 'react';
 
 type AuthNavigationProp = StackNavigationProp<AuthStackParamList, 'Auth'>;
 
@@ -14,24 +13,15 @@ export const useAuth = () => {
   const dispatch = useAppDispatch();
   const {user, error} = useAppSelector(state => state.auth);
 
-  useEffect(() => {
-    if (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Login Failed',
-        text2: error,
-      });
-    }
-    if (user) {
-      Toast.show({
-        type: 'success',
-        text1: 'Login Successful',
-      });
-      // Navigate to your main screen (ensure that route exists in your navigator)
-      navigation.replace('Home'); // Replace 'Home' with the actual route name
-    }
-  }, [error, user, navigation]);
+  if (error) {
+    Toast.show({
+      type: 'error',
+      text1: 'Login Failed',
+      text2: error,
+    });
+  }
 
+  // Add these functions so they can be used in your Auth screen:
   const navigateToLogin = () => {
     navigation.navigate('Login');
   };
@@ -41,13 +31,20 @@ export const useAuth = () => {
   };
 
   const handleGoogleSignIn = () => {
-    // Dispatch the Google sign-in thunk
     dispatch(signInWithGoogle());
   };
 
+  // You can add handleLogin here if needed.
+  const handleLogin = (email: string, password: string) => {
+    // Implement your email login dispatch here if needed.
+  };
+
   return {
-    navigateToLogin,
+    navigation,
     handleGoogleSignIn,
+    handleLogin,
+    handleForgotPassword: () => navigation.navigate('ForgotPassword'),
+    navigateToLogin,
     navigateToSignup,
   };
 };

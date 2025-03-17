@@ -2,6 +2,10 @@
 export const ICONS = {
   google: require('../assets/icons/google.png'),
   backArrow: require('../assets/icons/backArrow.png'),
+  avatar: require('../assets/icons/avatar.png'),
+  message: require('../assets/icons/message.png'),
+  contacts: require('../assets/icons/contacts.png'),
+  settings: require('../assets/icons/settings.png'),
   // add more icons if needed
 };
 

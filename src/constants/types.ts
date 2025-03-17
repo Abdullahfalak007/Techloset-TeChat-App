@@ -5,7 +5,16 @@ export type AuthStackParamList = {
   Login: undefined;
   ForgotPassword: undefined;
   Signup: undefined;
+};
+
+export type MainStackParamList = {
   Home: undefined;
+};
+
+export type BottomTabParamList = {
+  Message: undefined;
+  Contacts: undefined;
+  Settings: undefined;
 };
 
 export type AuthState = {

@@ -1,3 +1,4 @@
+// src/constants/types.ts
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 export type AuthStackParamList = {
@@ -8,14 +9,12 @@ export type AuthStackParamList = {
 };
 
 export type MainStackParamList = {
-  MainTabs: undefined; // The bottom tab navigator
-  ChatListScreen: undefined;
+  MainTabs: undefined; // The bottom tab navigator container
   Conversation: {conversationId: string};
-  BottomTabs: undefined;
 };
 
 export type BottomTabParamList = {
-  Messages: undefined;
+  Messages: undefined; // This will render your ChatList
   Contacts: undefined;
   Settings: undefined;
 };

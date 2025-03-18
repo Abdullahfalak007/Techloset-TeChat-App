@@ -1,62 +1,63 @@
-// src/screens/chatList/useChatList.ts
-import {useEffect, useState} from 'react';
-import {useAppSelector} from '../../hooks/useStore';
-import database, {FirebaseDatabaseTypes} from '@react-native-firebase/database';
+import {useEffect} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import {useAppDispatch} from '../../hooks/useStore';
+import {setConversations, Conversation} from '../../store/slices/chatSlice';
 
-export interface Conversation {
-  id: string;
-  lastMessage: string;
-}
-
-export const useChatList = () => {
-  const {user} = useAppSelector(state => state.auth);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+export const useChatList = (uid: string | undefined) => {
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!user?.uid) {
-      setLoading(false);
-      return;
-    }
-    const userConvRef = database().ref(`/userConversations/${user.uid}`);
+    if (!uid) return;
 
-    const onValueChange = userConvRef.on(
-      'value',
-      (snapshot: FirebaseDatabaseTypes.DataSnapshot) => {
-        if (!snapshot.exists()) {
-          setConversations([]);
-          setLoading(false);
-          return;
-        }
-        const data = snapshot.val(); // e.g. { conv1: true, conv2: true, ... }
-        const convIds = Object.keys(data);
-
-        const fetchLastMessages = async () => {
-          const convArray: Conversation[] = [];
-          for (const convId of convIds) {
-            const messagesSnap = await database()
-              .ref(`/conversations/${convId}/messages`)
-              .orderByKey()
-              .limitToLast(1)
-              .once('value');
-            let lastMessage = '';
-            messagesSnap.forEach((msg: FirebaseDatabaseTypes.DataSnapshot) => {
-              const msgData = msg.val();
-              lastMessage = msgData?.text || '';
-              return undefined; // Continue iterating
-            });
-            convArray.push({id: convId, lastMessage});
+    const unsubscribe = firestore()
+      .collection('conversations')
+      .where('participants', 'array-contains', uid)
+      .orderBy('updatedAt', 'desc')
+      .onSnapshot(
+        async snapshot => {
+          if (snapshot.empty) {
+            dispatch(setConversations([]));
+            return;
           }
-          setConversations(convArray);
-          setLoading(false);
-        };
 
-        fetchLastMessages();
-      },
-    );
+          const convs: Conversation[] = await Promise.all(
+            snapshot.docs.map(async doc => {
+              const data = doc.data();
+              const recipientId = data.participants.find(
+                (p: string) => p !== uid,
+              );
+              let recipientName = 'Unknown';
+              let recipientPhoto: string | null = null;
+              if (recipientId) {
+                const userDoc = await firestore()
+                  .collection('users')
+                  .doc(recipientId)
+                  .get();
+                if (userDoc.exists) {
+                  const userData = userDoc.data();
+                  recipientName =
+                    userData?.displayName || userData?.email || 'Unknown';
+                  recipientPhoto = userData?.photoURL || null;
+                }
+              }
+              return {
+                id: doc.id,
+                lastMessage: data.lastMessage || '',
+                updatedAt: data.updatedAt,
+                participants: data.participants,
+                recipientName,
+                recipientPhoto,
+              } as Conversation;
+            }),
+          );
 
-    return () => userConvRef.off('value', onValueChange);
-  }, [user?.uid]);
+          dispatch(setConversations(convs));
+        },
+        error => {
+          console.error('Error listening to conversations: ', error);
+        },
+      );
 
-  return {conversations, loading};
+    return () => unsubscribe();
+  }, [uid, dispatch]);
 };

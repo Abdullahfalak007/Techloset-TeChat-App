@@ -1,212 +1,370 @@
-// src/store/slices/chatSlice.ts
-import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
-import database, {FirebaseDatabaseTypes} from '@react-native-firebase/database';
-import {RootState} from '../store';
+// // src/store/slices/chatSlice.ts
+// import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
+// import firestore from '@react-native-firebase/firestore';
+// import {RootState, AppDispatch} from '../../store/store';
 
-// Interfaces for conversation & messages
+// /**
+//  * The shape of a conversation document in Firestore
+//  */
+// export interface Conversation {
+//   id: string;
+//   participants: string[];
+//   lastMessage: string;
+//   updatedAt: any; // Firestore timestamp
+//   recipientName: string;
+//   recipientPhoto?: string | null;
+// }
+
+// export interface Message {
+//   id: string;
+//   senderId: string;
+//   text: string;
+//   timestamp: any; // Firestore timestamp
+// }
+
+// interface ChatState {
+//   loading: boolean;
+//   error: string | null;
+//   conversations: Conversation[];
+// }
+
+// const initialState: ChatState = {
+//   loading: false,
+//   error: null,
+//   conversations: [],
+// };
+
+// /**
+//  * Create a new conversation or return an existing one
+//  * between the current user (uid) and otherUid.
+//  */
+// export const createConversation = createAsyncThunk<
+//   string, // conversationId
+//   {uid: string; otherUid: string},
+//   {rejectValue: string}
+// >('chat/createConversation', async ({uid, otherUid}, {rejectWithValue}) => {
+//   try {
+//     // Check if conversation already exists
+//     const existing = await firestore()
+//       .collection('conversations')
+//       .where('participants', 'array-contains', uid)
+//       .get();
+
+//     let conversationId: string | null = null;
+
+//     existing.forEach(doc => {
+//       const data = doc.data();
+//       if (data.participants.includes(otherUid)) {
+//         conversationId = doc.id;
+//       }
+//     });
+
+//     if (conversationId) {
+//       // Return existing conversation
+//       return conversationId;
+//     }
+
+//     // Otherwise, create a new conversation
+//     const convRef = await firestore()
+//       .collection('conversations')
+//       .add({
+//         participants: [uid, otherUid],
+//         lastMessage: '',
+//         updatedAt: firestore.FieldValue.serverTimestamp(),
+//       });
+
+//     return convRef.id;
+//   } catch (error: any) {
+//     return rejectWithValue(error.message);
+//   }
+// });
+
+// /**
+//  * Send a message to an existing conversation
+//  */
+// export const sendMessage = createAsyncThunk<
+//   void,
+//   {conversationId: string; senderId: string; text: string},
+//   {rejectValue: string}
+// >(
+//   'chat/sendMessage',
+//   async ({conversationId, senderId, text}, {rejectWithValue}) => {
+//     try {
+//       // Add message doc to subcollection
+//       await firestore()
+//         .collection('conversations')
+//         .doc(conversationId)
+//         .collection('messages')
+//         .add({
+//           senderId,
+//           text: text.trim(),
+//           timestamp: firestore.FieldValue.serverTimestamp(),
+//         });
+
+//       // Update conversation lastMessage & updatedAt
+//       await firestore().collection('conversations').doc(conversationId).update({
+//         lastMessage: text.trim(),
+//         updatedAt: firestore.FieldValue.serverTimestamp(),
+//       });
+//     } catch (error: any) {
+//       return rejectWithValue(error.message);
+//     }
+//   },
+// );
+
+// // Reducer to update conversations in state.
+// const chatSlice = createSlice({
+//   name: 'chat',
+//   initialState,
+//   reducers: {
+//     clearChatState(state) {
+//       state.loading = false;
+//       state.error = null;
+//     },
+//     setConversations(state, action: PayloadAction<Conversation[]>) {
+//       state.conversations = action.payload;
+//     },
+//   },
+//   extraReducers: builder => {
+//     // createConversation
+//     builder.addCase(createConversation.pending, state => {
+//       state.loading = true;
+//       state.error = null;
+//     });
+//     builder.addCase(createConversation.fulfilled, (state, action) => {
+//       state.loading = false;
+//       // The actual conversation doc is listened to in real-time,
+//       // so we don't need to store it here directly
+//     });
+//     builder.addCase(createConversation.rejected, (state, action) => {
+//       state.loading = false;
+//       state.error = action.payload as string;
+//     });
+
+//     // sendMessage
+//     builder.addCase(sendMessage.pending, state => {
+//       state.loading = true;
+//       state.error = null;
+//     });
+//     builder.addCase(sendMessage.fulfilled, state => {
+//       state.loading = false;
+//     });
+//     builder.addCase(sendMessage.rejected, (state, action) => {
+//       state.loading = false;
+//       state.error = action.payload as string;
+//     });
+//   },
+// });
+
+// export const {clearChatState, setConversations} = chatSlice.actions;
+// export default chatSlice.reducer;
+
+// /**
+//  * Thunk to listen to all conversations for a user in real-time
+//  */
+// export const listenToUserConversations =
+//   (uid: string) => (dispatch: AppDispatch, getState: () => RootState) => {
+//     // Real-time listener
+//     return firestore()
+//       .collection('conversations')
+//       .where('participants', 'array-contains', uid)
+//       .orderBy('updatedAt', 'desc')
+//       .onSnapshot(snapshot => {
+//         const convs: Conversation[] = [];
+//         snapshot.forEach(doc => {
+//           const data = doc.data();
+//           convs.push({
+//             id: doc.id,
+//             participants: data.participants,
+//             lastMessage: data.lastMessage || '',
+//             updatedAt: data.updatedAt,
+//           });
+//         });
+//         // We directly update the store by returning an action:
+//         dispatch({
+//           type: 'chat/userConversationsReceived',
+//           payload: convs,
+//         });
+//       });
+//   };
+
+// /**
+//  * Thunk to listen to messages in a conversation in real-time
+//  */
+// export const listenToConversationMessages =
+//   (conversationId: string) =>
+//   (dispatch: AppDispatch, getState: () => RootState) => {
+//     return firestore()
+//       .collection('conversations')
+//       .doc(conversationId)
+//       .collection('messages')
+//       .orderBy('timestamp', 'asc')
+//       .onSnapshot(snapshot => {
+//         const msgs: Message[] = [];
+//         snapshot.forEach(doc => {
+//           const data = doc.data();
+//           if (data.timestamp) {
+//             msgs.push({
+//               id: doc.id,
+//               senderId: data.senderId,
+//               text: data.text,
+//               timestamp: data.timestamp,
+//             });
+//           }
+//         });
+//         dispatch({
+//           type: 'chat/conversationMessagesReceived',
+//           payload: msgs,
+//         });
+//       });
+//   };
+
+// /**
+//  * We'll handle these custom actions in a case reducer below
+//  * (since we're dispatching plain objects, not from createAsyncThunk).
+//  */
+
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
+import firestore from '@react-native-firebase/firestore';
+
 export interface Conversation {
   id: string;
-  lastMessage?: string;
+  participants: string[];
+  lastMessage: string;
+  updatedAt: any; // Firestore timestamp
+  recipientName: string;
+  recipientPhoto?: string | null;
 }
 
 export interface Message {
   id: string;
   senderId: string;
   text: string;
-  timestamp: number;
+  timestamp: any; // Firestore timestamp
 }
 
 interface ChatState {
-  conversations: Conversation[];
-  messages: Message[];
-  activeConversationId: string | null;
   loading: boolean;
   error: string | null;
-  // You can store listener references if needed for unsubscribing
+  conversations: Conversation[];
 }
 
-// Initial state
 const initialState: ChatState = {
-  conversations: [],
-  messages: [],
-  activeConversationId: null,
   loading: false,
   error: null,
+  conversations: [],
 };
 
-// Listen to all user conversations from `/userConversations/{uid}`
-export const listenToUserConversations = createAsyncThunk<
-  void,
-  {uid: string},
-  {state: RootState}
->('chat/listenToUserConversations', async ({uid}, {dispatch}) => {
-  // Setup a realtime listener for /userConversations/{uid}
-  const userConvRef = database().ref(`/userConversations/${uid}`);
+// Create a conversation between two users (if none exists)
+export const createConversation = createAsyncThunk<
+  string, // returns the conversationId
+  {uid: string; otherUid: string},
+  {rejectValue: string}
+>('chat/createConversation', async ({uid, otherUid}, {rejectWithValue}) => {
+  try {
+    const existingSnapshot = await firestore()
+      .collection('conversations')
+      .where('participants', 'array-contains', uid)
+      .get();
 
-  userConvRef.on('value', async snapshot => {
-    if (!snapshot.exists()) {
-      dispatch(chatSlice.actions.setConversations([]));
-      return;
+    let conversationId: string | null = null;
+    existingSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.participants.includes(otherUid)) {
+        conversationId = doc.id;
+      }
+    });
+
+    if (conversationId) {
+      return conversationId;
     }
-    const data = snapshot.val(); // e.g. { convId1: true, convId2: true }
-    const convIds = Object.keys(data);
 
-    // For each conversation ID, get the last message from /conversations/{convId}/messages
-    const convArray: Conversation[] = [];
-    for (const convId of convIds) {
-      const messagesSnap = await database()
-        .ref(`/conversations/${convId}/messages`)
-        .orderByKey()
-        .limitToLast(1)
-        .once('value');
-
-      let lastMessage = '';
-      messagesSnap.forEach((msg: FirebaseDatabaseTypes.DataSnapshot) => {
-        const msgData = msg.val();
-        lastMessage = msgData?.text || '';
-        return undefined;
+    // If no conversation exists, create a new one with default recipient fields.
+    const convRef = await firestore()
+      .collection('conversations')
+      .add({
+        participants: [uid, otherUid],
+        lastMessage: '',
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        updatedAt: firestore.FieldValue.serverTimestamp(),
+        recipientName: 'Unknown', // Default value; later updated by hook if possible
+        recipientPhoto: null,
       });
-      convArray.push({id: convId, lastMessage});
-    }
 
-    dispatch(chatSlice.actions.setConversations(convArray));
-  });
+    return convRef.id;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
 });
 
-// Listen to messages of a specific conversation
-export const listenToConversation = createAsyncThunk<
-  void,
-  {conversationId: string; userUid: string},
-  {state: RootState}
->(
-  'chat/listenToConversation',
-  async ({conversationId, userUid}, {dispatch}) => {
-    // set active conversation in Redux
-    dispatch(chatSlice.actions.setActiveConversation(conversationId));
-
-    const messagesRef = database().ref(
-      `/conversations/${conversationId}/messages`,
-    );
-
-    messagesRef.on('value', snapshot => {
-      if (!snapshot.exists()) {
-        dispatch(chatSlice.actions.setMessages([]));
-        return;
-      }
-      const data = snapshot.val(); // { msgId: { senderId, text, timestamp }, ... }
-      const msgArray: Message[] = Object.keys(data).map(msgId => ({
-        id: msgId,
-        senderId: data[msgId].senderId,
-        text: data[msgId].text,
-        timestamp: data[msgId].timestamp,
-      }));
-      // sort by timestamp
-      msgArray.sort((a, b) => a.timestamp - b.timestamp);
-
-      dispatch(chatSlice.actions.setMessages(msgArray));
-    });
-  },
-);
-
-// Send a new message
+// (Keep your sendMessage thunk as is.)
 export const sendMessage = createAsyncThunk<
   void,
   {conversationId: string; senderId: string; text: string},
-  {state: RootState}
->('chat/sendMessage', async ({conversationId, senderId, text}) => {
-  if (!text.trim()) return;
-
-  const newMessageRef = database()
-    .ref(`/conversations/${conversationId}/messages`)
-    .push();
-  await newMessageRef.set({
-    senderId,
-    text: text.trim(),
-    timestamp: Date.now(),
-  });
-});
-
-// Optionally, create a conversation with some user(s)
-export const createConversation = createAsyncThunk<
-  string, // returns the new conversationId
-  {uid: string; otherUid: string},
-  {state: RootState}
->('chat/createConversation', async ({uid, otherUid}) => {
-  // create a new conversation ID
-  const convRef = database().ref('/conversations').push();
-  const conversationId = convRef.key as string;
-
-  // Mark the conversation for both users
-  await database().ref(`/userConversations/${uid}/${conversationId}`).set(true);
-  await database()
-    .ref(`/userConversations/${otherUid}/${conversationId}`)
-    .set(true);
-
-  return conversationId;
-});
+  {rejectValue: string}
+>(
+  'chat/sendMessage',
+  async ({conversationId, senderId, text}, {rejectWithValue}) => {
+    try {
+      // Add new message in the "messages" subcollection
+      await firestore()
+        .collection('conversations')
+        .doc(conversationId)
+        .collection('messages')
+        .add({
+          senderId,
+          text: text.trim(),
+          timestamp: firestore.FieldValue.serverTimestamp(),
+        });
+      // Update parent conversation's lastMessage and updatedAt
+      await firestore().collection('conversations').doc(conversationId).update({
+        lastMessage: text.trim(),
+        updatedAt: firestore.FieldValue.serverTimestamp(),
+      });
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setConversations(state, action: PayloadAction<Conversation[]>) {
-      state.conversations = action.payload;
-    },
-    setActiveConversation(state, action: PayloadAction<string | null>) {
-      state.activeConversationId = action.payload;
-    },
-    setMessages(state, action: PayloadAction<Message[]>) {
-      state.messages = action.payload;
-    },
     clearChatState(state) {
-      // e.g. sign out or cleanup
-      state.conversations = [];
-      state.messages = [];
-      state.activeConversationId = null;
       state.loading = false;
       state.error = null;
+    },
+    setConversations(state, action: PayloadAction<Conversation[]>) {
+      state.conversations = action.payload;
     },
   },
   extraReducers: builder => {
     builder
-      .addCase(listenToUserConversations.pending, state => {
+      .addCase(createConversation.pending, state => {
         state.loading = true;
+        state.error = null;
       })
-      .addCase(listenToUserConversations.fulfilled, state => {
+      .addCase(createConversation.fulfilled, state => {
         state.loading = false;
       })
-      .addCase(listenToUserConversations.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.error.message || 'Error listening to conversations';
-      })
-
-      .addCase(listenToConversation.pending, state => {
-        state.loading = true;
-      })
-      .addCase(listenToConversation.fulfilled, state => {
-        state.loading = false;
-      })
-      .addCase(listenToConversation.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Error listening to conversation';
-      })
-
-      .addCase(sendMessage.rejected, (state, action) => {
-        state.error = action.error.message || 'Failed to send message';
-      })
-
       .addCase(createConversation.rejected, (state, action) => {
-        state.error = action.error.message || 'Failed to create conversation';
+        state.loading = false;
+        state.error = action.payload || 'Failed to create conversation';
+      })
+      .addCase(sendMessage.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(sendMessage.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(sendMessage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Failed to send message';
       });
   },
 });
 
-export const {
-  setConversations,
-  setActiveConversation,
-  setMessages,
-  clearChatState,
-} = chatSlice.actions;
-
+export const {clearChatState, setConversations} = chatSlice.actions;
 export default chatSlice.reducer;

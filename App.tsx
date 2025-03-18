@@ -10,6 +10,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {WEB_CLIENT_ID} from '@env';
 import auth from '@react-native-firebase/auth';
 import {signOut} from './src/store/slices/authSlice';
+import firestore from '@react-native-firebase/firestore';
 
 const App = () => {
   useEffect(() => {
@@ -17,11 +18,17 @@ const App = () => {
 
     GoogleSignin.configure({
       webClientId: WEB_CLIENT_ID,
-      offlineAccess: true, // This is necessary to get an idToken for server authentication
+      offlineAccess: true,
       scopes: ['profile', 'email', 'openid'],
     });
 
-    // Listen for auth state changes. When there is no user, dispatch signOut.
+    // Disable Firestore offline caching to avoid stale data
+    firestore().settings({persistence: false});
+    firestore()
+      .clearPersistence()
+      .then(() => console.log('Firestore cache cleared'))
+      .catch(err => console.error('Failed to clear Firestore cache:', err));
+
     const unsubscribe = auth().onAuthStateChanged(user => {
       if (!user) {
         store.dispatch(signOut());

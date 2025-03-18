@@ -5,7 +5,7 @@ import {Image} from 'react-native';
 import {BottomTabParamList} from '../../constants/types';
 import {ICONS} from '../../constants';
 import {COLORS} from '../../constants/colors';
-import ChatList from '../../screens/chatList/ChatList'; // Use ChatList as the Messages screen
+import ChatList from '../../screens/chatList/ChatList'; // ChatList as "Messages"
 import Contacts from '../../screens/contacts/Contacts';
 import Settings from '../../screens/settings/Settings';
 
@@ -17,7 +17,7 @@ const BottomTabNavigator = () => {
       initialRouteName="Messages"
       screenOptions={({route}) => ({
         headerShown: false,
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({color, size}) => {
           let iconSource;
           if (route.name === 'Messages') {
             iconSource = ICONS.message;

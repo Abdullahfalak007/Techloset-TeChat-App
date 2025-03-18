@@ -9,11 +9,12 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
-import {MainStackParamList} from '../../constants/types';
 import firestore from '@react-native-firebase/firestore';
-import {useAppSelector} from '../../hooks/useStore';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
+import {MainStackParamList} from '../../constants/types';
 import {COLORS} from '../../constants/colors';
+import {sendMessage} from '../../store/slices/chatSlice';
 
 type ConversationRouteProp = RouteProp<MainStackParamList, 'Conversation'>;
 
@@ -21,17 +22,20 @@ interface MessageDoc {
   id: string;
   senderId: string;
   text: string;
-  timestamp: any; // Firestore timestamp
+  timestamp: any; // Firestore Timestamp or number
 }
 
 const Conversation = () => {
   const route = useRoute<ConversationRouteProp>();
-  const {conversationId} = route.params;
+  const {conversationId} = route.params; // Must match { conversationId: string }
   const {user} = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+
   const [messages, setMessages] = useState<MessageDoc[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Listen to messages in real time
   useEffect(() => {
     if (!conversationId) return;
     const unsubscribe = firestore()
@@ -59,42 +63,45 @@ const Conversation = () => {
           setLoading(false);
         },
       );
-
     return () => unsubscribe();
   }, [conversationId]);
 
+  // Reset unread counts for the current user when opening conversation
+  useEffect(() => {
+    if (!conversationId || !user?.uid) return;
+    const docRef = firestore().collection('conversations').doc(conversationId);
+    const resetUnreadIfNeeded = async () => {
+      try {
+        const convSnap = await docRef.get();
+        if (!convSnap.exists) return;
+        const convData = convSnap.data() || {};
+        const existingUnread = convData.unreadCounts || {};
+        if (existingUnread[user.uid] && existingUnread[user.uid] > 0) {
+          existingUnread[user.uid] = 0;
+          await docRef.update({unreadCounts: existingUnread});
+        }
+      } catch (err) {
+        console.error('Error resetting unread:', err);
+      }
+    };
+    resetUnreadIfNeeded();
+  }, [conversationId, user?.uid]);
+
+  // Handler for sending messages using the sendMessage thunk.
   const handleSend = async () => {
     if (!inputText.trim() || !user?.uid) return;
-    await firestore()
-      .collection('conversations')
-      .doc(conversationId)
-      .collection('messages')
-      .add({
-        senderId: user.uid,
-        text: inputText.trim(),
-        timestamp: firestore.FieldValue.serverTimestamp(),
-      });
-    // Update conversation's lastMessage and updatedAt
-    await firestore().collection('conversations').doc(conversationId).update({
-      lastMessage: inputText.trim(),
-      updatedAt: firestore.FieldValue.serverTimestamp(),
-    });
+    try {
+      await dispatch(
+        sendMessage({
+          conversationId,
+          senderId: user.uid,
+          text: inputText.trim(),
+        }),
+      );
+    } catch (err) {
+      console.error('Error sending message:', err);
+    }
     setInputText('');
-  };
-
-  const renderItem = ({item}: {item: MessageDoc}) => {
-    const isOwnMessage = item.senderId === user?.uid;
-    return (
-      <View
-        style={[styles.messageContainer, isOwnMessage && styles.ownMessage]}>
-        <Text style={styles.messageText}>{item.text}</Text>
-        <Text style={styles.messageTime}>
-          {item.timestamp
-            ? new Date(item.timestamp.toDate()).toLocaleTimeString()
-            : ''}
-        </Text>
-      </View>
-    );
   };
 
   if (loading) {
@@ -105,11 +112,25 @@ const Conversation = () => {
     );
   }
 
+  const renderItem = ({item}: {item: MessageDoc}) => {
+    const isOwnMessage = item.senderId === user?.uid;
+    return (
+      <View
+        style={[styles.messageContainer, isOwnMessage && styles.ownMessage]}>
+        <Text style={styles.messageText}>{item.text}</Text>
+        <Text style={styles.messageTime}>
+          {item.timestamp
+            ? new Date(
+                item.timestamp.toDate?.() || item.timestamp,
+              ).toLocaleTimeString()
+            : ''}
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.conversationTitle}>
-        Conversation: {conversationId}
-      </Text>
       <FlatList
         data={messages}
         renderItem={renderItem}
@@ -137,13 +158,6 @@ export default Conversation;
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: COLORS.white},
   centered: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  conversationTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: COLORS.black,
-    textAlign: 'center',
-    padding: 10,
-  },
   messageList: {flex: 1, paddingHorizontal: 10},
   messageContainer: {
     backgroundColor: '#eee',

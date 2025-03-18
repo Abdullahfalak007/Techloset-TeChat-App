@@ -1,4 +1,3 @@
-// // src/screens/chatList/ChatList.tsx
 // import React from 'react';
 // import {
 //   View,
@@ -9,9 +8,6 @@
 //   ActivityIndicator,
 //   Image,
 // } from 'react-native';
-// import firestore, {
-//   FirebaseFirestoreTypes,
-// } from '@react-native-firebase/firestore';
 // import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 // import {useNavigation, CompositeNavigationProp} from '@react-navigation/native';
 // import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
@@ -21,15 +17,6 @@
 // import {ICONS} from '../../constants';
 // import {useChatList} from './useChatList';
 // import {deleteConversation} from '../../store/slices/chatSlice';
-
-// export type ConversationDoc = {
-//   id: string;
-//   lastMessage: string;
-//   updatedAt: FirebaseFirestoreTypes.Timestamp;
-//   participants: string[];
-//   recipientName: string;
-//   recipientPhoto?: string | null;
-// };
 
 // type ChatListNavigationProp = CompositeNavigationProp<
 //   BottomTabNavigationProp<BottomTabParamList, 'Messages'>,
@@ -42,7 +29,6 @@
 //   const dispatch = useAppDispatch();
 //   const navigation = useNavigation<ChatListNavigationProp>();
 
-//   // Listen to conversations from the hook
 //   useChatList(user?.uid);
 
 //   const handleOpenConversation = (conversationId: string) => {
@@ -53,33 +39,52 @@
 //     dispatch(deleteConversation({conversationId}));
 //   };
 
-//   const renderItem = ({item}: {item: ConversationDoc}) => (
-//     <View style={styles.itemContainer}>
-//       <TouchableOpacity
-//         style={styles.profileContainer}
-//         onPress={() => handleOpenConversation(item.id)}>
-//         {item.recipientPhoto ? (
+//   const renderItem = ({item}: {item: any}) => {
+//     // Unread count for current user
+//     const unreadCount = item.unreadCounts?.[user?.uid] || 0;
+
+//     return (
+//       <View style={styles.itemContainer}>
+//         {/* Tap to open conversation */}
+//         <TouchableOpacity
+//           style={styles.profileContainer}
+//           onPress={() => handleOpenConversation(item.id)}>
+//           {item.recipientPhoto ? (
+//             <Image
+//               source={{uri: item.recipientPhoto}}
+//               style={styles.profileImage}
+//             />
+//           ) : (
+//             <View style={styles.placeholderAvatar} />
+//           )}
+//           <View style={styles.textContainer}>
+//             <Text style={styles.convTitle}>{item.recipientName}</Text>
+//             <Text style={styles.lastMessage}>
+//               {item.lastMessage || 'No messages yet'}
+//             </Text>
+//           </View>
+
+//           {/* Show unread badge if unreadCount > 0 */}
+//           {unreadCount > 0 && (
+//             <View style={styles.unreadBadge}>
+//               <Text style={styles.unreadBadgeText}>{unreadCount}</Text>
+//             </View>
+//           )}
+//         </TouchableOpacity>
+
+//         {/* Delete icon */}
+//         <TouchableOpacity
+//           style={styles.deleteIconContainer}
+//           onPress={() => handleDeleteConversation(item.id)}>
 //           <Image
-//             source={{uri: item.recipientPhoto}}
-//             style={styles.profileImage}
+//             source={ICONS.delete}
+//             style={styles.deleteIcon}
+//             resizeMode="contain"
 //           />
-//         ) : (
-//           <View style={styles.placeholderAvatar} />
-//         )}
-//         <View style={styles.textContainer}>
-//           <Text style={styles.convTitle}>{item.recipientName}</Text>
-//           <Text style={styles.lastMessage}>
-//             {item.lastMessage || 'No messages yet'}
-//           </Text>
-//         </View>
-//       </TouchableOpacity>
-//       <TouchableOpacity
-//         style={styles.deleteIconContainer}
-//         onPress={() => handleDeleteConversation(item.id)}>
-//         <Image source={ICONS.delete} style={styles.deleteIcon} />
-//       </TouchableOpacity>
-//     </View>
-//   );
+//         </TouchableOpacity>
+//       </View>
+//     );
+//   };
 
 //   if (loading) {
 //     return (
@@ -125,18 +130,34 @@
 //   textContainer: {flex: 1},
 //   convTitle: {fontSize: 16, fontWeight: 'bold', color: COLORS.black},
 //   lastMessage: {fontSize: 14, color: COLORS.textColor, marginTop: 4},
+//   unreadBadge: {
+//     backgroundColor: 'red',
+//     borderRadius: 12,
+//     minWidth: 24,
+//     height: 24,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginLeft: 8,
+//   },
+//   unreadBadgeText: {
+//     color: '#fff',
+//     fontSize: 12,
+//     fontWeight: 'bold',
+//     paddingHorizontal: 4,
+//   },
 //   deleteIconContainer: {
-//     width: 40,
-//     height: 40,
-//     borderRadius: 20,
+//     width: 36,
+//     height: 36,
+//     borderRadius: 18,
 //     backgroundColor: 'red',
 //     justifyContent: 'center',
 //     alignItems: 'center',
+//     marginLeft: 8,
 //   },
 //   deleteIcon: {
-//     width: 20,
-//     height: 20,
-//     tintColor: COLORS.white,
+//     width: 18,
+//     height: 18,
+//     tintColor: '#fff',
 //   },
 // });
 
@@ -151,10 +172,6 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
-import {Swipeable} from 'react-native-gesture-handler';
-import firestore, {
-  FirebaseFirestoreTypes,
-} from '@react-native-firebase/firestore';
 import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 import {useNavigation, CompositeNavigationProp} from '@react-navigation/native';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
@@ -165,20 +182,20 @@ import {ICONS} from '../../constants';
 import {useChatList} from './useChatList';
 import {deleteConversation} from '../../store/slices/chatSlice';
 
-export type ConversationDoc = {
-  id: string;
-  lastMessage: string;
-  updatedAt: FirebaseFirestoreTypes.Timestamp;
-  participants: string[];
-  recipientName: string;
-  recipientPhoto?: string | null;
-};
-
-// Use a composite navigation prop so that we can navigate from a bottom tab to a MainStack screen.
 type ChatListNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<BottomTabParamList, 'Messages'>,
   NativeStackNavigationProp<MainStackParamList>
 >;
+
+export type ConversationDoc = {
+  id: string;
+  lastMessage: string;
+  updatedAt: any;
+  participants: string[];
+  recipientName: string;
+  recipientPhoto?: string | null;
+  unreadCounts?: Record<string, number>;
+};
 
 const ChatList = () => {
   const {user} = useAppSelector(state => state.auth);
@@ -186,7 +203,6 @@ const ChatList = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<ChatListNavigationProp>();
 
-  // Set up Firestore listener via our custom hook
   useChatList(user?.uid);
 
   const handleOpenConversation = (conversationId: string) => {
@@ -197,29 +213,11 @@ const ChatList = () => {
     dispatch(deleteConversation({conversationId}));
   };
 
-  const renderRightActions = (
-    progress: any,
-    dragX: any,
-    item: ConversationDoc,
-  ) => {
-    return (
-      <TouchableOpacity
-        style={styles.deleteIconContainer}
-        onPress={() => handleDeleteConversation(item.id)}>
-        <Image
-          source={ICONS.delete}
-          style={styles.deleteIcon}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-    );
-  };
+  const renderItem = ({item}: {item: ConversationDoc}) => {
+    // Get unread count for current user
+    const unreadCount = item.unreadCounts?.[user?.uid] || 0;
 
-  const renderItem = ({item}: {item: ConversationDoc}) => (
-    <Swipeable
-      renderRightActions={(progress, dragX) =>
-        renderRightActions(progress, dragX, item)
-      }>
+    return (
       <View style={styles.itemContainer}>
         <TouchableOpacity
           style={styles.profileContainer}
@@ -238,10 +236,24 @@ const ChatList = () => {
               {item.lastMessage || 'No messages yet'}
             </Text>
           </View>
+          {unreadCount > 0 && (
+            <View style={styles.unreadBadge}>
+              <Text style={styles.unreadBadgeText}>{unreadCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteIconContainer}
+          onPress={() => handleDeleteConversation(item.id)}>
+          <Image
+            source={ICONS.delete}
+            style={styles.deleteIcon}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       </View>
-    </Swipeable>
-  );
+    );
+  };
 
   if (loading) {
     return (
@@ -268,15 +280,14 @@ const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: COLORS.white, padding: 16},
   centered: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   itemContainer: {
-    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
   },
-  profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
+  profileContainer: {flexDirection: 'row', alignItems: 'center', flex: 1},
   profileImage: {width: 40, height: 40, borderRadius: 20, marginRight: 10},
   placeholderAvatar: {
     width: 40,
@@ -288,6 +299,21 @@ const styles = StyleSheet.create({
   textContainer: {flex: 1},
   convTitle: {fontSize: 16, fontWeight: 'bold', color: COLORS.black},
   lastMessage: {fontSize: 14, color: COLORS.textColor, marginTop: 4},
+  unreadBadge: {
+    backgroundColor: 'red',
+    borderRadius: 12,
+    minWidth: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  unreadBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingHorizontal: 4,
+  },
   deleteIconContainer: {
     width: 36,
     height: 36,
@@ -297,9 +323,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
   },
-  deleteIcon: {
-    width: 18,
-    height: 18,
-    tintColor: COLORS.white,
-  },
+  deleteIcon: {width: 18, height: 18, tintColor: '#fff'},
 });

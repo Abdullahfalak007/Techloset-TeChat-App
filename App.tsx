@@ -1,5 +1,7 @@
 // src/App.tsx
+import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -22,7 +24,6 @@ const App = () => {
       scopes: ['profile', 'email', 'openid'],
     });
 
-    // Disable Firestore offline caching to avoid stale data
     firestore().settings({persistence: false});
     firestore()
       .clearPersistence()
@@ -39,12 +40,15 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-      <Toast />
-    </Provider>
+    // ✅ Wrap everything in GestureHandlerRootView
+    <GestureHandlerRootView style={{flex: 1}}>
+      <Provider store={store}>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+        <Toast />
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

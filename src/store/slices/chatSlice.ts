@@ -327,6 +327,32 @@ export const sendMessage = createAsyncThunk<
   },
 );
 
+export const deleteConversation = createAsyncThunk<
+  void,
+  {conversationId: string},
+  {rejectValue: string}
+>('chat/deleteConversation', async ({conversationId}, {rejectWithValue}) => {
+  try {
+    const convRef = firestore().collection('conversations').doc(conversationId);
+
+    // 1) Get all messages in subcollection
+    const messagesSnap = await convRef.collection('messages').get();
+
+    // 2) Use a batch to delete all messages + the conversation doc
+    const batch = firestore().batch();
+    messagesSnap.forEach(doc => {
+      batch.delete(doc.ref);
+    });
+    batch.delete(convRef);
+
+    // 3) Commit the batch
+    await batch.commit();
+  } catch (error: any) {
+    console.error('Error deleting conversation:', error);
+    return rejectWithValue(error.message);
+  }
+});
+
 const chatSlice = createSlice({
   name: 'chat',
   initialState,
@@ -362,6 +388,17 @@ const chatSlice = createSlice({
       .addCase(sendMessage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Failed to send message';
+      })
+      .addCase(deleteConversation.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteConversation.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(deleteConversation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Failed to delete conversation';
       });
   },
 });

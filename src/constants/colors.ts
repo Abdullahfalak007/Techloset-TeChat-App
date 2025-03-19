@@ -8,4 +8,5 @@ export const COLORS = {
   signupButtonBackground: 'rgba(255, 255, 255, 0.31)',
   textColor: 'rgba(61, 74, 122, 1)',
   tabBarActiveTintColor: 'rgba(61, 74, 122, 1)',
+  redBackground: 'rgb(234, 55, 54)',
 };

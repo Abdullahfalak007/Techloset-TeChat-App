@@ -1,5 +1,5 @@
 // src/screens/chatList/ChatList.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   Image,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import {Swipeable} from 'react-native-gesture-handler';
 import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
@@ -21,11 +23,6 @@ import {useChatList} from './useChatList';
 import {deleteConversation} from '../../store/slices/chatSlice';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 
-type ChatListNavigationProp = CompositeNavigationProp<
-  BottomTabNavigationProp<BottomTabParamList, 'Messages'>,
-  NativeStackNavigationProp<MainStackParamList>
->;
-
 export type ConversationDoc = {
   id: string;
   lastMessage: string;
@@ -36,7 +33,7 @@ export type ConversationDoc = {
   unreadCounts?: Record<string, number>;
 };
 
-/** Convert a Firestore timestamp -> a relative time string like “2 min ago” */
+/** Convert a Firestore timestamp into a relative time string */
 function timeAgo(updatedAt: any): string {
   if (!updatedAt) return '';
   const date = updatedAt.toDate ? updatedAt.toDate() : new Date(updatedAt);
@@ -58,10 +55,27 @@ const ChatList = () => {
   const {user} = useAppSelector(state => state.auth);
   const {conversations, loading} = useAppSelector(state => state.chat);
   const dispatch = useAppDispatch();
-  const navigation = useNavigation<ChatListNavigationProp>();
+  const navigation =
+    useNavigation<
+      CompositeNavigationProp<
+        BottomTabNavigationProp<BottomTabParamList, 'Messages'>,
+        NativeStackNavigationProp<MainStackParamList>
+      >
+    >();
 
-  // Listen for conversation changes
+  // Listen for conversation changes.
   useChatList(user?.uid);
+
+  // Search state.
+  const [searchActive, setSearchActive] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchPress = () => {
+    setSearchActive(prev => !prev);
+    if (searchActive) {
+      setSearchTerm('');
+    }
+  };
 
   const handleOpenConversation = (conversationId: string) => {
     navigation.navigate('Conversation', {conversationId});
@@ -71,7 +85,6 @@ const ChatList = () => {
     dispatch(deleteConversation({conversationId}));
   };
 
-  // The swipeable right action for deleting a conversation
   const renderRightActions = (conversationId: string) => (
     <TouchableOpacity
       style={styles.deleteIconContainer}
@@ -93,7 +106,6 @@ const ChatList = () => {
         <TouchableOpacity
           style={styles.itemContainer}
           onPress={() => handleOpenConversation(item.id)}>
-          {/* Avatar */}
           {item.recipientPhoto ? (
             <Image
               source={{uri: item.recipientPhoto}}
@@ -102,16 +114,11 @@ const ChatList = () => {
           ) : (
             <View style={styles.placeholderAvatar} />
           )}
-
-          {/* Text Container: top row => name + time, bottom row => last message + unread */}
           <View style={styles.textWrapper}>
-            {/* Top row */}
             <View style={styles.topRow}>
               <Text style={styles.convTitle}>{item.recipientName}</Text>
               <Text style={styles.timeText}>{lastMessageTime}</Text>
             </View>
-
-            {/* Bottom row */}
             <View style={styles.bottomRow}>
               <Text style={styles.lastMessage}>
                 {item.lastMessage || 'No messages yet'}
@@ -128,6 +135,13 @@ const ChatList = () => {
     );
   };
 
+  // Filter conversations by recipient name if a search term is provided.
+  const filteredConversations = searchTerm
+    ? conversations.filter(conv =>
+        conv.recipientName.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : conversations;
+
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -137,22 +151,34 @@ const ChatList = () => {
   }
 
   return (
-    <View style={{flex: 1}}>
-      {/* The gradient header at the top */}
-      <GradientHeader
-        title="Messages"
-        avatarUri={user?.base64Photo ?? user?.photoURL ?? null}
-      />
-
-      {/* The rounded container below the header */}
-      <View style={styles.roundedContainer}>
-        <FlatList
-          data={conversations}
-          keyExtractor={item => item.id}
-          renderItem={renderItem}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        if (searchActive) {
+          setSearchActive(false);
+          setSearchTerm('');
+          Keyboard.dismiss();
+        }
+      }}>
+      <View style={{flex: 1}}>
+        <GradientHeader
+          title="Messages"
+          // ChatList layout: pass avatarUri and isContactsScreen as false.
+          avatarUri={user?.base64Photo ?? user?.photoURL ?? null}
+          isContactsScreen={false}
+          searchActive={searchActive}
+          searchValue={searchTerm}
+          onChangeSearch={setSearchTerm}
+          onSearchPress={handleSearchPress}
         />
+        <View style={styles.roundedContainer}>
+          <FlatList
+            data={filteredConversations}
+            keyExtractor={item => item.id}
+            renderItem={renderItem}
+          />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -164,13 +190,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // The container that holds your entire list and has the rounded corners
+  // Container for the list with rounded top corners.
   roundedContainer: {
     flex: 1,
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    marginTop: -20, // overlap the gradient a bit
+    marginTop: -20, // Overlap the gradient header.
     padding: 16,
   },
   itemContainer: {
@@ -225,7 +251,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   unreadBadge: {
-    backgroundColor: COLORS.redBackground, // define redBackground in colors.ts
+    backgroundColor: COLORS.redBackground,
     borderRadius: 12,
     minWidth: 24,
     height: 24,

@@ -17,6 +17,7 @@ import {MainStackParamList} from '../../constants/types';
 import {COLORS} from '../../constants/colors';
 import {ICONS} from '../../constants';
 import {createConversation} from '../../store/slices/chatSlice';
+import GradientHeader from '../../components/gradientHeader/GradientHeader';
 
 interface Contact {
   uid: string;
@@ -55,7 +56,7 @@ const Contacts = () => {
             });
           });
 
-          // Build a set of UIDs that already have a conversation with the current user.
+          // Build a set of UIDs that already have a conversation with the current user
           const existingContactIds = new Set<string>();
           conversations.forEach(conv => {
             conv.participants.forEach(participantUid => {
@@ -65,7 +66,7 @@ const Contacts = () => {
             });
           });
 
-          // Filter out contacts that are already in a conversation.
+          // Filter out contacts that are already in a conversation
           const filteredContacts = list.filter(
             contact => !existingContactIds.has(contact.uid),
           );
@@ -81,9 +82,7 @@ const Contacts = () => {
     return () => unsubscribe();
   }, [user?.uid, conversations]);
 
-  // When a contact is tapped, call the createConversation thunk.
-  // Once the conversation is created, navigate to the MainTabs (the bottom tab navigator)
-  // which renders the ChatList (under the "Messages" tab).
+  // When a contact is tapped, create a conversation and navigate to MainTabs
   const handleAddContact = async (otherUid: string) => {
     if (!user?.uid) return;
     try {
@@ -129,16 +128,23 @@ const Contacts = () => {
   }
 
   return (
-    <View style={styles.container}>
-      {contacts.length === 0 ? (
-        <Text>No other users found (or all are in your chat list).</Text>
-      ) : (
-        <FlatList
-          data={contacts}
-          keyExtractor={item => item.uid}
-          renderItem={renderItem}
-        />
-      )}
+    <View style={{flex: 1}}>
+      <GradientHeader
+        title="Contacts"
+        avatarUri={user?.base64Photo ?? user?.photoURL ?? null}
+      />
+
+      <View style={styles.roundedContainer}>
+        {contacts.length === 0 ? (
+          <Text>No other users found (or all are in your chat list).</Text>
+        ) : (
+          <FlatList
+            data={contacts}
+            keyExtractor={item => item.uid}
+            renderItem={renderItem}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -146,8 +152,19 @@ const Contacts = () => {
 export default Contacts;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: COLORS.white, padding: 16},
-  centered: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  roundedContainer: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    marginTop: -20, // Overlap the gradient
+    padding: 16,
+  },
   contactRow: {
     flexDirection: 'row',
     alignItems: 'center',

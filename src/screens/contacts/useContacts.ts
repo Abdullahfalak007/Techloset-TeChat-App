@@ -1,50 +1,30 @@
-// // src/screens/contacts/useContacts.ts
-// import {useEffect, useState} from 'react';
-// import firestore from '@react-native-firebase/firestore';
-// import {useAppSelector} from '../../hooks/useStore';
+// src>screens>contacts>useContacts.ts
+import {Contact} from './Contacts'; // or define the interface inline
 
-// interface ContactItem {
-//   uid: string;
-//   email: string;
-//   displayName: string | null;
-//   photoURL: string | null;
-//   base64Photo: string | null;
-// }
+export function groupContactsByInitial(contacts: Contact[]) {
+  // 1) Sort the contacts
+  const sorted = [...contacts].sort((a, b) => {
+    const nameA = (a.displayName || a.email).toLowerCase();
+    const nameB = (b.displayName || b.email).toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
 
-// export const useContacts = () => {
-//   const {user} = useAppSelector(state => state.auth);
-//   const [contacts, setContacts] = useState<ContactItem[]>([]);
-//   const [loading, setLoading] = useState(true);
+  // 2) Group them by first letter
+  const map: Record<string, Contact[]> = {};
+  for (const contact of sorted) {
+    const name = contact.displayName || contact.email;
+    const firstLetter = name.charAt(0).toUpperCase();
+    if (!map[firstLetter]) {
+      map[firstLetter] = [];
+    }
+    map[firstLetter].push(contact);
+  }
 
-//   useEffect(() => {
-//     const unsubscribe = firestore()
-//       .collection('users')
-//       .onSnapshot(
-//         snapshot => {
-//           const list: ContactItem[] = [];
-//           snapshot.forEach(doc => {
-//             const data = doc.data();
-//             if (data.uid !== user?.uid) {
-//               list.push({
-//                 uid: data.uid,
-//                 email: data.email,
-//                 displayName: data.displayName || null,
-//                 photoURL: data.photoURL || null,
-//                 base64Photo: data.base64Photo || null,
-//               });
-//             }
-//           });
-//           setContacts(list);
-//           setLoading(false);
-//         },
-//         error => {
-//           console.error('Error fetching contacts:', error);
-//           setLoading(false);
-//         },
-//       );
-
-//     return () => unsubscribe();
-//   }, [user?.uid]);
-
-//   return {contacts, loading};
-// };
+  // 3) Convert map to an array of sections
+  return Object.keys(map)
+    .sort()
+    .map(letter => ({
+      title: letter,
+      data: map[letter],
+    }));
+}

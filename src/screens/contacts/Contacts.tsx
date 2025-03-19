@@ -4,10 +4,12 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
   StyleSheet,
   ActivityIndicator,
   Image,
+  SectionList,
+  ListRenderItemInfo,
+  SectionListRenderItemInfo,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
@@ -18,8 +20,9 @@ import {COLORS} from '../../constants/colors';
 import {ICONS} from '../../constants';
 import {createConversation} from '../../store/slices/chatSlice';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
+import {groupContactsByInitial} from './useContacts'; // or wherever you placed it
 
-interface Contact {
+export interface Contact {
   uid: string;
   email: string;
   displayName: string | null;
@@ -27,7 +30,7 @@ interface Contact {
   base64Photo: string | null;
 }
 
-// Since we want to navigate to the MainTabs container, change the navigation type:
+// If you want to navigate to MainTabs container
 type ContactsNavProp = StackNavigationProp<MainStackParamList, 'MainTabs'>;
 
 const Contacts = () => {
@@ -70,6 +73,7 @@ const Contacts = () => {
           const filteredContacts = list.filter(
             contact => !existingContactIds.has(contact.uid),
           );
+
           setContacts(filteredContacts);
           setLoading(false);
         },
@@ -82,7 +86,7 @@ const Contacts = () => {
     return () => unsubscribe();
   }, [user?.uid, conversations]);
 
-  // When a contact is tapped, create a conversation and navigate to MainTabs
+  // Create conversation, then navigate to MainTabs
   const handleAddContact = async (otherUid: string) => {
     if (!user?.uid) return;
     try {
@@ -97,12 +101,14 @@ const Contacts = () => {
     }
   };
 
-  const renderItem = ({item}: {item: Contact}) => {
+  // Render each contact item
+  const renderContactItem = ({item}: {item: Contact}) => {
     const avatarSource = item.base64Photo
       ? {uri: item.base64Photo}
       : item.photoURL
       ? {uri: item.photoURL}
       : ICONS.avatar;
+
     return (
       <View style={styles.contactRow}>
         <View style={styles.leftContainer}>
@@ -119,6 +125,12 @@ const Contacts = () => {
     );
   };
 
+  // Render the section header for each letter
+  const renderSectionHeader = ({section}: any) => {
+    return <Text style={styles.sectionHeader}>{section.title}</Text>;
+  };
+
+  // If loading data
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -126,6 +138,9 @@ const Contacts = () => {
       </View>
     );
   }
+
+  // Group the contacts by first letter
+  const sections = groupContactsByInitial(contacts);
 
   return (
     <View style={{flex: 1}}>
@@ -135,13 +150,19 @@ const Contacts = () => {
       />
 
       <View style={styles.roundedContainer}>
-        {contacts.length === 0 ? (
+        {sections.length === 0 ? (
           <Text>No other users found (or all are in your chat list).</Text>
         ) : (
-          <FlatList
-            data={contacts}
+          <SectionList
+            sections={sections}
             keyExtractor={item => item.uid}
-            renderItem={renderItem}
+            renderItem={renderContactItem}
+            renderSectionHeader={renderSectionHeader}
+            // If you want a “My Contact” label at the top, you can do:
+            ListHeaderComponent={() => (
+              <Text style={styles.myContactLabel}>My Contact</Text>
+            )}
+            stickySectionHeadersEnabled={false}
           />
         )}
       </View>
@@ -164,6 +185,19 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     marginTop: -20, // Overlap the gradient
     padding: 16,
+  },
+  myContactLabel: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginVertical: 8,
+    color: COLORS.black,
+  },
+  sectionHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.black,
+    marginTop: 16,
+    marginBottom: 4,
   },
   contactRow: {
     flexDirection: 'row',

@@ -18,7 +18,7 @@ export const authStyle = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: COLORS.transparentWhite,
+    color: COLORS.greyText,
     marginBottom: 32,
   },
 

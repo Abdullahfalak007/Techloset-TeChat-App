@@ -1,7 +1,8 @@
 // src/constants/colors.ts
 export const COLORS = {
   white: '#FFFFFF',
-  transparentWhite: 'f0f0f0',
+  transparentWhite: 'rgba(255,255,255,0.2)',
+  greyText: 'rgba(255, 255, 255, 0.5)',
   black: '#000000',
   gradientStart: '#445386',
   gradientEnd: '#2c1753',

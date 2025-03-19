@@ -161,7 +161,7 @@ const ChatList = () => {
       }}>
       <View style={{flex: 1}}>
         <GradientHeader
-          title="Messages"
+          title="Home"
           // ChatList layout: pass avatarUri and isContactsScreen as false.
           avatarUri={user?.base64Photo ?? user?.photoURL ?? null}
           isContactsScreen={false}

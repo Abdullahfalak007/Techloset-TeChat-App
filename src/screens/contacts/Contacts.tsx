@@ -8,8 +8,6 @@ import {
   ActivityIndicator,
   Image,
   SectionList,
-  TextInput,
-  Alert,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -22,7 +20,6 @@ import {COLORS} from '../../constants/colors';
 import {ICONS} from '../../constants';
 import {createConversation} from '../../store/slices/chatSlice';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
-
 import {groupContactsByInitial} from './useContacts';
 
 export interface Contact {
@@ -44,9 +41,10 @@ const Contacts = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // --- NEW STATES FOR SEARCH ---
+  // --- NEW STATES FOR SEARCH & ADD MODE ---
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAddButtons, setShowAddButtons] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -108,14 +106,16 @@ const Contacts = () => {
   // --- ON SEARCH ICON PRESSED ---
   const handleSearchPress = () => {
     setShowSearchInput(prev => !prev);
+    // Optionally, turn off add buttons when searching
     if (showSearchInput) {
       setSearchTerm('');
     }
   };
 
-  // --- ON ADD ICON PRESSED ---
+  // --- ON ADD ICON PRESSED (Header) ---
   const handleAddPress = () => {
-    Alert.alert('Add Pressed', 'Implement your custom logic here!');
+    // Toggle the state that shows add buttons in each contact row.
+    setShowAddButtons(prev => !prev);
   };
 
   const renderContactItem = ({item}: {item: Contact}) => {
@@ -134,9 +134,13 @@ const Contacts = () => {
             <Text style={styles.subtitle}>Life is beautiful 👌</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={() => handleAddContact(item.uid)}>
-          <Image source={ICONS.addContact} style={styles.addIcon} />
-        </TouchableOpacity>
+        {showAddButtons && (
+          <TouchableOpacity
+            onPress={() => handleAddContact(item.uid)}
+            style={styles.addButtonContainer}>
+            <Image source={ICONS.addContact} style={styles.addIcon} />
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
@@ -179,7 +183,7 @@ const Contacts = () => {
           searchValue={searchTerm}
           onChangeSearch={setSearchTerm}
           onSearchPress={handleSearchPress}
-          onAddPress={handleAddPress} // if needed
+          onAddPress={handleAddPress} // Toggling add mode.
         />
 
         {/* The contacts list */}
@@ -263,6 +267,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.textColor,
     marginTop: 2,
+  },
+  addButtonContainer: {
+    backgroundColor: COLORS.transparentWhite,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addIcon: {
     width: 24,

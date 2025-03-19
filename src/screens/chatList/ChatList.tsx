@@ -140,7 +140,7 @@ const ChatList = () => {
     <View style={{flex: 1}}>
       {/* The gradient header at the top */}
       <GradientHeader
-        title="Home"
+        title="Messages"
         avatarUri={user?.base64Photo ?? user?.photoURL ?? null}
       />
 

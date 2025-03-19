@@ -8,7 +8,7 @@ export const ICONS = {
   settings: require('../assets/icons/settings.png'),
   addContact: require('../assets/icons/addContact.png'),
   delete: require('../assets/icons/delete.png'),
-
+  search: require('../assets/icons/search.png'),
   // add more icons if needed
 };
 

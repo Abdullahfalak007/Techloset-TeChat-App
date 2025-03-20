@@ -1,148 +1,234 @@
-// // src/screens/conversation/groupMessagesByDay.ts
-// import {Message} from '../../store/slices/chatSlice'; // adjust path if needed
+import {useState, useEffect, useRef} from 'react';
+import {SectionList} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import {
+  launchImageLibrary,
+  launchCamera,
+  Asset,
+} from 'react-native-image-picker';
+import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
+import {sendMessage, Message} from '../../store/slices/chatSlice';
 
-// type MessageSection = {
-//   title: string; // e.g. "Today", "Yesterday", or "Mar 21, 2023"
-//   data: Message[]; // messages for that day
-// };
-
-// function getMessageTime(timestamp: any): number {
-//   if (timestamp && typeof timestamp.toDate === 'function') {
-//     return timestamp.toDate().getTime();
-//   } else if (timestamp) {
-//     return new Date(timestamp).getTime();
-//   }
-//   // If timestamp is missing, assume it's "now"
-//   return Date.now();
-// }
-
-// export function groupMessagesByDay(messages: Message[]): MessageSection[] {
-//   // 1) Sort messages by timestamp ascending, using current time if missing
-//   const sorted = [...messages].sort((a, b) => {
-//     return getMessageTime(a.timestamp) - getMessageTime(b.timestamp);
-//   });
-
-//   // 2) Group messages by day using toDateString()
-//   const map: Record<string, Message[]> = {};
-//   for (const msg of sorted) {
-//     const time = getMessageTime(msg.timestamp);
-//     const key = new Date(time).toDateString();
-//     if (!map[key]) {
-//       map[key] = [];
-//     }
-//     map[key].push(msg);
-//   }
-
-//   // 3) Convert map to sections and apply labels ("Today", "Yesterday", or formatted date)
-//   const sections: MessageSection[] = Object.keys(map)
-//     .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-//     .map(dayString => {
-//       const date = new Date(dayString);
-//       return {
-//         title: getDayLabel(date),
-//         data: map[dayString],
-//       };
-//     });
-
-//   return sections;
-// }
-
-// function getDayLabel(date: Date): string {
-//   const now = new Date();
-
-//   if (isSameDay(date, now)) {
-//     return 'Today';
-//   }
-
-//   const yesterday = new Date(now);
-//   yesterday.setDate(now.getDate() - 1);
-//   if (isSameDay(date, yesterday)) {
-//     return 'Yesterday';
-//   }
-
-//   return date.toLocaleDateString(undefined, {
-//     year: 'numeric',
-//     month: 'short',
-//     day: 'numeric',
-//   });
-// }
-
-// function isSameDay(d1: Date, d2: Date) {
-//   return (
-//     d1.getFullYear() === d2.getFullYear() &&
-//     d1.getMonth() === d2.getMonth() &&
-//     d1.getDate() === d2.getDate()
-//   );
-// }
-// src/screens/conversation/groupMessagesByDay.ts
-import {Message} from '../../store/slices/chatSlice';
-
-export type MessageSection = {
+export interface MessageSection {
   title: string;
-  data: readonly Message[]; // Note: readonly array
-};
-
-function getMessageTime(timestamp: any): number {
-  if (timestamp && typeof timestamp.toDate === 'function') {
-    return timestamp.toDate().getTime();
-  } else if (timestamp) {
-    return new Date(timestamp).getTime();
-  }
-  return Date.now();
+  data: Message[];
 }
 
-export function groupMessagesByDay(messages: Message[]): MessageSection[] {
-  // 1) Sort messages by ascending timestamp
-  const sorted = [...messages].sort(
-    (a, b) => getMessageTime(a.timestamp) - getMessageTime(b.timestamp),
+export function useConversationLogic(conversationId: string) {
+  const {user} = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState('');
+  const [loading, setLoading] = useState(true);
+  const sectionListRef = useRef<SectionList<Message, {title: string}>>(null);
+
+  // Read conversation details from the store.
+  const conversation = useAppSelector(state =>
+    state.chat.conversations.find(conv => conv.id === conversationId),
   );
 
-  // 2) Group messages by day using toDateString()
-  const map: Record<string, Message[]> = {};
-  for (const msg of sorted) {
-    const time = getMessageTime(msg.timestamp);
-    const key = new Date(time).toDateString();
-    if (!map[key]) {
-      map[key] = [];
+  // Group messages into sections by day.
+  const sections: MessageSection[] = groupMessagesByDay(messages);
+
+  // Subscribe to real-time updates from Firebase.
+  useEffect(() => {
+    if (!conversationId) return;
+    const unsubscribe = firestore()
+      .collection('conversations')
+      .doc(conversationId)
+      .collection('messages')
+      .orderBy('timestamp', 'asc')
+      .onSnapshot(
+        snapshot => {
+          const msgs: Message[] = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            msgs.push({
+              id: doc.id,
+              senderId: data.senderId,
+              text: data.text,
+              type: data.type || 'text',
+              timestamp: data.timestamp,
+            });
+          });
+          setMessages(msgs);
+          setLoading(false);
+        },
+        error => {
+          console.error('Error fetching messages:', error);
+          setLoading(false);
+        },
+      );
+    return () => unsubscribe();
+  }, [conversationId]);
+
+  // Reset unread counts when the conversation is opened.
+  useEffect(() => {
+    if (!conversationId || !user?.uid) return;
+    const docRef = firestore().collection('conversations').doc(conversationId);
+    const resetUnreadIfNeeded = async () => {
+      try {
+        const convSnap = await docRef.get();
+        if (!convSnap.exists) return;
+        const convData = convSnap.data() || {};
+        const existingUnread: Record<string, number> =
+          convData.unreadCounts || {};
+        if (existingUnread[user.uid] && existingUnread[user.uid] > 0) {
+          existingUnread[user.uid] = 0;
+          await docRef.update({unreadCounts: existingUnread});
+        }
+      } catch (err) {
+        console.error('Error resetting unread:', err);
+      }
+    };
+    resetUnreadIfNeeded();
+  }, [conversationId, user?.uid]);
+
+  // Auto-scroll to the latest message when messages update.
+  useEffect(() => {
+    if (sectionListRef.current && sections.length > 0) {
+      const lastSectionIndex = sections.length - 1;
+      const lastItemIndex = sections[lastSectionIndex].data.length - 1;
+      sectionListRef.current.scrollToLocation({
+        sectionIndex: lastSectionIndex,
+        itemIndex: lastItemIndex,
+        animated: true,
+        viewPosition: 0,
+      });
     }
-    map[key].push(msg);
-  }
+  }, [messages]);
 
-  // 3) Convert map to an array of MessageSection
-  const sections: MessageSection[] = Object.keys(map)
-    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-    .map(dayString => {
-      const date = new Date(dayString);
-      return {
-        title: getDayLabel(date),
-        data: map[dayString] as readonly Message[], // cast as readonly
-      };
-    });
+  // Handle button click: Pick an image from the library.
+  const handleAttach = async () => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        includeBase64: true,
+        maxWidth: 800,
+        maxHeight: 800,
+        quality: 0.8,
+      });
+      if (result.didCancel || result.errorCode) return;
+      const asset: Asset | undefined = result.assets && result.assets[0];
+      if (asset && asset.base64 && user?.uid) {
+        // Dispatch async action to send the message.
+        dispatch(
+          sendMessage({
+            conversationId,
+            senderId: user.uid,
+            text: asset.base64,
+            type: 'image',
+          }),
+        );
+      }
+    } catch (err) {
+      console.error('Error picking image:', err);
+    }
+  };
 
-  return sections;
+  // Handle button click: Capture an image using the camera.
+  const handleCamera = async () => {
+    try {
+      const result = await launchCamera({
+        mediaType: 'photo',
+        includeBase64: true,
+        maxWidth: 800,
+        maxHeight: 800,
+        quality: 0.8,
+      });
+      if (result.didCancel || result.errorCode) return;
+      const asset: Asset | undefined = result.assets && result.assets[0];
+      if (asset && asset.base64 && user?.uid) {
+        // Dispatch async action to send the message.
+        dispatch(
+          sendMessage({
+            conversationId,
+            senderId: user.uid,
+            text: asset.base64,
+            type: 'image',
+          }),
+        );
+      }
+    } catch (err) {
+      console.error('Error capturing image:', err);
+    }
+  };
+
+  // Handle button click: Send a text message.
+  const handleSend = async () => {
+    if (!inputText.trim() || !user?.uid) return;
+    try {
+      // Dispatch async action to send the message.
+      await dispatch(
+        sendMessage({
+          conversationId,
+          senderId: user.uid,
+          text: inputText.trim(),
+          type: 'text',
+        }),
+      );
+    } catch (err) {
+      console.error('Error sending message:', err);
+    }
+    setInputText('');
+  };
+
+  // Helper to format the timestamp for display.
+  const formatTime = (timestamp: any) => {
+    const time =
+      timestamp && typeof timestamp.toDate === 'function'
+        ? timestamp.toDate()
+        : timestamp
+        ? new Date(timestamp)
+        : new Date();
+    return time
+      .toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      })
+      .toUpperCase();
+  };
+
+  return {
+    messages,
+    setMessages,
+    inputText,
+    setInputText,
+    loading,
+    sectionListRef,
+    conversation,
+    sections,
+    handleAttach,
+    handleCamera,
+    handleSend,
+    formatTime,
+  };
 }
 
-function getDayLabel(date: Date): string {
-  const now = new Date();
-  if (isSameDay(date, now)) {
-    return 'Today';
-  }
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-  if (isSameDay(date, yesterday)) {
-    return 'Yesterday';
-  }
-  return date.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
+// Helper: Group messages by day for SectionList rendering.
+export function groupMessagesByDay(messages: Message[]): MessageSection[] {
+  const groups: {[key: string]: Message[]} = {};
+  messages.forEach(message => {
+    const date =
+      message.timestamp && typeof message.timestamp.toDate === 'function'
+        ? message.timestamp.toDate()
+        : new Date(message.timestamp);
+    const dateString = date.toDateString();
+    if (!groups[dateString]) {
+      groups[dateString] = [];
+    }
+    groups[dateString].push(message);
   });
-}
 
-function isSameDay(d1: Date, d2: Date) {
-  return (
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate()
+  const sections: MessageSection[] = Object.keys(groups).map(dateString => ({
+    title: dateString,
+    data: groups[dateString],
+  }));
+
+  sections.sort(
+    (a, b) => new Date(a.title).getTime() - new Date(b.title).getTime(),
   );
+  return sections;
 }

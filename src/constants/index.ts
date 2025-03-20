@@ -9,6 +9,9 @@ export const ICONS = {
   addContact: require('../assets/icons/addContact.png'),
   delete: require('../assets/icons/delete.png'),
   search: require('../assets/icons/search.png'),
+  paperclip: require('../assets/icons/paperclip.png'),
+  camera: require('../assets/icons/camera.png'),
+  send: require('../assets/icons/send.png'),
   // add more icons if needed
 };
 

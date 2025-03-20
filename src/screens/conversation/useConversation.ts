@@ -1,93 +1,76 @@
-// // src/screens/conversation/useConversation.ts
+// src/screens/conversation/groupMessagesByDay.ts
+import {Message} from '../../store/slices/chatSlice'; // adjust path if needed
 
-// import {useEffect, useState} from 'react';
-// import firestore from '@react-native-firebase/firestore';
-// import {useAppSelector} from '../../hooks/useStore';
+type MessageSection = {
+  title: string; // e.g. "Today", "Yesterday", or "Mar 21, 2023"
+  data: Message[]; // messages for that day
+};
 
-// export interface MessageDoc {
-//   id: string;
-//   senderId: string;
-//   text: string;
-//   timestamp: any;
-// }
+function getMessageTime(timestamp: any): number {
+  if (timestamp && typeof timestamp.toDate === 'function') {
+    return timestamp.toDate().getTime();
+  } else if (timestamp) {
+    return new Date(timestamp).getTime();
+  }
+  // If timestamp is missing, assume it's "now"
+  return Date.now();
+}
 
-// export const useConversation = (conversationId: string) => {
-//   const {user} = useAppSelector(state => state.auth);
-//   const [messages, setMessages] = useState<MessageDoc[]>([]);
-//   const [inputText, setInputText] = useState('');
-//   const [loading, setLoading] = useState(true);
+export function groupMessagesByDay(messages: Message[]): MessageSection[] {
+  // 1) Sort messages by timestamp ascending, using current time if missing
+  const sorted = [...messages].sort((a, b) => {
+    return getMessageTime(a.timestamp) - getMessageTime(b.timestamp);
+  });
 
-//   // Listen for messages in real-time
-//   useEffect(() => {
-//     if (!conversationId) {
-//       setLoading(false);
-//       return;
-//     }
+  // 2) Group messages by day using toDateString()
+  const map: Record<string, Message[]> = {};
+  for (const msg of sorted) {
+    const time = getMessageTime(msg.timestamp);
+    const key = new Date(time).toDateString();
+    if (!map[key]) {
+      map[key] = [];
+    }
+    map[key].push(msg);
+  }
 
-//     const unsubscribe = firestore()
-//       .collection('conversations')
-//       .doc(conversationId)
-//       .collection('messages')
-//       .orderBy('timestamp', 'asc')
-//       .onSnapshot(
-//         snapshot => {
-//           const msgs: MessageDoc[] = [];
-//           snapshot.forEach(doc => {
-//             const data = doc.data();
-//             if (data.timestamp) {
-//               msgs.push({
-//                 id: doc.id,
-//                 senderId: data.senderId,
-//                 text: data.text,
-//                 timestamp: data.timestamp,
-//               });
-//             }
-//           });
-//           setMessages(msgs);
-//           setLoading(false);
-//         },
-//         error => {
-//           console.error('Error fetching conversation messages:', error);
-//           setLoading(false);
-//         },
-//       );
+  // 3) Convert map to sections and apply labels ("Today", "Yesterday", or formatted date)
+  const sections: MessageSection[] = Object.keys(map)
+    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+    .map(dayString => {
+      const date = new Date(dayString);
+      return {
+        title: getDayLabel(date),
+        data: map[dayString],
+      };
+    });
 
-//     return () => unsubscribe();
-//   }, [conversationId]);
+  return sections;
+}
 
-//   // Send message
-//   const sendMessage = async () => {
-//     if (!user?.uid || !inputText.trim()) return;
+function getDayLabel(date: Date): string {
+  const now = new Date();
 
-//     // Create a new message
-//     const newMsg = {
-//       senderId: user.uid,
-//       text: inputText.trim(),
-//       timestamp: firestore.FieldValue.serverTimestamp(),
-//     };
+  if (isSameDay(date, now)) {
+    return 'Today';
+  }
 
-//     const conversationRef = firestore()
-//       .collection('conversations')
-//       .doc(conversationId);
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (isSameDay(date, yesterday)) {
+    return 'Yesterday';
+  }
 
-//     // Add the message doc
-//     await conversationRef.collection('messages').add(newMsg);
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 
-//     // Update conversation's lastMessage, updatedAt
-//     await conversationRef.update({
-//       lastMessage: inputText.trim(),
-//       updatedAt: firestore.FieldValue.serverTimestamp(),
-//     });
-
-//     setInputText('');
-//   };
-
-//   return {
-//     user,
-//     messages,
-//     inputText,
-//     setInputText,
-//     loading,
-//     sendMessage,
-//   };
-// };
+function isSameDay(d1: Date, d2: Date) {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}

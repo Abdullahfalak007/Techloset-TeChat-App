@@ -15,8 +15,10 @@ export interface Conversation {
 export interface Message {
   id: string;
   senderId: string;
-  text: string;
-  timestamp: any; // Firestore timestamp
+  text: string; // if type='image', this will hold base64
+  timestamp: any;
+  type?: 'text' | 'image'; // <--- new optional field
+  mimeType?: string; // new field to store the image MIME type
 }
 
 interface ChatState {
@@ -82,23 +84,41 @@ export const createConversation = createAsyncThunk<
   }
 });
 
-// Thunk to send a message and update unreadCounts accordingly.
 export const sendMessage = createAsyncThunk<
   void,
-  {conversationId: string; senderId: string; text: string},
+  {
+    conversationId: string;
+    senderId: string;
+    text: string;
+    type?: 'text' | 'image';
+  },
   {rejectValue: string}
 >(
   'chat/sendMessage',
-  async ({conversationId, senderId, text}, {rejectWithValue}) => {
+  async (
+    {conversationId, senderId, text, type = 'text'},
+    {rejectWithValue},
+  ) => {
     try {
       const docRef = firestore()
         .collection('conversations')
         .doc(conversationId);
 
-      // Add a new message to the "messages" subcollection.
+      // Only trim text if the message type is 'text'
+      const messageText = type === 'text' ? text.trim() : text;
+
+      // Log the length to verify that the image base64 is complete
+      if (type === 'image') {
+        console.log(
+          'Sending image message, base64 length:',
+          messageText.length,
+        );
+      }
+
       await docRef.collection('messages').add({
         senderId,
-        text: text.trim(),
+        text: messageText,
+        type,
         timestamp: firestore.FieldValue.serverTimestamp(),
       });
 
@@ -110,7 +130,6 @@ export const sendMessage = createAsyncThunk<
       const existingUnread: Record<string, number> =
         convData.unreadCounts || {};
 
-      // Build new unread counts: the sender’s count remains 0; for every other participant, increment by 1.
       const newUnreadCounts: Record<string, number> = {...existingUnread};
       participants.forEach(uid => {
         if (uid === senderId) {
@@ -120,9 +139,9 @@ export const sendMessage = createAsyncThunk<
         }
       });
 
-      // Update the conversation document with the new lastMessage, updatedAt, and unreadCounts.
+      const lastMessage = type === 'image' ? 'Photo' : messageText;
       await docRef.update({
-        lastMessage: text.trim(),
+        lastMessage,
         updatedAt: firestore.FieldValue.serverTimestamp(),
         unreadCounts: newUnreadCounts,
       });

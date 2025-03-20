@@ -1,5 +1,5 @@
 // src/components/gradientHeader/GradientHeader.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  TouchableWithoutFeedback,
+  Modal,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS} from '../../constants/colors';
 import {ICONS} from '../../constants';
+import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
+import {signOut} from '../../store/slices/authSlice';
 
 type GradientHeaderProps = {
   title: string;
@@ -33,7 +37,15 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
   searchValue,
   onChangeSearch,
 }) => {
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dispatch = useAppDispatch();
+  const {user} = useAppSelector(state => state.auth);
   const avatarSource = avatarUri ? {uri: avatarUri} : ICONS.avatar;
+
+  const handleLogout = () => {
+    dispatch(signOut());
+    setDropdownVisible(false);
+  };
 
   if (searchActive) {
     return (
@@ -100,9 +112,60 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
           <Text style={[styles.headerTitle, {flex: 1, textAlign: 'center'}]}>
             {title}
           </Text>
-          <View style={styles.iconContainer}>
-            <Image source={avatarSource} style={styles.headerAvatar} />
-          </View>
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => setDropdownVisible(prev => !prev)}>
+            {avatarUri ? (
+              <Image source={avatarSource} style={styles.headerAvatar} />
+            ) : (
+              <View style={styles.avatarPlaceholder} />
+            )}
+          </TouchableOpacity>
+
+          {dropdownVisible && (
+            <Modal
+              transparent
+              animationType="none"
+              visible={dropdownVisible}
+              onRequestClose={() => setDropdownVisible(false)}>
+              <TouchableWithoutFeedback
+                onPress={() => setDropdownVisible(false)}>
+                <View style={styles.modalOverlay}>
+                  <TouchableWithoutFeedback>
+                    <View style={styles.dropdown}>
+                      <View style={styles.dropdownHeader}>
+                        <TouchableOpacity
+                          onPress={() => setDropdownVisible(false)}>
+                          <Image source={ICONS.close} style={styles.icon} />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.profileInfo}>
+                        {avatarUri ? (
+                          <Image
+                            source={{uri: avatarUri}}
+                            style={styles.dropdownAvatar}
+                          />
+                        ) : (
+                          <View style={styles.dropdownAvatarPlaceholder} />
+                        )}
+                        <Text style={styles.userName}>
+                          {user?.displayName || 'User Name'}
+                        </Text>
+                        <Text style={styles.userEmail}>
+                          {user?.email || 'user@example.com'}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        style={styles.logoutButton}
+                        onPress={handleLogout}>
+                        <Image source={ICONS.logout} style={styles.icon} />
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
+          )}
         </View>
       </LinearGradient>
     );
@@ -141,7 +204,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
-    tintColor: COLORS.white,
+    tintColor: COLORS.black,
     resizeMode: 'contain',
   },
   searchBarContainer: {
@@ -170,5 +233,77 @@ const styles = StyleSheet.create({
     height: 20,
     tintColor: COLORS.white,
     resizeMode: 'contain',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 15,
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+
+  avatarPlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#ccc',
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 50, // adjust this value to position the dropdown correctly
+    right: 14,
+    width: '90%',
+    backgroundColor: COLORS.white,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    padding: 16,
+    zIndex: 20,
+  },
+  dropdownHeader: {
+    alignItems: 'flex-end',
+  },
+  profileInfo: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  dropdownAvatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 8,
+  },
+  dropdownAvatarPlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#ccc',
+    marginBottom: 8,
+  },
+  userName: {
+    color: COLORS.black,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  userEmail: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  logoutButton: {
+    alignSelf: 'center',
+    padding: 8,
   },
 });

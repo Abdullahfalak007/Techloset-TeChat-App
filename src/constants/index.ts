@@ -12,6 +12,8 @@ export const ICONS = {
   paperclip: require('../assets/icons/paperclip.png'),
   camera: require('../assets/icons/camera.png'),
   send: require('../assets/icons/send.png'),
+  close: require('../assets/icons/close.png'),
+  logout: require('../assets/icons/logout.png'),
   // add more icons if needed
 };
 

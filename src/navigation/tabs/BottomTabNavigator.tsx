@@ -3,7 +3,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image} from 'react-native';
 import {BottomTabParamList} from '../../constants/types';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 import {COLORS} from '../../constants/colors';
 import ChatList from '../../screens/chatList/ChatList'; // ChatList as "Messages"
 import Contacts from '../../screens/contacts/Contacts';

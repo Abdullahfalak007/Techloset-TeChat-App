@@ -14,6 +14,10 @@ export const ICONS = {
   send: require('../assets/icons/send.png'),
   close: require('../assets/icons/close.png'),
   logout: require('../assets/icons/logout.png'),
+  notification: require('../assets/icons/notification.png'),
+  help: require('../assets/icons/help.png'),
+  changePassword: require('../assets/icons/changePassword.png'),
+  invite: require('../assets/icons/invite.png'),
   // add more icons if needed
 };
 

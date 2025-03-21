@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {conversationHeaderStyles} from '../../styles/conversationHeaderStyle';
 import {useConversationHeader} from '../../hooks/useConversationHeader';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 
 type Props = {
   conversationId: string;

@@ -17,7 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {MainStackParamList} from '../../constants/types';
 import {COLORS} from '../../constants/colors';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 import {createConversation} from '../../store/slices/chatSlice';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {groupContactsByInitial} from './useContacts';

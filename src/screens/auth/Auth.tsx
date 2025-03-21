@@ -3,7 +3,7 @@ import {View, Text, Image, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {authStyle} from '../../styles/authStyle';
 import {COLORS} from '../../constants/colors';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 import {useAuth} from './useAuth';
 
 const Auth: React.FC = () => {

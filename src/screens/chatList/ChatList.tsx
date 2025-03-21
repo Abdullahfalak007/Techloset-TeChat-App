@@ -18,7 +18,7 @@ import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {BottomTabParamList, MainStackParamList} from '../../constants/types';
 import {COLORS} from '../../constants/colors';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 import {useChatList} from './useChatList';
 import {deleteConversation} from '../../store/slices/chatSlice';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';

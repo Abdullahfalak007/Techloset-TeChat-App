@@ -3,7 +3,7 @@ import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {forgotPasswordStyle} from '../../styles/forgotPasswordStyle';
 import {useForgotPassword} from './useForgotPassword';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');

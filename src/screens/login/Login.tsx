@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {loginStyle} from '../../styles/loginStyle';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 import {useLogin} from './useLogin';
 
 const Login: React.FC = () => {

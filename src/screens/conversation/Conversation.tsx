@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {MainStackParamList} from '../../constants/types';
-import {ICONS} from '../../constants';
+import {ICONS} from '../../constants/icons';
 import ConversationHeader from '../../components/conversationHeader/ConversationHeader';
 import {useConversationLogic} from './useConversation';
 import {conversationStyles as styles} from '../../styles/conversationStyle';

@@ -11,4 +11,5 @@ export const COLORS = {
   tabBarActiveTintColor: 'rgba(61, 74, 122, 1)',
   redBackground: 'rgb(234, 55, 54)',
   bubbleOwnGrey: '#f2f7fb',
+  greyTextSubtitle: 'rgba(121, 124, 123, 0.39)',
 };

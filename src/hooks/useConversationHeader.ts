@@ -1,5 +1,5 @@
 import {useAppSelector} from '../hooks/useStore';
-import {ICONS} from '../constants';
+import {ICONS} from '../constants/icons';
 
 export const useConversationHeader = (conversationId: string) => {
   const conversation = useAppSelector(state =>

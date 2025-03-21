@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthStackParamList} from '../../constants/types';
 import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
-import {signInWithGoogle} from '../../store/slices/authSlice';
+import {signupWithGoogle} from '../../store/slices/authSlice';
 import Toast from 'react-native-toast-message';
 
 type AuthNavigationProp = StackNavigationProp<AuthStackParamList, 'Auth'>;
@@ -33,8 +33,8 @@ export const useAuth = () => {
   const handleForgotPassword = () => {
     navigation.navigate('ForgotPassword');
   };
-  const handleGoogleSignIn = () => {
-    dispatch(signInWithGoogle());
+  const handleGoogleSignUp = () => {
+    dispatch(signupWithGoogle());
   };
 
   // You can add handleLogin here if needed.
@@ -44,7 +44,7 @@ export const useAuth = () => {
 
   return {
     navigation,
-    handleGoogleSignIn,
+    handleGoogleSignUp,
     handleLogin,
     handleForgotPassword,
     navigateToLogin,

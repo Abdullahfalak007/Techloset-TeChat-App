@@ -16,16 +16,6 @@
 // import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
 // import {signOut} from '../../store/slices/authSlice';
 
-// // type GradientHeaderProps = {
-// //   title: string;
-// //   isContactsScreen?: boolean;
-// //   onSearchPress?: () => void;
-// //   onAddPress?: () => void;
-// //   avatarUri?: string | null;
-// //   searchActive?: boolean;
-// //   searchValue?: string;
-// //   onChangeSearch?: (text: string) => void;
-// // };
 // type GradientHeaderProps = {
 //   title: string;
 //   isContactsScreen?: boolean;
@@ -35,10 +25,9 @@
 //   searchActive?: boolean;
 //   searchValue?: string;
 //   onChangeSearch?: (text: string) => void;
-
-//   // NEW PROPS:
-//   isSettingsScreen?: boolean; // tells header to show a back arrow and hide profile image
-//   onBackPress?: () => void; // callback for back arrow
+//   // NEW PROPS for settings screen:
+//   isSettingsScreen?: boolean;
+//   onBackPress?: () => void;
 // };
 
 // const GradientHeader: React.FC<GradientHeaderProps> = ({
@@ -50,6 +39,8 @@
 //   searchActive = false,
 //   searchValue,
 //   onChangeSearch,
+//   isSettingsScreen = false,
+//   onBackPress,
 // }) => {
 //   const [dropdownVisible, setDropdownVisible] = useState(false);
 //   const dispatch = useAppDispatch();
@@ -60,6 +51,8 @@
 //     dispatch(signOut());
 //     setDropdownVisible(false);
 //   };
+
+//   // New condition for settings screen
 //   if (isSettingsScreen) {
 //     return (
 //       <LinearGradient
@@ -73,13 +66,11 @@
 //             activeOpacity={0.7}>
 //             <Image source={ICONS.backArrow} style={styles.icon} />
 //           </TouchableOpacity>
-
 //           {/* Title in the center */}
 //           <Text style={[styles.headerTitle, {flex: 1, textAlign: 'center'}]}>
 //             {title}
 //           </Text>
-
-//           {/* Just an empty View on the right (to keep spacing) */}
+//           {/* Empty view for spacing on the right */}
 //           <View style={{width: 40}} />
 //         </View>
 //       </LinearGradient>
@@ -273,20 +264,10 @@
 //     tintColor: COLORS.white,
 //     resizeMode: 'contain',
 //   },
-//   overlay: {
-//     position: 'absolute',
-//     top: 0,
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//     zIndex: 15,
-//   },
-
 //   modalOverlay: {
 //     flex: 1,
 //     backgroundColor: 'transparent',
 //   },
-
 //   avatarPlaceholder: {
 //     width: 40,
 //     height: 40,
@@ -374,7 +355,6 @@ type GradientHeaderProps = {
   searchActive?: boolean;
   searchValue?: string;
   onChangeSearch?: (text: string) => void;
-  // NEW PROPS for settings screen:
   isSettingsScreen?: boolean;
   onBackPress?: () => void;
 };
@@ -394,32 +374,31 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dispatch = useAppDispatch();
   const {user} = useAppSelector(state => state.auth);
-  const avatarSource = avatarUri ? {uri: avatarUri} : ICONS.avatar;
+
+  // Use avatarUri prop if provided; otherwise, use the user's photoURL.
+  const finalAvatarUri = avatarUri || user?.photoURL;
 
   const handleLogout = () => {
     dispatch(signOut());
     setDropdownVisible(false);
   };
 
-  // New condition for settings screen
+  // For settings screen, show back arrow instead of profile image.
   if (isSettingsScreen) {
     return (
       <LinearGradient
         colors={[COLORS.gradientStart, COLORS.gradientEnd]}
         style={styles.headerContainer}>
         <View style={styles.headerRow}>
-          {/* Back arrow on the left */}
           <TouchableOpacity
             style={styles.iconContainer}
             onPress={onBackPress}
             activeOpacity={0.7}>
             <Image source={ICONS.backArrow} style={styles.icon} />
           </TouchableOpacity>
-          {/* Title in the center */}
           <Text style={[styles.headerTitle, {flex: 1, textAlign: 'center'}]}>
             {title}
           </Text>
-          {/* Empty view for spacing on the right */}
           <View style={{width: 40}} />
         </View>
       </LinearGradient>
@@ -494,13 +473,15 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
           <TouchableOpacity
             style={styles.iconContainer}
             onPress={() => setDropdownVisible(prev => !prev)}>
-            {avatarUri ? (
-              <Image source={avatarSource} style={styles.headerAvatar} />
+            {finalAvatarUri ? (
+              <Image
+                source={{uri: finalAvatarUri}}
+                style={styles.headerAvatar}
+              />
             ) : (
               <View style={styles.avatarPlaceholder} />
             )}
           </TouchableOpacity>
-
           {dropdownVisible && (
             <Modal
               transparent
@@ -519,9 +500,9 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
                         </TouchableOpacity>
                       </View>
                       <View style={styles.profileInfo}>
-                        {avatarUri ? (
+                        {finalAvatarUri ? (
                           <Image
-                            source={{uri: avatarUri}}
+                            source={{uri: finalAvatarUri}}
                             style={styles.dropdownAvatar}
                           />
                         ) : (

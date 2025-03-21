@@ -59,8 +59,8 @@ const Conversation = () => {
     let senderAvatar = ICONS.avatar;
     let senderName = '';
     if (isOwnMessage) {
-      if (user?.base64Photo) {
-        senderAvatar = {uri: user.base64Photo};
+      if (user?.photoURL) {
+        senderAvatar = {uri: user.photoURL};
       } else if (user?.photoURL) {
         senderAvatar = {uri: user.photoURL};
       }

@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthStackParamList} from '../../constants/types';
 import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
-import {loginWithEmail, signInWithGoogle} from '../../store/slices/authSlice';
+import {loginWithEmail, loginWithGoogle} from '../../store/slices/authSlice';
 import Toast from 'react-native-toast-message';
 
 type LoginScreenNavigationProp = StackNavigationProp<
@@ -36,7 +36,7 @@ export const useLogin = () => {
   }, [error, user, navigation]);
 
   const handleGoogleSignIn = () => {
-    dispatch(signInWithGoogle());
+    dispatch(loginWithGoogle());
   };
 
   const handleLogin = (email: string, password: string) => {

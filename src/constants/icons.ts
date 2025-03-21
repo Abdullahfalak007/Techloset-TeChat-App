@@ -18,6 +18,7 @@ export const ICONS = {
   help: require('../assets/icons/help.png'),
   changePassword: require('../assets/icons/changePassword.png'),
   invite: require('../assets/icons/invite.png'),
+  edit: require('../assets/icons/edit.png'),
   // add more icons if needed
 };
 

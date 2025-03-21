@@ -7,7 +7,7 @@ import {ICONS} from '../../constants/icons';
 import {useAuth} from './useAuth';
 
 const Auth: React.FC = () => {
-  const {navigateToLogin, handleGoogleSignIn, navigateToSignup} = useAuth();
+  const {navigateToLogin, handleGoogleSignUp, navigateToSignup} = useAuth();
 
   return (
     <LinearGradient
@@ -26,7 +26,7 @@ const Auth: React.FC = () => {
         {/* Circular Google Button */}
         <TouchableOpacity
           style={authStyle.googleButton}
-          onPress={handleGoogleSignIn}>
+          onPress={handleGoogleSignUp}>
           <Image source={ICONS.google} style={authStyle.googleIcon} />
         </TouchableOpacity>
 

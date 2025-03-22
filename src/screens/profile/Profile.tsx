@@ -18,14 +18,21 @@ import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 import {setUser} from '../../store/slices/authSlice';
 import {COLORS} from '../../constants/colors';
 import {ICONS} from '../../constants/icons';
+import GradientHeader from '../../components/gradientHeader/GradientHeader';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {MainStackParamList} from '../../constants/types';
+import {useNavigation} from '@react-navigation/native';
 
-const ProfileScreen: React.FC = () => {
+const Profile: React.FC = () => {
   const {user} = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
 
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
   const [status, setStatus] = useState(user?.status || '');
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
   // On mount, if Firestore doesn't have a photoURL, update it with Firebase Auth's photoURL.
   useEffect(() => {
@@ -116,11 +123,11 @@ const ProfileScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       {/* Gradient Header */}
-      <LinearGradient
-        colors={[COLORS.gradientStart, COLORS.gradientEnd]}
-        style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Profile</Text>
-      </LinearGradient>
+      <GradientHeader
+        title="Profile"
+        isScreenWithBackArrow
+        onBackPress={() => navigation.goBack()}
+      />
 
       {/* Content Container */}
       <View style={styles.contentContainer}>
@@ -180,7 +187,7 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-export default ProfileScreen;
+export default Profile;
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: COLORS.white},
@@ -195,6 +202,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     marginTop: -20,
+    justifyContent: 'space-around',
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -203,34 +211,30 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   avatarContainer: {position: 'relative', marginBottom: 24},
-  avatar: {width: 100, height: 100, borderRadius: 50},
+  avatar: {width: 120, height: 120, borderRadius: 60},
   editIconWrapper: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
-    backgroundColor: COLORS.white,
+    bottom: 3,
+    right: 10,
+    backgroundColor: COLORS.tabBarActiveTintColor,
     width: 28,
     height: 28,
     borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.1,
-    elevation: 2,
   },
-  editIcon: {width: 16, height: 16, tintColor: COLORS.black},
+  editIcon: {width: 16, height: 16},
   infoGroup: {width: '100%', marginBottom: 16},
   label: {
     fontSize: 14,
-    color: COLORS.greyTextSubtitle,
+    color: COLORS.tabBarActiveTintColor,
     fontWeight: '500',
     marginBottom: 4,
   },
   valueInput: {
     fontSize: 16,
     color: COLORS.black,
-    fontWeight: '600',
+    fontWeight: '400',
     borderBottomWidth: 1,
     borderBottomColor: COLORS.greyTextSubtitle,
     paddingBottom: 8,
@@ -238,9 +242,9 @@ const styles = StyleSheet.create({
   updateButton: {
     marginTop: 40,
     width: '100%',
-    backgroundColor: COLORS.gradientEnd,
+    backgroundColor: COLORS.tabBarActiveTintColor,
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: 16,
     alignItems: 'center',
   },
   updateButtonText: {color: COLORS.white, fontSize: 16, fontWeight: 'bold'},

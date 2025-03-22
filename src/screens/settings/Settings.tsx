@@ -22,7 +22,7 @@ import {
   SETTINGS_MENU_ITEMS,
 } from '../../constants/appConstants';
 
-const SettingsScreen: React.FC = () => {
+const Settings: React.FC = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const {user} = useAppSelector(state => state.auth);
@@ -30,31 +30,42 @@ const SettingsScreen: React.FC = () => {
   const nameToDisplay = user?.displayName || DEFAULT_USER_NAME;
   const statusToDisplay = user?.status || DEFAULT_USER_STATUS;
 
-  const renderMenuItem = ({item}: any) => (
-    <TouchableOpacity
-      style={styles.menuItem}
-      onPress={() => console.log(item.title)}>
-      <View style={styles.menuItemLeft}>
-        <View style={styles.iconBackground}>
-          {item.icon && <Image source={item.icon} style={styles.menuIcon} />}
+  const renderMenuItem = ({item}: any) => {
+    const handlePress = () => {
+      // Check the item.id or item.title to decide where to navigate
+      if (item.id === 'changePassword') {
+        navigation.navigate('ChangePassword');
+      } else {
+        // Handle other menu items
+        console.log(item.title);
+      }
+    };
+
+    return (
+      <TouchableOpacity style={styles.menuItem} onPress={handlePress}>
+        <View style={styles.menuItemLeft}>
+          <View style={styles.iconBackground}>
+            {item.icon && <Image source={item.icon} style={styles.menuIcon} />}
+          </View>
+          <View style={{marginLeft: 12}}>
+            <Text style={styles.menuTitle}>{item.title}</Text>
+            {item.subtitle && (
+              <Text style={styles.menuSubtitle}>{item.subtitle}</Text>
+            )}
+          </View>
         </View>
-        <View style={{marginLeft: 12}}>
-          <Text style={styles.menuTitle}>{item.title}</Text>
-          {item.subtitle && (
-            <Text style={styles.menuSubtitle}>{item.subtitle}</Text>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <GradientHeader
         title="Settings"
-        isSettingsScreen
-        onBackPress={() => {}}
+        isScreenWithBackArrow
+        onBackPress={() => navigation.goBack()}
       />
+
       <View style={styles.roundedContainer}>
         <TouchableOpacity
           style={styles.userCard}
@@ -80,7 +91,7 @@ const SettingsScreen: React.FC = () => {
   );
 };
 
-export default SettingsScreen;
+export default Settings;
 
 const styles = StyleSheet.create({
   container: {
@@ -113,6 +124,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
+    marginLeft: 20,
   },
   userName: {
     fontSize: 20,

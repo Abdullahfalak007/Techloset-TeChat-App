@@ -12,6 +12,7 @@ export type MainStackParamList = {
   MainTabs: undefined; // The bottom tab navigator container
   Conversation: {conversationId: string};
   Profile: undefined; // add this
+  ChangePassword: undefined;
 };
 
 export type BottomTabParamList = {

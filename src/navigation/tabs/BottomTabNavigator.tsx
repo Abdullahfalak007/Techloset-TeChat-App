@@ -7,7 +7,7 @@ import {ICONS} from '../../constants/icons';
 import {COLORS} from '../../constants/colors';
 import ChatList from '../../screens/chatList/ChatList'; // ChatList as "Messages"
 import Contacts from '../../screens/contacts/Contacts';
-import Settings from '../../screens/settings/Settings';
+import SettingsStack from '../stack/settings/SettingsStack';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -38,7 +38,7 @@ const BottomTabNavigator = () => {
       })}>
       <Tab.Screen name="Messages" component={ChatList} />
       <Tab.Screen name="Contacts" component={Contacts} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen name="Settings" component={SettingsStack} />
     </Tab.Navigator>
   );
 };

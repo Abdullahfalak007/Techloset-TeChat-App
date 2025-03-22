@@ -1,604 +1,10 @@
-// // // src/store/slices/authSlice.ts
-// // import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-// // import auth from '@react-native-firebase/auth';
-// // import firestore from '@react-native-firebase/firestore';
-// // import {GoogleSignin} from '@react-native-google-signin/google-signin';
-// // import Toast from 'react-native-toast-message';
-
-// // /**
-// //  * Convert an image URL to a base64 string.
-// //  * Returns null if photoURL is missing or on error.
-// //  */
-// // async function fetchBase64Image(photoURL: string): Promise<string | null> {
-// //   try {
-// //     const response = await fetch(photoURL);
-// //     const blob = await response.blob();
-// //     return await new Promise((resolve, reject) => {
-// //       const reader = new FileReader();
-// //       reader.onloadend = () => resolve(reader.result as string);
-// //       reader.onerror = reject;
-// //       reader.readAsDataURL(blob);
-// //     });
-// //   } catch (error) {
-// //     console.error('Error converting photoURL to base64:', error);
-// //     return null;
-// //   }
-// // }
-
-// // /**
-// //  * Write or update the user doc in Firestore.
-// //  * Using merge: true so we don't overwrite existing fields.
-// //  */
-// // async function writeUserToFirestore(userObj: {
-// //   uid: string;
-// //   email: string; // forced to non-null
-// //   displayName: string | null;
-// //   photoURL: string | null;
-// //   base64Photo: string | null;
-// // }) {
-// //   await firestore()
-// //     .collection('users')
-// //     .doc(userObj.uid)
-// //     .set(userObj, {merge: true});
-// // }
-
-// // // Define your authentication slice shape
-// // interface AuthState {
-// //   user: any | null; // user object includes base64Photo
-// //   loading: boolean;
-// //   error: string | null;
-// //   idToken: string | null;
-// // }
-
-// // const initialState: AuthState = {
-// //   user: null,
-// //   loading: false,
-// //   error: null,
-// //   idToken: null,
-// // };
-
-// // // Async thunk for logging in with email/password
-// // export const loginWithEmail = createAsyncThunk(
-// //   'auth/loginWithEmail',
-// //   async (
-// //     {email, password}: {email: string; password: string},
-// //     {rejectWithValue},
-// //   ) => {
-// //     try {
-// //       const userCredential = await auth().signInWithEmailAndPassword(
-// //         email,
-// //         password,
-// //       );
-// //       const {
-// //         uid,
-// //         email: userEmail,
-// //         displayName,
-// //         photoURL,
-// //       } = userCredential.user;
-
-// //       const finalEmail = userEmail || ''; // fallback to empty string
-// //       let base64Photo = null;
-// //       if (photoURL) {
-// //         base64Photo = await fetchBase64Image(photoURL);
-// //       }
-
-// //       const userObj = {
-// //         uid,
-// //         email: finalEmail,
-// //         displayName,
-// //         photoURL,
-// //         base64Photo,
-// //       };
-
-// //       // Write to Firestore
-// //       await writeUserToFirestore(userObj);
-
-// //       return userObj;
-// //     } catch (error) {
-// //       if (error instanceof Error) {
-// //         return rejectWithValue(error.message);
-// //       }
-// //       return rejectWithValue('An unknown error occurred');
-// //     }
-// //   },
-// // );
-
-// // // Async thunk for signing up with email/password
-// // export const signupWithEmail = createAsyncThunk(
-// //   'auth/signupWithEmail',
-// //   async (
-// //     {email, password, name}: {email: string; password: string; name: string},
-// //     {rejectWithValue},
-// //   ) => {
-// //     try {
-// //       // Create user in Firebase Auth
-// //       const userCredential = await auth().createUserWithEmailAndPassword(
-// //         email,
-// //         password,
-// //       );
-// //       await userCredential.user.updateProfile({displayName: name});
-
-// //       const {
-// //         uid,
-// //         email: userEmail,
-// //         displayName,
-// //         photoURL,
-// //       } = userCredential.user;
-// //       const finalEmail = userEmail || '';
-// //       let base64Photo = null;
-// //       if (photoURL) {
-// //         base64Photo = await fetchBase64Image(photoURL);
-// //       }
-
-// //       const userObj = {
-// //         uid,
-// //         email: finalEmail,
-// //         displayName,
-// //         photoURL,
-// //         base64Photo,
-// //       };
-
-// //       // Write to Firestore
-// //       await firestore().collection('users').doc(uid).set(userObj);
-
-// //       return userObj;
-// //     } catch (error) {
-// //       if (error instanceof Error) {
-// //         return rejectWithValue(error.message);
-// //       }
-// //       return rejectWithValue('An unknown error occurred');
-// //     }
-// //   },
-// // );
-
-// // // Async thunk for Google Sign-In
-// // export const signInWithGoogle = createAsyncThunk(
-// //   'auth/signInWithGoogle',
-// //   async (_, {rejectWithValue}) => {
-// //     try {
-// //       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-// //       await GoogleSignin.signOut();
-// //       const signInResponse = await GoogleSignin.signIn();
-// //       const {data} = signInResponse;
-// //       if (!data?.idToken) {
-// //         throw new Error('Google Sign-In failed: idToken is null.');
-// //       }
-
-// //       const googleCredential = auth.GoogleAuthProvider.credential(data.idToken);
-// //       const response = await auth().signInWithCredential(googleCredential);
-
-// //       const {uid, email, displayName, photoURL} = response.user;
-// //       const finalEmail = email || '';
-// //       let base64Photo = null;
-// //       if (photoURL) {
-// //         base64Photo = await fetchBase64Image(photoURL);
-// //       }
-
-// //       const userObj = {
-// //         uid,
-// //         email: finalEmail,
-// //         displayName,
-// //         photoURL,
-// //         base64Photo,
-// //       };
-
-// //       // Write to Firestore
-// //       await writeUserToFirestore(userObj);
-
-// //       return userObj;
-// //     } catch (err: any) {
-// //       console.error('signInWithGoogle error:', err);
-// //       Toast.show({
-// //         type: 'error',
-// //         text1: 'Google login failed. Please try again.',
-// //         text2: err.message || 'An unknown error occurred',
-// //       });
-// //       return rejectWithValue(err.message || 'An unknown error occurred');
-// //     }
-// //   },
-// // );
-
-// // // Async thunk for password reset
-// // export const resetPassword = createAsyncThunk(
-// //   'auth/resetPassword',
-// //   async ({email}: {email: string}, {rejectWithValue}) => {
-// //     try {
-// //       await auth().sendPasswordResetEmail(email);
-// //       return email;
-// //     } catch (error) {
-// //       if (error instanceof Error) {
-// //         return rejectWithValue(error.message);
-// //       }
-// //       return rejectWithValue('An unknown error occurred');
-// //     }
-// //   },
-// // );
-
-// // const authSlice = createSlice({
-// //   name: 'auth',
-// //   initialState,
-// //   reducers: {
-// //     signOut(state) {
-// //       state.user = null;
-// //       state.error = null;
-// //     },
-// //     setUser(state, action) {
-// //       state.user = action.payload;
-// //     },
-// //   },
-// //   extraReducers: builder => {
-// //     // loginWithEmail
-// //     builder.addCase(loginWithEmail.pending, state => {
-// //       state.loading = true;
-// //       state.error = null;
-// //     });
-// //     builder.addCase(loginWithEmail.fulfilled, (state, action) => {
-// //       state.loading = false;
-// //       state.user = action.payload;
-// //     });
-// //     builder.addCase(loginWithEmail.rejected, (state, action) => {
-// //       state.loading = false;
-// //       state.error = action.payload as string;
-// //     });
-
-// //     // signupWithEmail
-// //     builder.addCase(signupWithEmail.pending, state => {
-// //       state.loading = true;
-// //       state.error = null;
-// //     });
-// //     builder.addCase(signupWithEmail.fulfilled, (state, action) => {
-// //       state.loading = false;
-// //       state.user = action.payload;
-// //     });
-// //     builder.addCase(signupWithEmail.rejected, (state, action) => {
-// //       state.loading = false;
-// //       state.error = action.payload as string;
-// //     });
-
-// //     // signInWithGoogle
-// //     builder.addCase(signInWithGoogle.pending, state => {
-// //       state.loading = true;
-// //       state.error = null;
-// //     });
-// //     builder.addCase(signInWithGoogle.fulfilled, (state, action) => {
-// //       state.loading = false;
-// //       state.user = action.payload;
-// //     });
-// //     builder.addCase(signInWithGoogle.rejected, (state, action) => {
-// //       state.loading = false;
-// //       state.error = action.payload as string;
-// //     });
-
-// //     // resetPassword
-// //     builder.addCase(resetPassword.pending, state => {
-// //       state.loading = true;
-// //       state.error = null;
-// //     });
-// //     builder.addCase(resetPassword.fulfilled, state => {
-// //       state.loading = false;
-// //     });
-// //     builder.addCase(resetPassword.rejected, (state, action) => {
-// //       state.loading = false;
-// //       state.error = action.payload as string;
-// //     });
-// //   },
-// // });
-
-// // export const {signOut, setUser} = authSlice.actions;
-// // export default authSlice.reducer;
-
-// // src/store/slices/authSlice.ts
-// import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-// import auth from '@react-native-firebase/auth';
-// import firestore from '@react-native-firebase/firestore';
-// import {GoogleSignin} from '@react-native-google-signin/google-signin';
-// import Toast from 'react-native-toast-message';
-
-// //
-// // 1) Define a User interface with a dynamic status field
-// //
-// interface User {
-//   uid: string;
-//   email: string;
-//   displayName: string | null;
-//   photoURL: string | null;
-//   base64Photo: string | null;
-//   status: string | null;
-// }
-
-// interface AuthState {
-//   user: User | null;
-//   loading: boolean;
-//   error: string | null;
-//   idToken: string | null;
-// }
-
-// const initialState: AuthState = {
-//   user: null,
-//   loading: false,
-//   error: null,
-//   idToken: null,
-// };
-
-// //
-// // 2) Utility functions
-// //
-
-// /** Convert an image URL to a base64 string. */
-// async function fetchBase64Image(photoURL: string): Promise<string | null> {
-//   try {
-//     const response = await fetch(photoURL);
-//     const blob = await response.blob();
-//     return await new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-//       reader.onloadend = () => resolve(reader.result as string);
-//       reader.onerror = reject;
-//       reader.readAsDataURL(blob);
-//     });
-//   } catch (error) {
-//     console.error('Error converting photoURL to base64:', error);
-//     return null;
-//   }
-// }
-
-// /** Write or update the user doc in Firestore (using merge to avoid overwriting fields). */
-// async function writeUserToFirestore(userObj: User) {
-//   await firestore()
-//     .collection('users')
-//     .doc(userObj.uid)
-//     .set(userObj, {merge: true});
-// }
-
-// /**
-//  * Fetch the user's status from Firestore if it exists.
-//  * If not, return a default status.
-//  */
-// async function fetchStatusFromFirestoreOrDefault(uid: string): Promise<string> {
-//   const docRef = firestore().collection('users').doc(uid);
-//   const docSnap = await docRef.get();
-//   if (docSnap.exists) {
-//     const data = docSnap.data();
-//     if (data?.status) {
-//       return data.status;
-//     }
-//   }
-//   return 'Never give up 💪'; // default status
-// }
-
-// //
-// // 3) Thunks with dynamic status handling
-// //
-
-// // Async thunk for logging in with email/password
-// export const loginWithEmail = createAsyncThunk(
-//   'auth/loginWithEmail',
-//   async (
-//     {email, password}: {email: string; password: string},
-//     {rejectWithValue},
-//   ) => {
-//     try {
-//       const userCredential = await auth().signInWithEmailAndPassword(
-//         email,
-//         password,
-//       );
-//       const {
-//         uid,
-//         email: userEmail,
-//         displayName,
-//         photoURL,
-//       } = userCredential.user;
-//       const finalEmail = userEmail || '';
-//       let base64Photo = null;
-//       if (photoURL) {
-//         base64Photo = await fetchBase64Image(photoURL);
-//       }
-//       // Retrieve status dynamically from Firestore or use default
-//       const status = await fetchStatusFromFirestoreOrDefault(uid);
-//       const userObj: User = {
-//         uid,
-//         email: finalEmail,
-//         displayName,
-//         photoURL,
-//         base64Photo,
-//         status,
-//       };
-//       await writeUserToFirestore(userObj);
-//       return userObj;
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return rejectWithValue(error.message);
-//       }
-//       return rejectWithValue('An unknown error occurred');
-//     }
-//   },
-// );
-
-// // Async thunk for signing up with email/password
-// export const signupWithEmail = createAsyncThunk(
-//   'auth/signupWithEmail',
-//   async (
-//     {email, password, name}: {email: string; password: string; name: string},
-//     {rejectWithValue},
-//   ) => {
-//     try {
-//       const userCredential = await auth().createUserWithEmailAndPassword(
-//         email,
-//         password,
-//       );
-//       await userCredential.user.updateProfile({displayName: name});
-//       const {
-//         uid,
-//         email: userEmail,
-//         displayName,
-//         photoURL,
-//       } = userCredential.user;
-//       const finalEmail = userEmail || '';
-//       let base64Photo = null;
-//       if (photoURL) {
-//         base64Photo = await fetchBase64Image(photoURL);
-//       }
-//       // For a new user, fetchStatusFromFirestoreOrDefault will return the default
-//       const status = await fetchStatusFromFirestoreOrDefault(uid);
-//       const userObj: User = {
-//         uid,
-//         email: finalEmail,
-//         displayName,
-//         photoURL,
-//         base64Photo,
-//         status,
-//       };
-//       await writeUserToFirestore(userObj);
-//       return userObj;
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return rejectWithValue(error.message);
-//       }
-//       return rejectWithValue('An unknown error occurred');
-//     }
-//   },
-// );
-
-// // Async thunk for Google Sign-In
-// export const signInWithGoogle = createAsyncThunk(
-//   'auth/signInWithGoogle',
-//   async (_, {rejectWithValue}) => {
-//     try {
-//       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-//       await GoogleSignin.signOut();
-//       const signInResponse = await GoogleSignin.signIn();
-//       const {data} = signInResponse;
-//       if (!data?.idToken) {
-//         throw new Error('Google Sign-In failed: idToken is null.');
-//       }
-//       const googleCredential = auth.GoogleAuthProvider.credential(data.idToken);
-//       const response = await auth().signInWithCredential(googleCredential);
-//       const {uid, email, displayName, photoURL} = response.user;
-//       const finalEmail = email || '';
-//       let base64Photo = null;
-//       if (photoURL) {
-//         base64Photo = await fetchBase64Image(photoURL);
-//       }
-//       const status = await fetchStatusFromFirestoreOrDefault(uid);
-//       const userObj: User = {
-//         uid,
-//         email: finalEmail,
-//         displayName,
-//         photoURL,
-//         base64Photo,
-//         status,
-//       };
-//       await writeUserToFirestore(userObj);
-//       return userObj;
-//     } catch (err: any) {
-//       console.error('signInWithGoogle error:', err);
-//       Toast.show({
-//         type: 'error',
-//         text1: 'Google login failed. Please try again.',
-//         text2: err.message || 'An unknown error occurred',
-//       });
-//       return rejectWithValue(err.message || 'An unknown error occurred');
-//     }
-//   },
-// );
-
-// // Async thunk for password reset remains unchanged
-// export const resetPassword = createAsyncThunk(
-//   'auth/resetPassword',
-//   async ({email}: {email: string}, {rejectWithValue}) => {
-//     try {
-//       await auth().sendPasswordResetEmail(email);
-//       return email;
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return rejectWithValue(error.message);
-//       }
-//       return rejectWithValue('An unknown error occurred');
-//     }
-//   },
-// );
-
-// //
-// // 4) Slice definition
-// //
-// const authSlice = createSlice({
-//   name: 'auth',
-//   initialState,
-//   reducers: {
-//     signOut(state) {
-//       state.user = null;
-//       state.error = null;
-//     },
-//     setUser(state, action) {
-//       state.user = action.payload;
-//     },
-//   },
-//   extraReducers: builder => {
-//     // loginWithEmail
-//     builder.addCase(loginWithEmail.pending, state => {
-//       state.loading = true;
-//       state.error = null;
-//     });
-//     builder.addCase(loginWithEmail.fulfilled, (state, action) => {
-//       state.loading = false;
-//       state.user = action.payload;
-//     });
-//     builder.addCase(loginWithEmail.rejected, (state, action) => {
-//       state.loading = false;
-//       state.error = action.payload as string;
-//     });
-
-//     // signupWithEmail
-//     builder.addCase(signupWithEmail.pending, state => {
-//       state.loading = true;
-//       state.error = null;
-//     });
-//     builder.addCase(signupWithEmail.fulfilled, (state, action) => {
-//       state.loading = false;
-//       state.user = action.payload;
-//     });
-//     builder.addCase(signupWithEmail.rejected, (state, action) => {
-//       state.loading = false;
-//       state.error = action.payload as string;
-//     });
-
-//     // signInWithGoogle
-//     builder.addCase(signInWithGoogle.pending, state => {
-//       state.loading = true;
-//       state.error = null;
-//     });
-//     builder.addCase(signInWithGoogle.fulfilled, (state, action) => {
-//       state.loading = false;
-//       state.user = action.payload;
-//     });
-//     builder.addCase(signInWithGoogle.rejected, (state, action) => {
-//       state.loading = false;
-//       state.error = action.payload as string;
-//     });
-
-//     // resetPassword
-//     builder.addCase(resetPassword.pending, state => {
-//       state.loading = true;
-//       state.error = null;
-//     });
-//     builder.addCase(resetPassword.fulfilled, state => {
-//       state.loading = false;
-//     });
-//     builder.addCase(resetPassword.rejected, (state, action) => {
-//       state.loading = false;
-//       state.error = action.payload as string;
-//     });
-//   },
-// });
-
-// export const {signOut, setUser} = authSlice.actions;
-// export default authSlice.reducer;
-
 // src/store/slices/authSlice.ts
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
+import {RootState} from '../store';
 
 //
 // 1) Define a User interface without base64Photo
@@ -762,44 +168,6 @@ export const signupWithEmail = createAsyncThunk(
   },
 );
 
-// // Async thunk for Google Log-In
-// export const signInWithGoogle = createAsyncThunk(
-//   'auth/signInWithGoogle',
-//   async (_, {rejectWithValue}) => {
-//     try {
-//       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-//       await GoogleSignin.signOut();
-//       const signInResponse = await GoogleSignin.signIn();
-//       const {data} = signInResponse;
-//       if (!data?.idToken) {
-//         throw new Error('Google Sign-In failed: idToken is null.');
-//       }
-//       const googleCredential = auth.GoogleAuthProvider.credential(data.idToken);
-//       const response = await auth().signInWithCredential(googleCredential);
-//       const {uid, email, displayName, photoURL} = response.user;
-//       const finalEmail = email || '';
-//       const status = await fetchStatusFromFirestoreOrDefault(uid);
-//       const userObj: User = {
-//         uid,
-//         email: finalEmail,
-//         displayName,
-//         photoURL,
-//         status,
-//       };
-//       await writeUserToFirestore(userObj);
-//       return userObj;
-//     } catch (err: any) {
-//       console.error('signInWithGoogle error:', err);
-//       Toast.show({
-//         type: 'error',
-//         text1: 'Google login failed. Please try again.',
-//         text2: err.message || 'An unknown error occurred',
-//       });
-//       return rejectWithValue(err.message || 'An unknown error occurred');
-//     }
-//   },
-// );
-
 export const loginWithGoogle = createAsyncThunk(
   'auth/loginWithGoogle',
   async (_, {rejectWithValue}) => {
@@ -939,6 +307,51 @@ export const resetPassword = createAsyncThunk(
   },
 );
 
+/**
+ * Thunk to change the user's password by re-authenticating with the current password.
+ */
+export const changeUserPassword = createAsyncThunk<
+  void, // Return type (on success)
+  {currentPassword: string; newPassword: string}, // Arg type
+  {rejectValue: string; state: RootState} // Rejection type + access to state
+>(
+  'auth/changeUserPassword',
+  async ({currentPassword, newPassword}, {rejectWithValue, getState}) => {
+    try {
+      // 1) Get user from Redux state
+      const {
+        auth: {user},
+      } = getState();
+
+      if (!user || !user.email) {
+        throw new Error('No authenticated user or missing email.');
+      }
+
+      // 2) Get the currently logged in Firebase user
+      const currentAuthUser = auth().currentUser;
+      if (!currentAuthUser) {
+        throw new Error('No current Firebase user.');
+      }
+
+      // 3) Re-authenticate the user with current password
+      const credential = auth.EmailAuthProvider.credential(
+        user.email,
+        currentPassword,
+      );
+      await currentAuthUser.reauthenticateWithCredential(credential);
+
+      // 4) Update the password
+      await currentAuthUser.updatePassword(newPassword);
+
+      // (Optional) Show a success toast here or do it in the UI after dispatch
+    } catch (error: any) {
+      // If it’s a Firebase error, e.g. "auth/wrong-password"
+      console.error('changeUserPassword error:', error);
+      return rejectWithValue(error.message || 'Failed to update password.');
+    }
+  },
+);
+
 //
 // 4) Slice definition
 //
@@ -1020,6 +433,20 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(resetPassword.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
+
+    //changeUserPassword
+    builder.addCase(changeUserPassword.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(changeUserPassword.fulfilled, (state, action) => {
+      state.loading = false;
+      // no changes to state.user needed for a password update
+    });
+    builder.addCase(changeUserPassword.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
     });

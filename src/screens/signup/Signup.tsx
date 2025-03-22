@@ -82,6 +82,7 @@ const Signup: React.FC = () => {
               style={signupStyle.input}
               placeholder="Password"
               placeholderTextColor="#999"
+              secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
@@ -94,6 +95,7 @@ const Signup: React.FC = () => {
               style={signupStyle.input}
               placeholder="Password"
               placeholderTextColor="#999"
+              secureTextEntry
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />

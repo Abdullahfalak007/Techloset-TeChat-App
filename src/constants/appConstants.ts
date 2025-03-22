@@ -2,8 +2,8 @@
 
 import {ICONS} from './icons'; // or wherever your icons are located
 
-export const DEFAULT_USER_NAME = 'Nazrul Islam';
-export const DEFAULT_USER_STATUS = 'Never give up 💪';
+export const DEFAULT_USER_NAME = 'No Username';
+export const DEFAULT_USER_STATUS = 'No Status Added Yet';
 
 // Example menu items for the Settings screen
 export const SETTINGS_MENU_ITEMS = [

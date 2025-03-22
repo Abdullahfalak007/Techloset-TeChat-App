@@ -35,25 +35,6 @@ const initialState: AuthState = {
 // 2) Utility functions
 //
 
-/** (Optional) Convert an image URL to a base64 string.
- * You can remove this if you don't need it in your auth logic.
- */
-async function fetchBase64Image(photoURL: string): Promise<string | null> {
-  try {
-    const response = await fetch(photoURL);
-    const blob = await response.blob();
-    return await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('Error converting photoURL to base64:', error);
-    return null;
-  }
-}
-
 /** Write or update the user doc in Firestore (using merge to avoid overwriting fields). */
 async function writeUserToFirestore(userObj: User) {
   await firestore()
@@ -75,7 +56,7 @@ async function fetchStatusFromFirestoreOrDefault(uid: string): Promise<string> {
       return data.status;
     }
   }
-  return 'Never give up 💪'; // default status
+  return 'No Status Added Yet.'; // default status
 }
 
 export const loginWithEmail = createAsyncThunk(
@@ -141,23 +122,28 @@ export const signupWithEmail = createAsyncThunk(
         email,
         password,
       );
+
+      // Immediately set the displayName on Firebase Auth
       await userCredential.user.updateProfile({displayName: name});
-      const {
-        uid,
-        email: userEmail,
-        displayName,
-        photoURL,
-      } = userCredential.user;
+      // Optionally reload to ensure the user object is fresh
+      // await userCredential.user.reload();
+
+      const {uid, email: userEmail, photoURL} = userCredential.user;
       const finalEmail = userEmail || '';
       const status = await fetchStatusFromFirestoreOrDefault(uid);
+
+      // Instead of destructuring displayName from userCredential, use 'name'
       const userObj: User = {
         uid,
         email: finalEmail,
-        displayName,
+        displayName: name,
         photoURL,
         status,
       };
+
+      // Write the user doc
       await writeUserToFirestore(userObj);
+
       return userObj;
     } catch (error) {
       if (error instanceof Error) {

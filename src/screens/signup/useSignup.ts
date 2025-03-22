@@ -51,12 +51,11 @@ export const useSignup = () => {
 
       if (signupWithEmail.fulfilled.match(resultAction)) {
         // Immediately sign out the newly created user
-        await auth().signOut();
 
         dispatch(signOut());
 
         // Navigate to the Login screen
-        navigation.navigate('Login');
+        navigation.replace('Login');
 
         Toast.show({
           type: 'success',

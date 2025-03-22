@@ -38,7 +38,19 @@ export const useLogin = () => {
   };
 
   const handleLogin = (email: string, password: string) => {
-    dispatch(loginWithEmail({email, password}));
+    if (!email || !password) {
+      Toast.show({
+        type: 'error',
+        text1:
+          !email && !password
+            ? 'Please enter your credentials!'
+            : !email
+            ? 'Please enter your email!'
+            : 'Please enter your password!',
+      });
+    } else {
+      dispatch(loginWithEmail({email, password}));
+    }
   };
 
   const handleForgotPassword = () => {

@@ -102,7 +102,7 @@ const ChatList: React.FC = () => {
       <View style={{flex: 1}}>
         <GradientHeader
           title="Home"
-          avatarUri={user?.photoURL ?? ICONS.avatar}
+          avatarUri={user?.photoURL}
           isContactsScreen={false}
           searchActive={searchActive}
           searchValue={searchTerm}

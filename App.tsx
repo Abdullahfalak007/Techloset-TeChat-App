@@ -24,11 +24,18 @@ const App = () => {
       scopes: ['profile', 'email', 'openid'],
     });
 
-    firestore().settings({persistence: false});
-    firestore()
-      .clearPersistence()
-      .then(() => console.log('Firestore cache cleared'))
-      .catch(err => console.error('Failed to clear Firestore cache:', err));
+    async function initFirestore() {
+      // 1. Terminate any running Firestore instance
+      await firestore().terminate();
+
+      // 2. Clear persistence
+      await firestore().clearPersistence();
+
+      // 3. Set your Firestore settings after clearing
+      await firestore().settings({persistence: false});
+    }
+
+    initFirestore();
 
     const unsubscribe = auth().onAuthStateChanged(user => {
       if (!user) {

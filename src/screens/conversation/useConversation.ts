@@ -1,5 +1,9 @@
 import {useState, useEffect, useRef} from 'react';
-import {SectionList} from 'react-native';
+import {
+  SectionList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   launchImageLibrary,
@@ -27,6 +31,22 @@ export function useConversationLogic(conversationId: string) {
   const conversation = useAppSelector(state =>
     state.chat.conversations.find(conv => conv.id === conversationId),
   );
+
+  // State to control the visibility of the scroll down button
+  const [showScrollDown, setShowScrollDown] = useState(false);
+
+  // Handler to check if the user is near the bottom of the list
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
+    // Adjust threshold as needed (here, 20 pixels from bottom)
+    const isAtBottom =
+      contentOffset.y + layoutMeasurement.height >= contentSize.height - 20;
+    setShowScrollDown(!isAtBottom);
+  };
+
+  const scrollToBottom = () => {
+    sectionListRef.current?.getScrollResponder()?.scrollToEnd({animated: true});
+  };
 
   // Group messages into sections by day.
   const sections: MessageSection[] = groupMessagesByDay(messages);
@@ -204,6 +224,9 @@ export function useConversationLogic(conversationId: string) {
     handleCamera,
     handleSend,
     formatTime,
+    handleScroll,
+    showScrollDown,
+    scrollToBottom,
   };
 }
 

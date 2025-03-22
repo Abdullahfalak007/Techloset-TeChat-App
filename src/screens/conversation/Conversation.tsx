@@ -24,8 +24,6 @@ const Conversation = () => {
   const route = useRoute<ConversationRouteProp>();
   const navigation = useNavigation();
   const {conversationId} = route.params;
-
-  // Retrieve authenticated user from the auth slice.
   const {user} = useAppSelector(state => state.auth);
 
   const {
@@ -39,9 +37,12 @@ const Conversation = () => {
     handleSend,
     formatTime,
     conversation,
+    handleScroll,
+    showScrollDown,
+    scrollToBottom,
   } = useConversationLogic(conversationId);
 
-  // RENDER A SINGLE MESSAGE
+  // Render a single message (existing logic)
   const renderMessage = ({
     item,
     index,
@@ -53,23 +54,17 @@ const Conversation = () => {
   }) => {
     const showHeader =
       index === 0 || section.data[index - 1].senderId !== item.senderId;
-    // Determine whether this message is from the current (authenticated) user.
     const isOwnMessage = item.senderId === user?.uid;
 
     let senderAvatar = ICONS.avatar;
     let senderName = '';
     if (isOwnMessage) {
-      if (user?.photoURL) {
-        senderAvatar = {uri: user.photoURL};
-      } else if (user?.photoURL) {
-        senderAvatar = {uri: user.photoURL};
-      }
+      senderAvatar = user?.photoURL ? {uri: user.photoURL} : ICONS.avatar;
       senderName = user?.displayName || 'You';
     } else {
-      // For messages not sent by the authenticated user, use conversation recipient info.
-      if (conversation?.recipientPhoto) {
-        senderAvatar = {uri: conversation.recipientPhoto};
-      }
+      senderAvatar = conversation?.recipientPhoto
+        ? {uri: conversation.recipientPhoto}
+        : ICONS.avatar;
       senderName = conversation?.recipientName || 'Unknown';
     }
 
@@ -161,7 +156,7 @@ const Conversation = () => {
     );
   };
 
-  // RENDER SECTION HEADER (for grouping messages by day)
+  // Render section header for grouping messages by day
   const renderSectionHeader = ({
     section,
   }: {
@@ -188,6 +183,7 @@ const Conversation = () => {
         conversationId={conversationId}
         onBackPress={() => navigation.goBack()}
       />
+
       <SectionList
         ref={sectionListRef}
         sections={sections}
@@ -199,21 +195,23 @@ const Conversation = () => {
         style={styles.messageList}
         showsVerticalScrollIndicator={true}
         indicatorStyle="black"
-        onScrollToIndexFailed={() => {
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        onScrollToIndexFailed={info => {
+          console.warn('Scroll to index failed: ', info);
+          // Retry scrolling after a delay.
           setTimeout(() => {
-            if (sectionListRef.current && sections.length > 0) {
-              const lastSectionIndex = sections.length - 1;
-              const lastItemIndex = sections[lastSectionIndex].data.length - 1;
-              sectionListRef.current?.scrollToLocation({
-                sectionIndex: lastSectionIndex,
-                itemIndex: lastItemIndex,
-                animated: true,
-                viewPosition: 1,
-              });
-            }
+            sectionListRef.current?.scrollToLocation({
+              sectionIndex: 0, // Adjust this if scrolling within a specific section
+              itemIndex: info.index,
+              viewPosition: 0.5, // try to center the item
+              animated: true,
+            });
           }, 500);
         }}
       />
+
+      {/* Input Bar */}
       <View style={styles.inputBar}>
         <TouchableOpacity style={styles.iconOutside} onPress={handleAttach}>
           <Image source={ICONS.paperclip} style={styles.iconOutsideImage} />
@@ -234,6 +232,15 @@ const Conversation = () => {
           <Image source={ICONS.camera} style={styles.iconOutsideImage} />
         </TouchableOpacity>
       </View>
+
+      {/* Floating Arrow Down Button */}
+      {showScrollDown && (
+        <TouchableOpacity
+          style={styles.scrollDownButton}
+          onPress={scrollToBottom}>
+          <Image source={ICONS.arrowDown} style={styles.arrowDownIcon} />
+        </TouchableOpacity>
+      )}
     </KeyboardAvoidingView>
   );
 };

@@ -130,7 +130,7 @@ export const conversationStyles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#F3F3F3',
+    backgroundColor: COLORS.lightGrey,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -143,7 +143,7 @@ export const conversationStyles = StyleSheet.create({
   inputContainer: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#F7F9FB',
+    backgroundColor: COLORS.lightGrey,
     borderRadius: 20,
     alignItems: 'center',
     marginHorizontal: 8,
@@ -165,7 +165,7 @@ export const conversationStyles = StyleSheet.create({
   sendIcon: {
     width: 20,
     height: 20,
-    tintColor: '#9FA5C0',
+    tintColor: COLORS.greyTextSubtitle,
     resizeMode: 'contain',
   },
   // Section header for grouping messages by day
@@ -179,5 +179,18 @@ export const conversationStyles = StyleSheet.create({
   sectionHeaderText: {
     color: '#999',
     fontSize: 12,
+  },
+  scrollDownButton: {
+    position: 'absolute',
+    bottom: 80, // adjust based on your input bar height
+    right: 200,
+    backgroundColor: COLORS.lightGrey,
+    padding: 8,
+    borderRadius: 20,
+  },
+  arrowDownIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#000',
   },
 });

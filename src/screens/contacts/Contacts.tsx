@@ -1,11 +1,11 @@
-// import React from 'react';
+import React from 'react';
 import {
+  SafeAreaView,
   View,
   Text,
   Image,
   TouchableOpacity,
   SectionList,
-  TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
 import {useContacts} from './useContacts';
@@ -13,6 +13,8 @@ import {contactsStyles} from '../../styles/contactsStyle';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {ICONS} from '../../constants/icons';
 import {COLORS} from '../../constants/colors';
+import {ScrollView} from 'react-native-gesture-handler';
+import UserAvatar from '../../components/userAvatar/UserAvatar';
 
 const Contacts: React.FC = () => {
   const {
@@ -25,20 +27,25 @@ const Contacts: React.FC = () => {
     showAddButtons,
     handleAddPress,
     handleAddContact,
-    dismissKeyboard,
   } = useContacts();
 
   const renderContactItem = ({item}: {item: any}) => {
-    const avatarSource = item.base64Photo
-      ? {uri: item.base64Photo}
-      : item.photoURL
-      ? {uri: item.photoURL}
-      : ICONS.avatar;
+    const avatarSource =
+      item.base64Photo &&
+      typeof item.base64Photo === 'string' &&
+      item.base64Photo.trim() !== ''
+        ? {uri: item.base64Photo}
+        : item.photoURL &&
+          typeof item.photoURL === 'string' &&
+          item.photoURL.trim() !== ''
+        ? {uri: item.photoURL}
+        : ICONS.avatar;
 
     return (
       <View style={contactsStyles.contactRow}>
         <View style={contactsStyles.leftContainer}>
-          <Image source={avatarSource} style={contactsStyles.avatar} />
+          {/* <Image source={avatarSource} style={contactsStyles.avatar} /> */}
+          <UserAvatar source={avatarSource} style={contactsStyles.avatar} />
           <View style={contactsStyles.textContainer}>
             <Text style={contactsStyles.name}>
               {item.displayName || item.email}
@@ -70,36 +77,36 @@ const Contacts: React.FC = () => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={{flex: 1}}>
-        <GradientHeader
-          title="Contacts"
-          isContactsScreen
-          searchActive={showSearchInput}
-          searchValue={searchTerm}
-          onChangeSearch={setSearchTerm}
-          onSearchPress={handleSearchPress}
-          onAddPress={handleAddPress}
-        />
+    <SafeAreaView style={{flex: 1}}>
+      {/* Fixed Header */}
+      <GradientHeader
+        title="Contacts"
+        isContactsScreen
+        searchActive={showSearchInput}
+        searchValue={searchTerm}
+        onChangeSearch={setSearchTerm}
+        onSearchPress={handleSearchPress}
+        onAddPress={handleAddPress}
+      />
+      {/* Scrollable list */}
 
-        <View style={contactsStyles.roundedContainer}>
-          {sections.length === 0 ? (
-            <Text>No other users found or all are in your chat list.</Text>
-          ) : (
-            <SectionList
-              sections={sections}
-              keyExtractor={item => item.uid}
-              renderItem={renderContactItem}
-              renderSectionHeader={renderSectionHeader}
-              ListHeaderComponent={() => (
-                <Text style={contactsStyles.myContactLabel}>My Contact</Text>
-              )}
-              stickySectionHeadersEnabled={false}
-            />
-          )}
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+      <ScrollView style={[contactsStyles.roundedContainer, {flex: 1}]}>
+        {sections.length === 0 ? (
+          <Text>No other users found or all are in your chat list.</Text>
+        ) : (
+          <SectionList
+            sections={sections}
+            keyExtractor={item => item.uid}
+            renderItem={renderContactItem}
+            renderSectionHeader={renderSectionHeader}
+            ListHeaderComponent={() => (
+              <Text style={contactsStyles.myContactLabel}>My Contact</Text>
+            )}
+            stickySectionHeadersEnabled={false}
+          />
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

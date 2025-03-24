@@ -1,11 +1,10 @@
-// src/components/gradientHeader/GradientHeader.tsx
 import React, {useState} from 'react';
 import {
   View,
   Text,
+  TouchableOpacity,
   Image,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
   TouchableWithoutFeedback,
   Modal,
@@ -15,6 +14,7 @@ import {COLORS} from '../../constants/colors';
 import {ICONS} from '../../constants/icons';
 import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
 import {signOut} from '../../store/slices/authSlice';
+import UserAvatar from '../userAvatar/UserAvatar';
 
 type GradientHeaderProps = {
   title: string;
@@ -48,26 +48,16 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
   const defaultAvatar = ICONS.avatar;
   const finalAvatarUri = avatarUri ?? user?.photoURL ?? defaultAvatar;
 
-  // Render the avatar with proper type checking
+  // Render the avatar using the UserAvatar component
   const renderAvatar = () => {
-    if (typeof finalAvatarUri === 'string') {
-      // If it's a string (remote URL), wrap it in an object with uri.
-      return (
-        <Image source={{uri: finalAvatarUri}} style={styles.headerAvatar} />
-      );
-    }
-    // Otherwise, it's a local asset (number)
-    return <Image source={finalAvatarUri} style={styles.headerAvatar} />;
+    return <UserAvatar source={finalAvatarUri} style={styles.headerAvatar} />;
   };
-  // // Use avatarUri prop if provided; otherwise, use the user's photoURL.
-  // const finalAvatarUri = avatarUri || user?.photoURL;
 
   const handleLogout = () => {
     dispatch(signOut());
     setDropdownVisible(false);
   };
 
-  // For settings screen, show back arrow instead of profile image.
   if (isScreenWithBackArrow) {
     return (
       <LinearGradient
@@ -177,29 +167,10 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
                         </TouchableOpacity>
                       </View>
                       <View style={styles.profileInfo}>
-                        {/* {finalAvatarUri ? (
-                          <Image
-                            source={{uri: finalAvatarUri}}
-                            style={styles.dropdownAvatar}
-                          />
-                        ) : (
-                          <View style={styles.dropdownAvatarPlaceholder} />
-                        )} */}
-                        {finalAvatarUri ? (
-                          typeof finalAvatarUri === 'string' ? (
-                            <Image
-                              source={{uri: finalAvatarUri}}
-                              style={styles.dropdownAvatar}
-                            />
-                          ) : (
-                            <Image
-                              source={finalAvatarUri}
-                              style={styles.dropdownAvatar}
-                            />
-                          )
-                        ) : (
-                          <View style={styles.dropdownAvatarPlaceholder} />
-                        )}
+                        <UserAvatar
+                          source={finalAvatarUri}
+                          style={styles.dropdownAvatar}
+                        />
                         <Text style={styles.userName}>
                           {user?.displayName || 'User Name'}
                         </Text>
@@ -210,7 +181,7 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
                       <TouchableOpacity
                         style={styles.logoutButton}
                         onPress={handleLogout}>
-                        <Image source={ICONS.logout} style={styles.icon} />
+                        <UserAvatar source={ICONS.logout} style={styles.icon} />
                       </TouchableOpacity>
                     </View>
                   </TouchableWithoutFeedback>
@@ -228,6 +199,7 @@ export default GradientHeader;
 
 const styles = StyleSheet.create({
   headerContainer: {
+    height: 150,
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
@@ -290,15 +262,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
-  avatarPlaceholder: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#ccc',
-  },
   dropdown: {
     position: 'absolute',
-    top: 50, // adjust this value to position the dropdown correctly
+    top: 50,
     right: 14,
     width: '90%',
     backgroundColor: COLORS.white,
@@ -322,13 +288,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginBottom: 8,
-  },
-  dropdownAvatarPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#ccc',
     marginBottom: 8,
   },
   userName: {

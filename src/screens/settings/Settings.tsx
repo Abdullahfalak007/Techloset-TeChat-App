@@ -1,9 +1,10 @@
 import React, {useCallback} from 'react';
-import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, Image} from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {useSettings} from './useSettings';
 import {settingsStyles} from '../../styles/settingsStyle';
 import {ICONS} from '../../constants/icons';
+import UserAvatar from '../../components/userAvatar/UserAvatar';
 
 const Settings: React.FC = () => {
   const {navigation, user, nameToDisplay, statusToDisplay, settingsMenuItems} =
@@ -15,7 +16,6 @@ const Settings: React.FC = () => {
         if (item.id === 'changePassword') {
           navigation.navigate('ChangePassword');
         } else {
-          // Handle other menu items
           console.log(item.title);
         }
       };
@@ -25,7 +25,10 @@ const Settings: React.FC = () => {
           <View style={settingsStyles.menuItemLeft}>
             <View style={settingsStyles.iconBackground}>
               {item.icon && (
-                <Image source={item.icon} style={settingsStyles.menuIcon} />
+                <UserAvatar
+                  source={item.icon}
+                  style={settingsStyles.menuIcon}
+                />
               )}
             </View>
             <View style={{marginLeft: 12}}>
@@ -53,14 +56,10 @@ const Settings: React.FC = () => {
         <TouchableOpacity
           style={settingsStyles.userCard}
           onPress={() => navigation.navigate('Profile')}>
-          {user?.photoURL ? (
-            <Image
-              source={{uri: user.photoURL}}
-              style={settingsStyles.userAvatar}
-            />
-          ) : (
-            <Image source={ICONS.avatar} style={settingsStyles.userAvatar} />
-          )}
+          <UserAvatar
+            source={user?.photoURL ? user.photoURL : ICONS.avatar}
+            style={settingsStyles.userAvatar}
+          />
           <View style={{marginLeft: 16}}>
             <Text style={settingsStyles.userName}>{nameToDisplay}</Text>
             <Text style={settingsStyles.userStatus}>{statusToDisplay}</Text>

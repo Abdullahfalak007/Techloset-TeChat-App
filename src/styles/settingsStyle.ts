@@ -9,16 +9,16 @@ export const settingsStyles = StyleSheet.create({
   roundedContainer: {
     flex: 1,
     backgroundColor: COLORS.white,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    marginTop: -20,
-    paddingTop: 20,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    marginTop: -20, // Overlap the gradient header.
+    padding: 16,
   },
   userCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.white,
-    marginTop: -20,
+    marginTop: -15,
     marginBottom: 20,
     padding: 16,
     borderTopLeftRadius: 30,

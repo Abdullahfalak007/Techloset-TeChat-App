@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, TextInput} from 'react-native';
+import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {useProfile} from './useProfile';
 import {profileStyles} from '../../styles/profileStyle';
 import {ICONS} from '../../constants/icons';
+import UserAvatar from '../../components/userAvatar/UserAvatar';
 
 const Profile: React.FC = () => {
   const {
@@ -32,15 +33,14 @@ const Profile: React.FC = () => {
       <View style={profileStyles.contentContainer}>
         {/* Avatar with Edit Icon */}
         <View style={profileStyles.avatarContainer}>
-          {user?.photoURL ? (
-            <Image source={{uri: user.photoURL}} style={profileStyles.avatar} />
-          ) : (
-            <Image source={ICONS.avatar} style={profileStyles.avatar} />
-          )}
+          <UserAvatar
+            source={user?.photoURL ? user.photoURL : ICONS.avatar}
+            style={profileStyles.avatar}
+          />
           <TouchableOpacity
             style={profileStyles.editIconWrapper}
             onPress={handleEditAvatar}>
-            <Image source={ICONS.edit} style={profileStyles.editIcon} />
+            <UserAvatar source={ICONS.edit} style={profileStyles.editIcon} />
           </TouchableOpacity>
         </View>
 

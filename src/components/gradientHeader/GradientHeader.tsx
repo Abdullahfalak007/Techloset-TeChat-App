@@ -45,8 +45,22 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
   const dispatch = useAppDispatch();
   const {user} = useAppSelector(state => state.auth);
 
-  // Use avatarUri prop if provided; otherwise, use the user's photoURL.
-  const finalAvatarUri = avatarUri || user?.photoURL;
+  const defaultAvatar = ICONS.avatar;
+  const finalAvatarUri = avatarUri ?? user?.photoURL ?? defaultAvatar;
+
+  // Render the avatar with proper type checking
+  const renderAvatar = () => {
+    if (typeof finalAvatarUri === 'string') {
+      // If it's a string (remote URL), wrap it in an object with uri.
+      return (
+        <Image source={{uri: finalAvatarUri}} style={styles.headerAvatar} />
+      );
+    }
+    // Otherwise, it's a local asset (number)
+    return <Image source={finalAvatarUri} style={styles.headerAvatar} />;
+  };
+  // // Use avatarUri prop if provided; otherwise, use the user's photoURL.
+  // const finalAvatarUri = avatarUri || user?.photoURL;
 
   const handleLogout = () => {
     dispatch(signOut());
@@ -143,14 +157,7 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
           <TouchableOpacity
             style={styles.iconContainer}
             onPress={() => setDropdownVisible(prev => !prev)}>
-            {finalAvatarUri ? (
-              <Image
-                source={{uri: finalAvatarUri}}
-                style={styles.headerAvatar}
-              />
-            ) : (
-              <View style={styles.avatarPlaceholder} />
-            )}
+            {renderAvatar()}
           </TouchableOpacity>
           {dropdownVisible && (
             <Modal
@@ -170,11 +177,26 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
                         </TouchableOpacity>
                       </View>
                       <View style={styles.profileInfo}>
-                        {finalAvatarUri ? (
+                        {/* {finalAvatarUri ? (
                           <Image
                             source={{uri: finalAvatarUri}}
                             style={styles.dropdownAvatar}
                           />
+                        ) : (
+                          <View style={styles.dropdownAvatarPlaceholder} />
+                        )} */}
+                        {finalAvatarUri ? (
+                          typeof finalAvatarUri === 'string' ? (
+                            <Image
+                              source={{uri: finalAvatarUri}}
+                              style={styles.dropdownAvatar}
+                            />
+                          ) : (
+                            <Image
+                              source={finalAvatarUri}
+                              style={styles.dropdownAvatar}
+                            />
+                          )
                         ) : (
                           <View style={styles.dropdownAvatarPlaceholder} />
                         )}

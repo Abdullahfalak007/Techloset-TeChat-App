@@ -20,7 +20,6 @@ export const ICONS = {
   invite: require('../assets/icons/invite.png'),
   edit: require('../assets/icons/edit.png'),
   arrowDown: require('../assets/icons/arrowDown.png'),
-  // add more icons if needed
 };
 
 export const IMAGES = {

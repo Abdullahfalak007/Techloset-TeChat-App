@@ -5,6 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import {RootState} from '../store';
+import {ICONS} from '../../constants/icons';
 
 //
 // 1) Define a User interface without base64Photo
@@ -86,6 +87,11 @@ export const loginWithEmail = createAsyncThunk(
         finalPhotoURL = docSnap.data()?.photoURL;
       }
 
+      // If there is no photoURL (either from Auth or Firestore), use the default avatar
+      if (!finalPhotoURL) {
+        finalPhotoURL = ICONS.avatar;
+      }
+
       // Retrieve status dynamically from Firestore or use default.
       const status = await fetchStatusFromFirestoreOrDefault(uid);
 
@@ -131,6 +137,9 @@ export const signupWithEmail = createAsyncThunk(
       const {uid, email: userEmail, photoURL} = userCredential.user;
       const finalEmail = userEmail || '';
       const status = await fetchStatusFromFirestoreOrDefault(uid);
+
+      // If there is no photoURL from Firebase Auth, assign the default avatar
+      const finalPhotoURL = photoURL ? photoURL : ICONS.avatar;
 
       // Instead of destructuring displayName from userCredential, use 'name'
       const userObj: User = {

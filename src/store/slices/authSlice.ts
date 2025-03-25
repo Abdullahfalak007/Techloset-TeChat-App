@@ -60,65 +60,7 @@ async function fetchStatusFromFirestoreOrDefault(uid: string): Promise<string> {
   return 'No Status Added Yet.'; // default status
 }
 
-// export const loginWithEmail = createAsyncThunk(
-//   'auth/loginWithEmail',
-//   async (
-//     {email, password}: {email: string; password: string},
-//     {rejectWithValue},
-//   ) => {
-//     try {
-//       const userCredential = await auth().signInWithEmailAndPassword(
-//         email,
-//         password,
-//       );
-//       const {
-//         uid,
-//         email: userEmail,
-//         displayName,
-//         photoURL: authPhotoURL, // from Firebase Auth
-//       } = userCredential.user;
-//       const finalEmail = userEmail || '';
-
-//       // Check Firestore to see if we already have a photoURL stored (e.g., base64 image)
-//       const docRef = firestore().collection('users').doc(uid);
-//       const docSnap = await docRef.get();
-//       let finalPhotoURL = authPhotoURL;
-//       if (docSnap.exists && docSnap.data()?.photoURL) {
-//         finalPhotoURL = docSnap.data()?.photoURL;
-//       }
-
-//       // If there is no photoURL (either from Auth or Firestore), use the default avatar
-//       if (!finalPhotoURL) {
-//         finalPhotoURL = ICONS.avatar;
-//       }
-
-//       // Retrieve status dynamically from Firestore or use default.
-//       const status = await fetchStatusFromFirestoreOrDefault(uid);
-
-//       const userObj: User = {
-//         uid,
-//         email: finalEmail,
-//         displayName,
-//         photoURL: finalPhotoURL, // use the value from Firestore if available.
-//         status,
-//       };
-
-//       // Write/merge to Firestore so that if the user never updated their avatar,
-//       // we store the Auth photoURL.
-//       await writeUserToFirestore(userObj);
-//       return userObj;
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return rejectWithValue(error.message);
-//       }
-//       return rejectWithValue('An unknown error occurred');
-//     }
-//   },
-// );
-
-// Async thunk for signing up with email/password
-
-// src/store/slices/authSlice.ts
+//  async thunk for login with email
 export const loginWithEmail = createAsyncThunk(
   'auth/loginWithEmail',
   async (
@@ -168,53 +110,7 @@ export const loginWithEmail = createAsyncThunk(
     }
   },
 );
-
-// export const signupWithEmail = createAsyncThunk(
-//   'auth/signupWithEmail',
-//   async (
-//     {email, password, name}: {email: string; password: string; name: string},
-//     {rejectWithValue},
-//   ) => {
-//     try {
-//       const userCredential = await auth().createUserWithEmailAndPassword(
-//         email,
-//         password,
-//       );
-
-//       // Immediately set the displayName on Firebase Auth
-//       await userCredential.user.updateProfile({displayName: name});
-//       // Optionally reload to ensure the user object is fresh
-//       // await userCredential.user.reload();
-
-//       const {uid, email: userEmail, photoURL} = userCredential.user;
-//       const finalEmail = userEmail || '';
-//       const status = await fetchStatusFromFirestoreOrDefault(uid);
-
-//       // If there is no photoURL from Firebase Auth, assign the default avatar
-//       const finalPhotoURL = photoURL ? photoURL : ICONS.avatar;
-
-//       // Instead of destructuring displayName from userCredential, use 'name'
-//       const userObj: User = {
-//         uid,
-//         email: finalEmail,
-//         displayName: name,
-//         photoURL,
-//         status,
-//       };
-
-//       // Write the user doc
-//       await writeUserToFirestore(userObj);
-
-//       return userObj;
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return rejectWithValue(error.message);
-//       }
-//       return rejectWithValue('An unknown error occurred');
-//     }
-//   },
-// );
-
+// async thunk for sign up with email
 export const signupWithEmail = createAsyncThunk(
   'auth/signupWithEmail',
   async (

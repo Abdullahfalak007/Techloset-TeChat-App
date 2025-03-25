@@ -7,6 +7,8 @@ import GradientButton from '../../components/gradientButton/GradientButton';
 import InputField from '../../components/inputField/InputField';
 import {useLogin} from './useLogin';
 import {ICONS} from '../../constants/icons';
+import GoogleButton from '../../components/googleButton/GoogleButton';
+import Divider from '../../components/divider/Divider';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -26,18 +28,9 @@ const Login: React.FC = () => {
               continue us
             </Text>
 
-            {/* Google Button */}
-            <TouchableOpacity
-              style={loginStyle.googleButton}
-              onPress={handleGoogleSignIn}>
-              <Image source={ICONS.google} style={loginStyle.googleIcon} />
-            </TouchableOpacity>
+            <GoogleButton onPress={handleGoogleSignIn} />
 
-            <View style={loginStyle.dividerContainer}>
-              <View style={loginStyle.divider} />
-              <Text style={loginStyle.orText}>OR</Text>
-              <View style={loginStyle.divider} />
-            </View>
+            <Divider />
 
             <InputField
               label="Your email"

@@ -24,9 +24,6 @@ export const forgotPasswordStyle = StyleSheet.create({
     textAlign: 'center',
   },
   bottomContainer: {
-    position: 'absolute',
-    left: 24,
-    right: 24,
-    bottom: 20,
+    margin: 20,
   },
 });

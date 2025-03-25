@@ -7,7 +7,7 @@ import {setUser} from '../../store/slices/authSlice';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {useImagePicker} from '../../utils/useImagePicker';
 
 export const useProfile = () => {
   const {user} = useAppSelector(state => state.auth);
@@ -19,6 +19,9 @@ export const useProfile = () => {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+
+  // Reusable image picker hook.
+  const {pickImage} = useImagePicker();
 
   // On mount, if Firestore doesn't have a photoURL, update it with Firebase Auth's photoURL.
   useEffect(() => {
@@ -66,20 +69,19 @@ export const useProfile = () => {
     }
   };
 
-  // Handle editing the avatar: pick an image, convert it to base64, and update Firestore
+  // Handle editing the avatar using the reusable image picker.
   const handleEditAvatar = async () => {
     if (!user?.uid) return;
     try {
-      const result = await launchImageLibrary({
+      const asset = await pickImage({
         mediaType: 'photo',
         includeBase64: true,
         maxWidth: 800,
         maxHeight: 800,
         quality: 0.8,
       });
-      if (result.didCancel || result.errorCode) return;
-      const asset = result.assets && result.assets[0];
-      if (asset && asset.base64 && asset.type) {
+      if (!asset) return;
+      if (asset.base64 && asset.type) {
         const base64Image = `data:${asset.type};base64,${asset.base64}`;
         await firestore().collection('users').doc(user.uid).update({
           photoURL: base64Image,

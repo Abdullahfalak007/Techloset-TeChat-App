@@ -5,13 +5,9 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {
-  launchImageLibrary,
-  launchCamera,
-  Asset,
-} from 'react-native-image-picker';
 import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 import {sendMessage, Message} from '../../store/slices/chatSlice';
+import {useImagePicker} from '../../utils/useImagePicker';
 
 export interface MessageSection {
   title: string;
@@ -21,9 +17,9 @@ export interface MessageSection {
 export function useConversationLogic(conversationId: string) {
   const {user} = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
-
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
+  const {pickImage, captureImage} = useImagePicker();
   const [loading, setLoading] = useState(true);
   const sectionListRef = useRef<SectionList<Message, {title: string}>>(null);
 
@@ -32,13 +28,12 @@ export function useConversationLogic(conversationId: string) {
     state.chat.conversations.find(conv => conv.id === conversationId),
   );
 
-  // State to control the visibility of the scroll down button
+  // State to control the visibility of the scroll down button.
   const [showScrollDown, setShowScrollDown] = useState(false);
 
-  // Handler to check if the user is near the bottom of the list
+  // Handler to check if the user is near the bottom of the list.
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
-    // Adjust threshold as needed (here, 20 pixels from bottom)
     const isAtBottom =
       contentOffset.y + layoutMeasurement.height >= contentSize.height - 20;
     setShowScrollDown(!isAtBottom);
@@ -119,57 +114,49 @@ export function useConversationLogic(conversationId: string) {
     }
   }, [messages]);
 
-  // Handle button click: Pick an image from the library.
+  // Handle button click: Pick an image from the library using the reusable hook.
   const handleAttach = async () => {
     try {
-      const result = await launchImageLibrary({
+      const asset = await pickImage({
         mediaType: 'photo',
         includeBase64: true,
         maxWidth: 800,
         maxHeight: 800,
         quality: 0.8,
       });
-      if (result.didCancel || result.errorCode) return;
-      const asset: Asset | undefined = result.assets && result.assets[0];
-      if (asset && asset.base64 && user?.uid) {
-        // Dispatch async action to send the message.
-        dispatch(
-          sendMessage({
-            conversationId,
-            senderId: user.uid,
-            text: asset.base64,
-            type: 'image',
-          }),
-        );
-      }
+      if (!asset || !asset.base64 || !user?.uid) return;
+      dispatch(
+        sendMessage({
+          conversationId,
+          senderId: user.uid,
+          text: asset.base64,
+          type: 'image',
+        }),
+      );
     } catch (err) {
       console.error('Error picking image:', err);
     }
   };
 
-  // Handle button click: Capture an image using the camera.
+  // Handle button click: Capture an image using the camera via the reusable hook.
   const handleCamera = async () => {
     try {
-      const result = await launchCamera({
+      const asset = await captureImage({
         mediaType: 'photo',
         includeBase64: true,
         maxWidth: 800,
         maxHeight: 800,
         quality: 0.8,
       });
-      if (result.didCancel || result.errorCode) return;
-      const asset: Asset | undefined = result.assets && result.assets[0];
-      if (asset && asset.base64 && user?.uid) {
-        // Dispatch async action to send the message.
-        dispatch(
-          sendMessage({
-            conversationId,
-            senderId: user.uid,
-            text: asset.base64,
-            type: 'image',
-          }),
-        );
-      }
+      if (!asset || !asset.base64 || !user?.uid) return;
+      dispatch(
+        sendMessage({
+          conversationId,
+          senderId: user.uid,
+          text: asset.base64,
+          type: 'image',
+        }),
+      );
     } catch (err) {
       console.error('Error capturing image:', err);
     }
@@ -179,7 +166,6 @@ export function useConversationLogic(conversationId: string) {
   const handleSend = async () => {
     if (!inputText.trim() || !user?.uid) return;
     try {
-      // Dispatch async action to send the message.
       await dispatch(
         sendMessage({
           conversationId,

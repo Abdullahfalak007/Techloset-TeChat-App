@@ -2,7 +2,7 @@ import React, {useRef, useEffect} from 'react';
 import {Animated, StyleSheet, View} from 'react-native';
 import {IMAGES} from '../../constants/icons';
 
-const Loader: React.FC = () => {
+const Loader = () => {
   const spinValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

@@ -1,19 +1,12 @@
 // src/screens/login/Login.tsx
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {loginStyle} from '../../styles/loginStyle';
-import {ICONS} from '../../constants/icons';
+import BackButton from '../../components/backButton/BackButton';
+import GradientButton from '../../components/gradientButton/GradientButton';
+import InputField from '../../components/inputField/InputField';
 import {useLogin} from './useLogin';
+import {ICONS} from '../../constants/icons';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -22,22 +15,10 @@ const Login: React.FC = () => {
     useLogin();
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1, backgroundColor: '#fff'}}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}>
-      <ScrollView
-        contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}
-        keyboardShouldPersistTaps="handled">
+    <View style={{flex: 1}}>
+      <View style={loginStyle.container}>
         <View>
-          {/* Back Arrow */}
-          <TouchableOpacity
-            style={loginStyle.backButton}
-            onPress={() => navigation.goBack()}>
-            <Image source={ICONS.backArrow} style={loginStyle.backArrowIcon} />
-          </TouchableOpacity>
-
-          {/* Top Container: Headings, Google Button, Divider, Inputs */}
+          <BackButton onPress={() => navigation.goBack()} />
           <View style={loginStyle.topContainer}>
             <Text style={loginStyle.heading}>Log in to Chatbox</Text>
             <Text style={loginStyle.subheading}>
@@ -52,29 +33,21 @@ const Login: React.FC = () => {
               <Image source={ICONS.google} style={loginStyle.googleIcon} />
             </TouchableOpacity>
 
-            {/* Divider with OR */}
             <View style={loginStyle.dividerContainer}>
               <View style={loginStyle.divider} />
               <Text style={loginStyle.orText}>OR</Text>
               <View style={loginStyle.divider} />
             </View>
 
-            {/* Email Field */}
-            <Text style={loginStyle.label}>Your email</Text>
-            <TextInput
-              style={loginStyle.input}
+            <InputField
+              label="Your email"
               placeholder="Your email"
-              placeholderTextColor="#999"
               value={email}
               onChangeText={setEmail}
             />
-
-            {/* Password Field */}
-            <Text style={[loginStyle.label, {marginTop: 24}]}>Password</Text>
-            <TextInput
-              style={loginStyle.input}
+            <InputField
+              label="Password"
               placeholder="Password"
-              placeholderTextColor="#999"
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -82,23 +55,17 @@ const Login: React.FC = () => {
           </View>
         </View>
 
-        {/* Bottom Container: Gradient Button & Forgot Password Link */}
         <View style={loginStyle.bottomContainer}>
-          <LinearGradient
-            colors={['#4156a5', '#010203']}
-            start={{x: 1, y: 0}}
-            end={{x: 0, y: 0}}
-            style={loginStyle.gradientButton}>
-            <TouchableOpacity onPress={() => handleLogin(email, password)}>
-              <Text style={loginStyle.buttonText}>Log in</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+          <GradientButton
+            onPress={() => handleLogin(email, password)}
+            text="Log in"
+          />
           <TouchableOpacity onPress={handleForgotPassword}>
             <Text style={loginStyle.forgotPasswordText}>Forgot password?</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+    </View>
   );
 };
 

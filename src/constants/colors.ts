@@ -2,6 +2,7 @@
 export const COLORS = {
   white: '#FFFFFF',
   transparentWhite: 'rgba(255,255,255,0.2)',
+  subHeadingGrey: 'rgba(121, 124, 123, 1)',
   greyText: 'rgba(255, 255, 255, 0.5)',
   black: '#000000',
   gradientStart: '#445386',

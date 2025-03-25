@@ -7,17 +7,6 @@ export const signupStyle = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-    zIndex: 10,
-  },
-  backArrowIcon: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.black,
-  },
   middleContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -32,42 +21,11 @@ export const signupStyle = StyleSheet.create({
   },
   subheading: {
     fontSize: 14,
-    color: COLORS.transparentWhite,
+    color: COLORS.subHeadingGrey,
     marginBottom: 24,
     textAlign: 'center',
   },
-  label: {
-    fontSize: 14,
-    color: COLORS.textColor,
-    marginBottom: 4,
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingVertical: 8,
-    fontSize: 14,
-    color: COLORS.black,
-  },
-  errorText: {
-    fontSize: 12,
-    color: 'red',
-    marginTop: 4,
-  },
   bottomContainer: {
-    position: 'absolute',
-    left: 24,
-    right: 24,
-    bottom: 20,
-  },
-  gradientButton: {
-    borderRadius: 16,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontSize: 16,
-    fontWeight: '600',
+    padding: 24,
   },
 });

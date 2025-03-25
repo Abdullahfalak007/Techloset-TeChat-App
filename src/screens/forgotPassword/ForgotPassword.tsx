@@ -1,28 +1,19 @@
+// src/screens/forgotPassword/ForgotPassword.tsx
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {View, Text} from 'react-native';
 import {forgotPasswordStyle} from '../../styles/forgotPasswordStyle';
+import BackButton from '../../components/backButton/BackButton';
+import GradientButton from '../../components/gradientButton/GradientButton';
+import InputField from '../../components/inputField/InputField';
 import {useForgotPassword} from './useForgotPassword';
-import {ICONS} from '../../constants/icons';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
-  const {handlePasswordReset, handleBackToLogin, navigation} =
-    useForgotPassword();
+  const {handlePasswordReset, navigation} = useForgotPassword();
 
   return (
     <View style={forgotPasswordStyle.container}>
-      {/* Back Arrow */}
-      <TouchableOpacity
-        style={forgotPasswordStyle.backButton}
-        onPress={() => navigation.goBack()}>
-        <Image
-          source={ICONS.backArrow}
-          style={forgotPasswordStyle.backArrowIcon}
-        />
-      </TouchableOpacity>
-
-      {/* Middle Container - vertically centered content */}
+      <BackButton onPress={() => navigation.goBack()} />
       <View style={forgotPasswordStyle.middleContainer}>
         <Text style={forgotPasswordStyle.heading}>Forgot Password</Text>
         <Text style={forgotPasswordStyle.subheading}>
@@ -30,27 +21,19 @@ const ForgotPassword: React.FC = () => {
           at your inbox!
         </Text>
 
-        <Text style={forgotPasswordStyle.label}>Your email</Text>
-        <TextInput
-          style={forgotPasswordStyle.input}
+        <InputField
+          label="Your email"
           placeholder="Your email"
-          placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
         />
       </View>
 
-      {/* Bottom Container - pinned gradient button */}
       <View style={forgotPasswordStyle.bottomContainer}>
-        <LinearGradient
-          colors={['#4156a5', '#010203']}
-          start={{x: 1, y: 0}}
-          end={{x: 0, y: 0}}
-          style={forgotPasswordStyle.gradientButton}>
-          <TouchableOpacity onPress={() => handlePasswordReset(email)}>
-            <Text style={forgotPasswordStyle.buttonText}>Reset Password</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+        <GradientButton
+          onPress={() => handlePasswordReset(email)}
+          text="Reset Password"
+        />
       </View>
     </View>
   );

@@ -23,5 +23,5 @@ export const ICONS = {
 };
 
 export const IMAGES = {
-  // e.g. background: require('../assets/images/background.png'),
+  loader: require('../assets/images/loader.gif'),
 };

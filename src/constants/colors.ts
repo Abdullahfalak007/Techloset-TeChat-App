@@ -14,4 +14,5 @@ export const COLORS = {
   bubbleOwnGrey: '#f2f7fb',
   greyTextSubtitle: 'rgba(121, 124, 123, 0.39)',
   lightGrey: '#F7F9FB',
+  loaderBackground: '#e1f5ff',
 };

@@ -210,14 +210,13 @@ const chatSlice = createSlice({
         state.error = action.payload || 'Failed to send message';
       })
       .addCase(deleteConversation.pending, state => {
-        state.loading = true;
         state.error = null;
       })
       .addCase(deleteConversation.fulfilled, state => {
-        state.loading = false;
+        // Optionally, you might remove the conversation from state here,
+        // but Firestore's onSnapshot listener should update it.
       })
       .addCase(deleteConversation.rejected, (state, action) => {
-        state.loading = false;
         state.error = action.payload || 'Failed to delete conversation';
       });
   },

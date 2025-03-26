@@ -1,16 +1,10 @@
 // src/screens/forgotPassword/useForgotPassword.ts
 import {useState} from 'react';
 import {useNavigation, CommonActions} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {AuthStackParamList} from '../../constants/types';
+import {ForgotPasswordNavigationProp} from '../../constants/types';
 import {useAppDispatch} from '../../hooks/useStore';
 import {resetPassword} from '../../store/slices/authSlice';
 import Toast from 'react-native-toast-message';
-
-type ForgotPasswordNavigationProp = StackNavigationProp<
-  AuthStackParamList,
-  'ForgotPassword'
->;
 
 export const useForgotPassword = () => {
   const navigation = useNavigation<ForgotPasswordNavigationProp>();

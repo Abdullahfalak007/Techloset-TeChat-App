@@ -2,10 +2,7 @@ import React, {FC, useRef, useEffect} from 'react';
 import {Animated, View, ViewStyle} from 'react-native';
 import {IMAGES} from '../../constants/icons';
 import {loaderStyle} from '../../styles/loaderStyle';
-
-interface LoaderProps {
-  style?: ViewStyle;
-}
+import {LoaderProps} from '../../constants/types';
 
 const Loader: FC<LoaderProps> = ({style}) => {
   const spinValue = useRef(new Animated.Value(0)).current;

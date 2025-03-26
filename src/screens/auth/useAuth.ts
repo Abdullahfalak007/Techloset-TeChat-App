@@ -1,12 +1,9 @@
 // src/screens/auth/useAuth.ts
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {AuthStackParamList} from '../../constants/types';
+import {AuthNavigationProp} from '../../constants/types';
 import {useAppDispatch} from '../../hooks/useStore';
 import {signupWithGoogle} from '../../store/slices/authSlice';
-
-type AuthNavigationProp = StackNavigationProp<AuthStackParamList, 'Auth'>;
 
 export const useAuth = () => {
   const navigation = useNavigation<AuthNavigationProp>();

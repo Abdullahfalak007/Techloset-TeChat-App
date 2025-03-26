@@ -6,8 +6,9 @@ import {
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
-import {sendMessage, Message} from '../../store/slices/chatSlice';
+import {sendMessage} from '../../store/slices/chatSlice';
 import {useImagePicker} from '../../utils/useImagePicker';
+import {Message} from '../../constants/types';
 
 export interface MessageSection {
   title: string;

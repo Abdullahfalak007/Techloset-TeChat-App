@@ -1,16 +1,10 @@
 // src/components/googleButton/GoogleButton.tsx
 import React from 'react';
-import {TouchableOpacity, Image, StyleSheet, ViewStyle} from 'react-native';
+import {TouchableOpacity, Image} from 'react-native';
 import {ICONS} from '../../constants/icons';
-import {COLORS} from '../../constants/colors';
 import Loader from '../loader/Loader';
 import {googleButtonStyle} from '../../styles/googleButtonStyle';
-
-interface GoogleButtonProps {
-  onPress: () => void;
-  style?: ViewStyle;
-  loading?: boolean; // Add loading prop
-}
+import {GoogleButtonProps} from '../../constants/types';
 
 const GoogleButton: React.FC<GoogleButtonProps> = ({
   onPress,

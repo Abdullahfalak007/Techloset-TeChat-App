@@ -2,14 +2,7 @@ import React from 'react';
 import {View, TextInput, TouchableOpacity, Image} from 'react-native';
 import {ICONS} from '../../constants/icons';
 import {inputBarStyles as styles} from '../../styles/inputBarStyle';
-
-interface InputBarProps {
-  inputText: string;
-  setInputText: (text: string) => void;
-  handleSend: () => void;
-  handleAttach: () => void;
-  handleCamera: () => void;
-}
+import {InputBarProps} from '../../constants/types';
 
 const InputBar: React.FC<InputBarProps> = ({
   inputText,

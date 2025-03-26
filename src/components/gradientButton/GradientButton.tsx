@@ -1,18 +1,10 @@
 // src/components/gradientButton/GradientButton.tsx
 import React, {FC} from 'react';
-import {TouchableOpacity, Text, ViewStyle, TextStyle} from 'react-native';
+import {TouchableOpacity, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS} from '../../constants/colors';
 import {gradientButtonStyle} from '../../styles/gradientButtonStyle';
-
-interface GradientButtonProps {
-  onPress: () => void;
-  text?: string;
-  children?: React.ReactNode;
-  containerStyle?: ViewStyle;
-  textStyle?: TextStyle;
-  colors?: string[];
-}
+import {GradientButtonProps} from '../../constants/types';
 
 const GradientButton: FC<GradientButtonProps> = ({
   onPress,

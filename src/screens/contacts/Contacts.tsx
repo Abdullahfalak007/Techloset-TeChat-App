@@ -11,7 +11,8 @@ import {useContacts} from './useContacts';
 import {contactsStyles} from '../../styles/contactsStyle';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {COLORS} from '../../constants/colors';
-import ContactItem, {Contact} from '../../components/contactItem/ContactItem';
+import ContactItem from '../../components/contactItem/ContactItem';
+import {Contact} from '../../constants/types';
 
 const Contacts: React.FC = () => {
   const {

@@ -5,20 +5,14 @@ import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 import {useNavigation, CompositeNavigationProp} from '@react-navigation/native';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {BottomTabParamList, MainStackParamList} from '../../constants/types';
+import {
+  BottomTabParamList,
+  ConversationDoc,
+  MainStackParamList,
+} from '../../constants/types';
 import {deleteConversation} from '../../store/slices/chatSlice';
 import {useConversationListener} from '../../hooks/useConversationListener';
 import Toast from 'react-native-toast-message';
-
-export type ConversationDoc = {
-  id: string;
-  lastMessage: string;
-  updatedAt: any;
-  participants: string[];
-  recipientName: string;
-  recipientPhoto?: string | null;
-  unreadCounts?: Record<string, number>;
-};
 
 export function timeAgo(updatedAt: any): string {
   if (!updatedAt) return '';

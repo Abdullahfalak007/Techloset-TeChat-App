@@ -1,31 +1,7 @@
 // src/store/slices/chatSlice.ts
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
-
-export interface Conversation {
-  id: string;
-  participants: string[];
-  lastMessage: string;
-  updatedAt: any; // Firestore timestamp
-  recipientName: string;
-  recipientPhoto?: string | null;
-  unreadCounts?: Record<string, number>; // e.g. { userUid1: 0, userUid2: 1 }
-}
-
-export interface Message {
-  id: string;
-  senderId: string;
-  text: string; // if type='image', this will hold base64
-  timestamp: any;
-  type?: 'text' | 'image'; // <--- new optional field
-  mimeType?: string; // new field to store the image MIME type
-}
-
-interface ChatState {
-  loading: boolean;
-  error: string | null;
-  conversations: Conversation[];
-}
+import {ChatState, Conversation} from '../../constants/types';
 
 const initialState: ChatState = {
   loading: false,

@@ -6,24 +6,11 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import {RootState} from '../store';
 import {ICONS} from '../../constants/icons';
+import {AuthState, User} from '../../constants/types';
 
 //
 // 1) Define a User interface without base64Photo
 //
-interface User {
-  uid: string;
-  email: string;
-  displayName: string | null;
-  photoURL: string | null; // This field will hold either a normal URL or a base64 data URI.
-  status: string | null;
-}
-
-interface AuthState {
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-  idToken: string | null;
-}
 
 const initialState: AuthState = {
   user: null,

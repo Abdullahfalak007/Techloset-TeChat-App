@@ -4,25 +4,7 @@ import {Swipeable} from 'react-native-gesture-handler';
 import Loader from '../loader/Loader';
 import {ICONS} from '../../constants/icons';
 import {chatListStyles} from '../../styles/chatlistStyle';
-
-export interface ConversationDoc {
-  id: string;
-  lastMessage: string;
-  updatedAt: any;
-  participants: string[];
-  recipientName: string;
-  recipientPhoto?: string | null;
-  unreadCounts?: Record<string, number>;
-}
-
-interface ConversationItemProps {
-  conversation: ConversationDoc;
-  userId: string;
-  onPress: () => void;
-  onDelete: () => void;
-  timeAgo: (updatedAt: any) => string;
-  isDeleting: boolean;
-}
+import {ConversationItemProps} from '../../constants/types';
 
 const ConversationItem: React.FC<ConversationItemProps> = ({
   conversation,

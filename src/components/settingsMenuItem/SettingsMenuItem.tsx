@@ -2,16 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {settingsMenuItemStyles} from '../../styles/settingsMenuItemStyles';
 import UserAvatar from '../userAvatar/UserAvatar';
-
-interface SettingsMenuItemProps {
-  item: {
-    id: string;
-    title: string;
-    subtitle?: string;
-    icon?: string;
-  };
-  onPress: () => void;
-}
+import {SettingsMenuItemProps} from '../../constants/types';
 
 const SettingsMenuItem: React.FC<SettingsMenuItemProps> = ({item, onPress}) => {
   return (

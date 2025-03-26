@@ -3,11 +3,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {COLORS} from '../../constants/colors';
 import {dividerStyle} from '../../styles/dividerStyle';
-
-interface DividerProps {
-  lineColor?: string;
-  orTextColor?: string;
-}
+import {DividerProps} from '../../constants/types';
 
 const Divider: React.FC<DividerProps> = ({
   lineColor = COLORS.subHeadingGrey,

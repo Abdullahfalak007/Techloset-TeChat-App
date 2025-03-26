@@ -1,22 +1,7 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
 import {messageItemStyles as styles} from '../../styles/messageItemStyle';
-
-interface MessageItemProps {
-  item: {
-    id: string;
-    senderId: string;
-    text: string;
-    type?: 'text' | 'image';
-    timestamp: any;
-  };
-  index: number;
-  section: {title: string; data: readonly any[]};
-  isOwnMessage: boolean;
-  senderAvatar: any;
-  senderName: string;
-  formatTime: (timestamp: any) => string;
-}
+import {MessageItemProps} from '../../constants/types';
 
 const MessageItem: React.FC<MessageItemProps> = ({
   item,

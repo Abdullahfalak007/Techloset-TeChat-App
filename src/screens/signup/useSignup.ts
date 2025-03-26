@@ -1,16 +1,10 @@
 // src/screens/signup/useSignup.ts
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {AuthStackParamList} from '../../constants/types';
+import {SignupScreenNavigationProp} from '../../constants/types';
 import {useAppDispatch} from '../../hooks/useStore';
 import {signOut, signupWithEmail} from '../../store/slices/authSlice';
 import Toast from 'react-native-toast-message';
-
-type SignupScreenNavigationProp = StackNavigationProp<
-  AuthStackParamList,
-  'Signup'
->;
 
 export const useSignup = () => {
   const navigation = useNavigation<SignupScreenNavigationProp>();

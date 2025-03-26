@@ -3,10 +3,7 @@ import {TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {ICONS} from '../../constants/icons';
 import {backButtonStyle} from '../../styles/backButtonStyle';
-
-interface BackButtonProps {
-  onPress?: () => void;
-}
+import {BackButtonProps} from '../../constants/types';
 
 const BackButton: React.FC<BackButtonProps> = ({onPress}) => {
   const navigation = useNavigation();

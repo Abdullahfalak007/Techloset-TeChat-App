@@ -4,22 +4,7 @@ import UserAvatar from '../userAvatar/UserAvatar';
 import {ICONS} from '../../constants/icons';
 import {contactsStyles} from '../../styles/contactsStyle';
 import Loader from '../loader/Loader';
-
-export interface Contact {
-  uid: string;
-  email: string;
-  displayName: string | null;
-  photoURL: string | null;
-  base64Photo: string | null;
-  status?: string;
-}
-
-interface ContactItemProps {
-  contact: Contact;
-  showAddButton: boolean;
-  isAdding: boolean;
-  onAddPress: (uid: string) => void;
-}
+import {ContactItemProps} from '../../constants/types';
 
 const ContactItem: React.FC<ContactItemProps> = ({
   contact,

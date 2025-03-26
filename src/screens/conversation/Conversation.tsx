@@ -9,8 +9,7 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
-import {MainStackParamList} from '../../constants/types';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {ICONS} from '../../constants/icons';
 import ConversationHeader from '../../components/conversationHeader/ConversationHeader';
 import {useConversationLogic} from './useConversation';
@@ -18,8 +17,7 @@ import MessageItem from '../../components/messageItem/MessageItem';
 import InputBar from '../../components/inputBar/InputBar';
 import {conversationStyle as styles} from '../../styles/conversationStyle';
 import {useAppSelector} from '../../hooks/useStore';
-
-type ConversationRouteProp = RouteProp<MainStackParamList, 'Conversation'>;
+import {ConversationRouteProp} from '../../constants/types';
 
 const Conversation: React.FC = () => {
   const route = useRoute<ConversationRouteProp>();

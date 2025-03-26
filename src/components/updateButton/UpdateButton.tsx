@@ -4,12 +4,7 @@ import GradientButton from '../gradientButton/GradientButton';
 import {updateButtonStyles as styles} from '../../styles/updateButtonStyle';
 import {COLORS} from '../../constants/colors';
 import Loader from '../loader/Loader';
-
-interface UpdateButtonProps {
-  onPress: () => void;
-  text: string;
-  loading?: boolean;
-}
+import {UpdateButtonProps} from '../../constants/types';
 
 const UpdateButton: React.FC<UpdateButtonProps> = ({
   onPress,

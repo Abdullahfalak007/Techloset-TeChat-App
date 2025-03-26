@@ -1,12 +1,8 @@
 import React from 'react';
-import {Image, ImageStyle, StyleProp} from 'react-native';
+import {Image} from 'react-native';
+import {UserAvatarProps} from '../../constants/types';
 
-type Props = {
-  source: string | number;
-  style?: StyleProp<ImageStyle>;
-};
-
-const UserAvatar: React.FC<Props> = ({source, style}) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({source, style}) => {
   // If source is a string, assume it's a remote URL; otherwise, it's a local asset.
   if (typeof source === 'string') {
     return <Image source={{uri: source}} style={style} />;

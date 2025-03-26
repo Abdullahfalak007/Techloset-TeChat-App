@@ -1,16 +1,10 @@
 // src/screens/login/useLogin.ts
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {AuthStackParamList} from '../../constants/types';
+import {LoginScreenNavigationProp} from '../../constants/types';
 import {useAppDispatch} from '../../hooks/useStore';
 import {loginWithEmail, loginWithGoogle} from '../../store/slices/authSlice';
 import Toast from 'react-native-toast-message';
-
-type LoginScreenNavigationProp = StackNavigationProp<
-  AuthStackParamList,
-  'Login'
->;
 
 export const useLogin = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();

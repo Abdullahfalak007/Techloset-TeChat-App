@@ -15,19 +15,7 @@ import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
 import {signOut} from '../../store/slices/authSlice';
 import UserAvatar from '../userAvatar/UserAvatar';
 import {gradientHeaderStyle} from '../../styles/gradientHeaderStyle';
-
-type GradientHeaderProps = {
-  title: string;
-  isContactsScreen?: boolean;
-  onSearchPress?: () => void;
-  onAddPress?: () => void;
-  avatarUri?: string | null;
-  searchActive?: boolean;
-  searchValue?: string;
-  onChangeSearch?: (text: string) => void;
-  isScreenWithBackArrow?: boolean;
-  onBackPress?: () => void;
-};
+import {GradientHeaderProps} from '../../constants/types';
 
 const GradientHeader: React.FC<GradientHeaderProps> = ({
   title,

@@ -3,11 +3,7 @@ import {View, TouchableOpacity} from 'react-native';
 import UserAvatar from '../userAvatar/UserAvatar';
 import {ICONS} from '../../constants/icons';
 import {editableAvatarStyles as styles} from '../../styles/editableAvatarStyle';
-
-interface EditableAvatarProps {
-  avatarSource: string;
-  onEdit: () => void;
-}
+import {EditableAvatarProps} from '../../constants/types';
 
 const EditableAvatar: React.FC<EditableAvatarProps> = ({
   avatarSource,

@@ -1,15 +1,7 @@
 import React from 'react';
-import {View, Text, TextInput, TextInputProps} from 'react-native';
+import {View, Text, TextInput} from 'react-native';
 import {inputFieldStyle} from '../../styles/inputFieldStyle';
-
-interface InputFieldProps extends TextInputProps {
-  label: string;
-  error?: string;
-  containerStyle?: object;
-  labelStyle?: object;
-  inputStyle?: object;
-  errorTextStyle?: object;
-}
+import {InputFieldProps} from '../../constants/types';
 
 const InputField: React.FC<InputFieldProps> = ({
   label,

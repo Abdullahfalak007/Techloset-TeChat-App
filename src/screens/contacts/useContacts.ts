@@ -6,16 +6,8 @@ import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 import {createConversation} from '../../store/slices/chatSlice';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {MainStackParamList} from '../../constants/types';
+import {Contact, MainStackParamList} from '../../constants/types';
 import Toast from 'react-native-toast-message';
-
-export interface Contact {
-  uid: string;
-  email: string;
-  displayName: string | null;
-  photoURL: string | null;
-  base64Photo: string | null;
-}
 
 export const groupContactsByInitial = (contacts: Contact[]) => {
   const sorted = [...contacts].sort((a, b) => {

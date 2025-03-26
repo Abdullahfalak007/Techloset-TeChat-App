@@ -4,13 +4,12 @@ import {conversationHeaderStyles} from '../../styles/conversationHeaderStyle';
 import {useConversationHeader} from '../../hooks/useConversationHeader';
 import {ICONS} from '../../constants/icons';
 import UserAvatar from '../userAvatar/UserAvatar';
+import {ConversationHeaderProps} from '../../constants/types';
 
-type Props = {
-  conversationId: string;
-  onBackPress?: () => void;
-};
-
-const ConversationHeader: React.FC<Props> = ({conversationId, onBackPress}) => {
+const ConversationHeader: React.FC<ConversationHeaderProps> = ({
+  conversationId,
+  onBackPress,
+}) => {
   // Use the custom hook to extract recipient info
   const {recipientName, avatarSource} = useConversationHeader(conversationId);
 

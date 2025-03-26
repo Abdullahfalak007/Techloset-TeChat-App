@@ -1,4 +1,3 @@
-// src/styles/ChangePasswordStyles.ts
 import {StyleSheet} from 'react-native';
 import {COLORS} from '../constants/colors';
 
@@ -18,7 +17,7 @@ export const changePasswordStyles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   formContainer: {
-    marginBottom: 300,
+    marginBottom: 40,
   },
   infoGroup: {
     width: '100%',
@@ -37,8 +36,10 @@ export const changePasswordStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.greyTextSubtitle,
     paddingBottom: 8,
+    minHeight: 40,
   },
   updateButton: {
+    marginTop: 40,
     width: '100%',
     backgroundColor: COLORS.tabBarActiveTintColor,
     paddingVertical: 14,

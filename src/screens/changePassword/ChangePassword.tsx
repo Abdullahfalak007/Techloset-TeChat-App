@@ -1,7 +1,8 @@
-// src/screens/changePassword/ChangePassword.tsx
 import React from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {View, KeyboardAvoidingView, Platform} from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
+import UpdateButton from '../../components/updateButton/UpdateButton';
+import InputField from '../../components/inputField/InputField';
 import {useChangePassword} from './useChangePassword';
 import {changePasswordStyles} from '../../styles/changePasswordStyle';
 
@@ -27,53 +28,51 @@ const ChangePassword: React.FC = () => {
       />
 
       <View style={changePasswordStyles.contentContainer}>
-        <View style={changePasswordStyles.formContainer}>
-          {/* Current Password */}
-          <View style={changePasswordStyles.infoGroup}>
-            <Text style={changePasswordStyles.label}>Current Password</Text>
-            <TextInput
-              style={changePasswordStyles.valueInput}
+        <View style={{flex: 1}}>
+          <View style={changePasswordStyles.formContainer}>
+            <InputField
+              label="Current Password"
               placeholder="********"
               secureTextEntry
               value={currentPassword}
               onChangeText={setCurrentPassword}
+              containerStyle={changePasswordStyles.infoGroup}
+              labelStyle={changePasswordStyles.label}
+              inputStyle={changePasswordStyles.valueInput}
             />
-          </View>
 
-          {/* New Password */}
-          <View style={changePasswordStyles.infoGroup}>
-            <Text style={changePasswordStyles.label}>New Password</Text>
-            <TextInput
-              style={changePasswordStyles.valueInput}
+            <InputField
+              label="New Password"
               placeholder="********"
               secureTextEntry
               value={newPassword}
               onChangeText={setNewPassword}
+              containerStyle={changePasswordStyles.infoGroup}
+              labelStyle={changePasswordStyles.label}
+              inputStyle={changePasswordStyles.valueInput}
             />
-          </View>
 
-          {/* Confirm New Password */}
-          <View style={changePasswordStyles.infoGroup}>
-            <Text style={changePasswordStyles.label}>Confirm New Password</Text>
-            <TextInput
-              style={changePasswordStyles.valueInput}
+            <InputField
+              label="Confirm New Password"
               placeholder="********"
               secureTextEntry
               value={confirmNewPassword}
               onChangeText={setConfirmNewPassword}
+              containerStyle={changePasswordStyles.infoGroup}
+              labelStyle={changePasswordStyles.label}
+              inputStyle={changePasswordStyles.valueInput}
             />
           </View>
         </View>
 
-        {/* Button at the bottom */}
-        <TouchableOpacity
-          style={[changePasswordStyles.updateButton, loading && {opacity: 0.5}]}
-          onPress={handleUpdatePassword}
-          disabled={loading}>
-          <Text style={changePasswordStyles.updateButtonText}>
-            Update Password
-          </Text>
-        </TouchableOpacity>
+        {/* Wrap the update button in a relative container */}
+        <View>
+          <UpdateButton
+            onPress={handleUpdatePassword}
+            text="Update Password"
+            loading={loading}
+          />
+        </View>
       </View>
     </View>
   );

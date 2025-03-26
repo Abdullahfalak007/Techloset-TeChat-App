@@ -1,4 +1,3 @@
-// src/screens/changePassword/useChangePassword.ts
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -18,11 +17,31 @@ export const useChangePassword = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   const handleUpdatePassword = async () => {
+    // Basic form validation
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      Toast.show({
+        type: 'error',
+        text1: 'Validation Error',
+        text2: 'Please fill all the fields.',
+      });
+      return;
+    }
+
     if (newPassword !== confirmNewPassword) {
       Toast.show({
         type: 'error',
         text1: 'Passwords do not match',
         text2: 'Please ensure the new passwords match.',
+      });
+      return;
+    }
+
+    // Optionally, check for minimum password length (e.g., 6 characters)
+    if (newPassword.length < 6) {
+      Toast.show({
+        type: 'error',
+        text1: 'Password too short',
+        text2: 'Password must be at least 6 characters.',
       });
       return;
     }

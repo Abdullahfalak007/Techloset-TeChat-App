@@ -10,6 +10,14 @@ export const forgotPasswordStyle = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
+
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  loader: {marginLeft: 8},
+
   heading: {
     fontSize: 24,
     fontWeight: 'bold',

@@ -10,11 +10,8 @@ import {
 import {useContacts} from './useContacts';
 import {contactsStyles} from '../../styles/contactsStyle';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
-import {ICONS} from '../../constants/icons';
 import {COLORS} from '../../constants/colors';
 import ContactItem, {Contact} from '../../components/contactItem/ContactItem';
-import UserAvatar from '../../components/userAvatar/UserAvatar';
-import Loader from '../../components/loader/Loader';
 
 const Contacts: React.FC = () => {
   const {

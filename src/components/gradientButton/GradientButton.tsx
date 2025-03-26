@@ -1,26 +1,23 @@
 // src/components/gradientButton/GradientButton.tsx
-import React from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import React, {FC} from 'react';
+import {TouchableOpacity, Text, ViewStyle, TextStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS} from '../../constants/colors';
+import {gradientButtonStyle} from '../../styles/gradientButtonStyle';
 
 interface GradientButtonProps {
   onPress: () => void;
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
   containerStyle?: ViewStyle;
   textStyle?: TextStyle;
   colors?: string[];
 }
 
-const GradientButton: React.FC<GradientButtonProps> = ({
+const GradientButton: FC<GradientButtonProps> = ({
   onPress,
   text,
+  children,
   containerStyle,
   textStyle,
   colors = [COLORS.gradientStart, COLORS.gradientEnd],
@@ -30,26 +27,20 @@ const GradientButton: React.FC<GradientButtonProps> = ({
       colors={colors}
       start={{x: 1, y: 0}}
       end={{x: 0, y: 0}}
-      style={[styles.gradientButton, containerStyle]}>
-      <TouchableOpacity onPress={onPress}>
-        <Text style={[styles.buttonText, textStyle]}>{text}</Text>
+      style={[gradientButtonStyle.gradientButton, containerStyle]}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={gradientButtonStyle.buttonContent}>
+        {children ? (
+          children
+        ) : (
+          <Text style={[gradientButtonStyle.buttonText, textStyle]}>
+            {text}
+          </Text>
+        )}
       </TouchableOpacity>
     </LinearGradient>
   );
 };
-
-const styles = StyleSheet.create({
-  gradientButton: {
-    borderRadius: 16,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
 
 export default GradientButton;

@@ -15,9 +15,13 @@ type ForgotPasswordNavigationProp = StackNavigationProp<
 export const useForgotPassword = () => {
   const navigation = useNavigation<ForgotPasswordNavigationProp>();
   const dispatch = useAppDispatch();
+
   const [email, setEmail] = useState('');
+  // Local loading for the reset password button
+  const [resetLoading, setResetLoading] = useState(false);
 
   const handlePasswordReset = async (email: string) => {
+    setResetLoading(true);
     try {
       const resultAction = await dispatch(resetPassword({email}));
       if (resetPassword.fulfilled.match(resultAction)) {
@@ -26,7 +30,6 @@ export const useForgotPassword = () => {
           text1: 'Reset Link Sent',
           text2: 'Please check your email and then log in.',
         });
-        // Wait a short moment before navigating
         setTimeout(() => {
           navigation.dispatch(
             CommonActions.reset({
@@ -34,7 +37,7 @@ export const useForgotPassword = () => {
               routes: [{name: 'Login'}],
             }),
           );
-        }, 1000); // 1 second delay (adjust if needed)
+        }, 1000);
       } else {
         Toast.show({
           type: 'error',
@@ -44,12 +47,13 @@ export const useForgotPassword = () => {
         });
       }
     } catch (error: any) {
-      console.error('Reset password error:', error);
       Toast.show({
         type: 'error',
         text1: 'Reset Failed',
         text2: error.message || 'An unknown error occurred',
       });
+    } finally {
+      setResetLoading(false);
     }
   };
 
@@ -63,5 +67,6 @@ export const useForgotPassword = () => {
     setEmail,
     handlePasswordReset,
     handleBackToLogin,
+    resetLoading,
   };
 };

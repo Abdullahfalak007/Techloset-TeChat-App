@@ -3,35 +3,32 @@ import React from 'react';
 import {TouchableOpacity, Image, StyleSheet, ViewStyle} from 'react-native';
 import {ICONS} from '../../constants/icons';
 import {COLORS} from '../../constants/colors';
+import Loader from '../loader/Loader';
+import {googleButtonStyle} from '../../styles/googleButtonStyle';
 
 interface GoogleButtonProps {
   onPress: () => void;
   style?: ViewStyle;
+  loading?: boolean; // Add loading prop
 }
 
-const GoogleButton: React.FC<GoogleButtonProps> = ({onPress, style}) => {
+const GoogleButton: React.FC<GoogleButtonProps> = ({
+  onPress,
+  style,
+  loading = false,
+}) => {
   return (
-    <TouchableOpacity style={[styles.googleButton, style]} onPress={onPress}>
-      <Image source={ICONS.google} style={styles.googleIcon} />
+    <TouchableOpacity
+      style={[googleButtonStyle.googleButton, style]}
+      onPress={onPress}
+      disabled={loading}>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Image source={ICONS.google} style={googleButtonStyle.googleIcon} />
+      )}
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  googleButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: COLORS.transparentWhite,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    marginBottom: 24,
-  },
-  googleIcon: {
-    width: 60,
-    height: 60,
-  },
-});
 
 export default GoogleButton;

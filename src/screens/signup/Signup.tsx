@@ -1,10 +1,12 @@
+// src/screens/signup/Signup.tsx
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {signupStyle} from '../../styles/signupStyle';
 import BackButton from '../../components/backButton/BackButton';
 import GradientButton from '../../components/gradientButton/GradientButton';
 import InputField from '../../components/inputField/InputField';
 import {useSignup} from './useSignup';
+import Loader from '../../components/loader/Loader';
 
 const Signup: React.FC = () => {
   const {
@@ -18,6 +20,7 @@ const Signup: React.FC = () => {
     confirmPassword,
     setConfirmPassword,
     handleSignup,
+    signupLoading,
   } = useSignup();
 
   return (
@@ -30,7 +33,6 @@ const Signup: React.FC = () => {
             Get chatting with friends and family today by signing up for our
             chat app!
           </Text>
-
           <InputField
             label="Your name"
             placeholder="Name"
@@ -59,9 +61,11 @@ const Signup: React.FC = () => {
           />
         </View>
       </View>
-
       <View style={signupStyle.bottomContainer}>
-        <GradientButton onPress={handleSignup} text="Create an account" />
+        <GradientButton onPress={handleSignup}>
+          <Text style={signupStyle.buttonText}>Create an account</Text>
+          {signupLoading && <Loader style={signupStyle.loader} />}
+        </GradientButton>
       </View>
     </View>
   );

@@ -37,6 +37,21 @@ export const authStyle = StyleSheet.create({
     width: 60,
     height: 60,
   },
+  buttonText: {
+    color: COLORS.white,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  iconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.transparentWhite,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginBottom: 24,
+  },
 
   /* Divider Container */
   dividerContainer: {

@@ -1,8 +1,13 @@
-import React, {useRef, useEffect} from 'react';
-import {Animated, StyleSheet, View} from 'react-native';
+import React, {FC, useRef, useEffect} from 'react';
+import {Animated, View, ViewStyle} from 'react-native';
 import {IMAGES} from '../../constants/icons';
+import {loaderStyle} from '../../styles/loaderStyle';
 
-const Loader = () => {
+interface LoaderProps {
+  style?: ViewStyle;
+}
+
+const Loader: FC<LoaderProps> = ({style}) => {
   const spinValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -21,30 +26,14 @@ const Loader = () => {
   });
 
   return (
-    <View style={styles.loaderContainer}>
+    <View style={[loaderStyle.loaderContainer, style]}>
       <Animated.Image
         source={IMAGES.loader}
-        style={[styles.loaderImage, {transform: [{rotate: spin}]}]}
+        style={[loaderStyle.loaderImage, {transform: [{rotate: spin}]}]}
         resizeMode="contain"
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  loaderContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    width: 40,
-    height: 40,
-    borderRadius: 40,
-  },
-  loaderImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 40,
-  },
-});
 
 export default Loader;

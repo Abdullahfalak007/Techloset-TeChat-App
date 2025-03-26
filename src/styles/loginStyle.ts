@@ -53,6 +53,24 @@ export const loginStyle = StyleSheet.create({
     color: '#666',
     marginHorizontal: 8,
   },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  loader: {
+    marginLeft: 8,
+  },
+  iconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.transparentWhite, // or '#ffffff80'
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginBottom: 24,
+  },
   bottomContainer: {
     paddingHorizontal: 24,
     marginBottom: 20,

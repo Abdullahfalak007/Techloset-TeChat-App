@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
   Modal,
@@ -15,6 +14,7 @@ import {ICONS} from '../../constants/icons';
 import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
 import {signOut} from '../../store/slices/authSlice';
 import UserAvatar from '../userAvatar/UserAvatar';
+import {gradientHeaderStyle} from '../../styles/gradientHeaderStyle';
 
 type GradientHeaderProps = {
   title: string;
@@ -50,7 +50,12 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
 
   // Render the avatar using the UserAvatar component
   const renderAvatar = () => {
-    return <UserAvatar source={finalAvatarUri} style={styles.headerAvatar} />;
+    return (
+      <UserAvatar
+        source={finalAvatarUri}
+        style={gradientHeaderStyle.headerAvatar}
+      />
+    );
   };
 
   const handleLogout = () => {
@@ -62,15 +67,19 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
     return (
       <LinearGradient
         colors={[COLORS.gradientStart, COLORS.gradientEnd]}
-        style={styles.headerContainer}>
-        <View style={styles.headerRow}>
+        style={gradientHeaderStyle.headerContainer}>
+        <View style={gradientHeaderStyle.headerRow}>
           <TouchableOpacity
-            style={styles.iconContainer}
+            style={gradientHeaderStyle.iconContainer}
             onPress={onBackPress}
             activeOpacity={0.7}>
-            <Image source={ICONS.backArrow} style={styles.icon} />
+            <Image source={ICONS.backArrow} style={gradientHeaderStyle.icon} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, {flex: 1, textAlign: 'center'}]}>
+          <Text
+            style={[
+              gradientHeaderStyle.headerTitle,
+              {flex: 1, textAlign: 'center'},
+            ]}>
             {title}
           </Text>
           <View style={{width: 40}} />
@@ -83,10 +92,10 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
     return (
       <LinearGradient
         colors={[COLORS.gradientStart, COLORS.gradientEnd]}
-        style={styles.headerContainer}>
-        <View style={styles.searchBarContainer}>
+        style={gradientHeaderStyle.headerContainer}>
+        <View style={gradientHeaderStyle.searchBarContainer}>
           <TextInput
-            style={styles.searchInputHeader}
+            style={gradientHeaderStyle.searchInputHeader}
             value={searchValue}
             onChangeText={onChangeSearch}
             placeholder={
@@ -96,9 +105,12 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
             autoFocus
           />
           <TouchableOpacity
-            style={styles.searchIconWrapper}
+            style={gradientHeaderStyle.searchIconWrapper}
             onPress={onSearchPress}>
-            <Image source={ICONS.search} style={styles.searchIcon} />
+            <Image
+              source={ICONS.search}
+              style={gradientHeaderStyle.searchIcon}
+            />
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -109,22 +121,26 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
     return (
       <LinearGradient
         colors={[COLORS.gradientStart, COLORS.gradientEnd]}
-        style={styles.headerContainer}>
-        <View style={styles.headerRow}>
+        style={gradientHeaderStyle.headerContainer}>
+        <View style={gradientHeaderStyle.headerRow}>
           <TouchableOpacity
-            style={styles.iconContainer}
+            style={gradientHeaderStyle.iconContainer}
             onPress={onSearchPress}
             activeOpacity={0.7}>
-            <Image source={ICONS.search} style={styles.icon} />
+            <Image source={ICONS.search} style={gradientHeaderStyle.icon} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, {flex: 1, textAlign: 'center'}]}>
+          <Text
+            style={[
+              gradientHeaderStyle.headerTitle,
+              {flex: 1, textAlign: 'center'},
+            ]}>
             {title}
           </Text>
           <TouchableOpacity
-            style={styles.iconContainer}
+            style={gradientHeaderStyle.iconContainer}
             onPress={onAddPress}
             activeOpacity={0.7}>
-            <Image source={ICONS.addContact} style={styles.icon} />
+            <Image source={ICONS.addContact} style={gradientHeaderStyle.icon} />
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -133,19 +149,23 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
     return (
       <LinearGradient
         colors={[COLORS.gradientStart, COLORS.gradientEnd]}
-        style={styles.headerContainer}>
-        <View style={styles.headerRow}>
+        style={gradientHeaderStyle.headerContainer}>
+        <View style={gradientHeaderStyle.headerRow}>
           <TouchableOpacity
-            style={styles.iconContainer}
+            style={gradientHeaderStyle.iconContainer}
             onPress={onSearchPress}
             activeOpacity={0.7}>
-            <Image source={ICONS.search} style={styles.icon} />
+            <Image source={ICONS.search} style={gradientHeaderStyle.icon} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, {flex: 1, textAlign: 'center'}]}>
+          <Text
+            style={[
+              gradientHeaderStyle.headerTitle,
+              {flex: 1, textAlign: 'center'},
+            ]}>
             {title}
           </Text>
           <TouchableOpacity
-            style={styles.iconContainer}
+            style={gradientHeaderStyle.iconContainer}
             onPress={() => setDropdownVisible(prev => !prev)}>
             {renderAvatar()}
           </TouchableOpacity>
@@ -157,31 +177,37 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
               onRequestClose={() => setDropdownVisible(false)}>
               <TouchableWithoutFeedback
                 onPress={() => setDropdownVisible(false)}>
-                <View style={styles.modalOverlay}>
+                <View style={gradientHeaderStyle.modalOverlay}>
                   <TouchableWithoutFeedback>
-                    <View style={styles.dropdown}>
-                      <View style={styles.dropdownHeader}>
+                    <View style={gradientHeaderStyle.dropdown}>
+                      <View style={gradientHeaderStyle.dropdownHeader}>
                         <TouchableOpacity
                           onPress={() => setDropdownVisible(false)}>
-                          <Image source={ICONS.close} style={styles.icon} />
+                          <Image
+                            source={ICONS.close}
+                            style={gradientHeaderStyle.icon}
+                          />
                         </TouchableOpacity>
                       </View>
-                      <View style={styles.profileInfo}>
+                      <View style={gradientHeaderStyle.profileInfo}>
                         <UserAvatar
                           source={finalAvatarUri}
-                          style={styles.dropdownAvatar}
+                          style={gradientHeaderStyle.dropdownAvatar}
                         />
-                        <Text style={styles.userName}>
+                        <Text style={gradientHeaderStyle.userName}>
                           {user?.displayName || 'User Name'}
                         </Text>
-                        <Text style={styles.userEmail}>
+                        <Text style={gradientHeaderStyle.userEmail}>
                           {user?.email || 'user@example.com'}
                         </Text>
                       </View>
                       <TouchableOpacity
-                        style={styles.logoutButton}
+                        style={gradientHeaderStyle.logoutButton}
                         onPress={handleLogout}>
-                        <UserAvatar source={ICONS.logout} style={styles.icon} />
+                        <UserAvatar
+                          source={ICONS.logout}
+                          style={gradientHeaderStyle.icon}
+                        />
                       </TouchableOpacity>
                     </View>
                   </TouchableWithoutFeedback>
@@ -196,115 +222,3 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
 };
 
 export default GradientHeader;
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    height: 150,
-    paddingHorizontal: 20,
-    paddingVertical: 40,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    color: COLORS.white,
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  headerAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.transparentWhite,
-    borderRadius: 20,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.black,
-    resizeMode: 'contain',
-  },
-  searchBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.transparentWhite,
-    borderRadius: 12,
-    paddingHorizontal: 10,
-  },
-  searchInputHeader: {
-    flex: 1,
-    height: 40,
-    color: COLORS.white,
-    fontSize: 16,
-  },
-  searchIconWrapper: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 5,
-  },
-  searchIcon: {
-    width: 20,
-    height: 20,
-    tintColor: COLORS.white,
-    resizeMode: 'contain',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  dropdown: {
-    position: 'absolute',
-    top: 50,
-    right: 14,
-    width: '90%',
-    backgroundColor: COLORS.white,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-    padding: 16,
-    zIndex: 20,
-  },
-  dropdownHeader: {
-    alignItems: 'flex-end',
-  },
-  profileInfo: {
-    alignItems: 'center',
-    marginVertical: 16,
-  },
-  dropdownAvatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: 8,
-  },
-  userName: {
-    color: COLORS.black,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  userEmail: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  logoutButton: {
-    alignSelf: 'center',
-    padding: 8,
-  },
-});

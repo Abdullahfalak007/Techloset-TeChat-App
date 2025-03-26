@@ -25,6 +25,12 @@ export const signupStyle = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'center',
   },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  loader: {marginLeft: 8},
   bottomContainer: {
     padding: 24,
   },

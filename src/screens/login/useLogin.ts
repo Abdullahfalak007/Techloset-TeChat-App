@@ -1,9 +1,9 @@
 // src/screens/login/useLogin.ts
-import {useEffect} from 'react';
+import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthStackParamList} from '../../constants/types';
-import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
+import {useAppDispatch} from '../../hooks/useStore';
 import {loginWithEmail, loginWithGoogle} from '../../store/slices/authSlice';
 import Toast from 'react-native-toast-message';
 
@@ -15,29 +15,23 @@ type LoginScreenNavigationProp = StackNavigationProp<
 export const useLogin = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();
   const dispatch = useAppDispatch();
-  const {user, error} = useAppSelector(state => state.auth);
 
-  useEffect(() => {
-    if (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Login Failed',
-        text2: error,
-      });
-    }
-    if (user) {
-      Toast.show({
-        type: 'success',
-        text1: 'Login Successful',
-      });
-    }
-  }, [error, user, navigation]);
+  // Local states for each button
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleGoogleSignIn = () => {
-    dispatch(loginWithGoogle());
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    try {
+      await dispatch(loginWithGoogle());
+    } catch (error) {
+      // Thunk handles error via Toast
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
-  const handleLogin = (email: string, password: string) => {
+  const handleLogin = async (email: string, password: string) => {
     if (!email || !password) {
       Toast.show({
         type: 'error',
@@ -48,8 +42,15 @@ export const useLogin = () => {
             ? 'Please enter your email!'
             : 'Please enter your password!',
       });
-    } else {
-      dispatch(loginWithEmail({email, password}));
+      return;
+    }
+    setLoginLoading(true);
+    try {
+      await dispatch(loginWithEmail({email, password}));
+    } catch (error) {
+      // Thunk handles error via Toast
+    } finally {
+      setLoginLoading(false);
     }
   };
 
@@ -62,5 +63,7 @@ export const useLogin = () => {
     handleGoogleSignIn,
     handleLogin,
     handleForgotPassword,
+    loginLoading,
+    googleLoading,
   };
 };

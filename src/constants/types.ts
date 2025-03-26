@@ -1,4 +1,3 @@
-// src/constants/types.ts
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {

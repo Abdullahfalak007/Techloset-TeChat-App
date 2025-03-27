@@ -32,7 +32,7 @@ export const gradientHeaderStyle = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
-    tintColor: COLORS.white,
+    tintColor: COLORS.black,
     resizeMode: 'contain',
   },
   searchBarContainer: {

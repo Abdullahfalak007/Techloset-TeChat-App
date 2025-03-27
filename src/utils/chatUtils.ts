@@ -1,5 +1,4 @@
 // src/utils/chatUtils.ts
-
 import {Message, MessageSection} from '../constants/types';
 export function groupMessagesByDay(messages: Message[]): MessageSection[] {
   // Group messages by their date (using toDateString to ignore time)

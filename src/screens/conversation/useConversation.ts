@@ -9,6 +9,7 @@ import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 import {sendMessage} from '../../store/slices/chatSlice';
 import {useImagePicker} from '../../utils/useImagePicker';
 import {Message} from '../../constants/types';
+import {groupMessagesByDay} from '../../utils/chatUtils';
 
 export interface MessageSection {
   title: string;
@@ -215,30 +216,4 @@ export function useConversationLogic(conversationId: string) {
     showScrollDown,
     scrollToBottom,
   };
-}
-
-// Helper: Group messages by day for SectionList rendering.
-export function groupMessagesByDay(messages: Message[]): MessageSection[] {
-  const groups: {[key: string]: Message[]} = {};
-  messages.forEach(message => {
-    const date =
-      message.timestamp && typeof message.timestamp.toDate === 'function'
-        ? message.timestamp.toDate()
-        : new Date(message.timestamp);
-    const dateString = date.toDateString();
-    if (!groups[dateString]) {
-      groups[dateString] = [];
-    }
-    groups[dateString].push(message);
-  });
-
-  const sections: MessageSection[] = Object.keys(groups).map(dateString => ({
-    title: dateString,
-    data: groups[dateString],
-  }));
-
-  sections.sort(
-    (a, b) => new Date(a.title).getTime() - new Date(b.title).getTime(),
-  );
-  return sections;
 }

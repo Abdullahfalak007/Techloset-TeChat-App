@@ -42,6 +42,6 @@ export const conversationHeaderStyles = StyleSheet.create({
   },
   status: {
     fontSize: 12,
-    color: COLORS.greyText,
+    color: COLORS.black,
   },
 });

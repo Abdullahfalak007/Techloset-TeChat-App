@@ -1,7 +1,8 @@
 import {useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {useAppDispatch} from './useStore';
-import {setConversations, Conversation} from '../store/slices/chatSlice';
+import {setConversations} from '../store/slices/chatSlice';
+import {Conversation} from '../constants/types';
 
 export const useConversationListener = (uid: string | undefined) => {
   const dispatch = useAppDispatch();

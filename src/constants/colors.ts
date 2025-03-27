@@ -8,6 +8,7 @@ export const COLORS = {
   gradientStart: '#445386',
   gradientEnd: '#2c1753',
   signupButtonBackground: 'rgba(255, 255, 255, 0.37)',
+  darkBlue: 'rgb(35, 68, 189)',
   textColor: 'rgba(61, 74, 122, 1)',
   tabBarActiveTintColor: 'rgba(61, 74, 122, 1)',
   redBackground: 'rgb(234, 55, 54)',

@@ -78,30 +78,42 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
 
   if (searchActive) {
     return (
-      <LinearGradient
-        colors={[COLORS.gradientStart, COLORS.gradientEnd]}
-        style={gradientHeaderStyle.headerContainer}>
-        <View style={gradientHeaderStyle.searchBarContainer}>
-          <TextInput
-            style={gradientHeaderStyle.searchInputHeader}
-            value={searchValue}
-            onChangeText={onChangeSearch}
-            placeholder={
-              isContactsScreen ? 'Search contacts...' : 'Search messages...'
-            }
-            placeholderTextColor="rgba(255,255,255,0.7)"
-            autoFocus
-          />
-          <TouchableOpacity
-            style={gradientHeaderStyle.searchIconWrapper}
-            onPress={onSearchPress}>
-            <Image
-              source={ICONS.search}
-              style={gradientHeaderStyle.searchIcon}
-            />
-          </TouchableOpacity>
-        </View>
-      </LinearGradient>
+      <TouchableWithoutFeedback onPress={onSearchPress}>
+        <LinearGradient
+          colors={[COLORS.gradientStart, COLORS.gradientEnd]}
+          style={gradientHeaderStyle.headerContainer}>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              /* stops propagation */
+            }}>
+            <View style={gradientHeaderStyle.searchBarContainer}>
+              <TextInput
+                style={gradientHeaderStyle.searchInputHeader}
+                value={searchValue}
+                onChangeText={onChangeSearch}
+                placeholder={
+                  isContactsScreen ? 'Search contacts...' : 'Search messages...'
+                }
+                placeholderTextColor="rgba(255,255,255,0.7)"
+                autoFocus
+                onBlur={() => {
+                  if (searchActive && onSearchPress) {
+                    onSearchPress();
+                  }
+                }}
+              />
+              <TouchableOpacity
+                style={gradientHeaderStyle.searchIconWrapper}
+                onPress={onSearchPress}>
+                <Image
+                  source={ICONS.search}
+                  style={gradientHeaderStyle.searchIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
+        </LinearGradient>
+      </TouchableWithoutFeedback>
     );
   }
 

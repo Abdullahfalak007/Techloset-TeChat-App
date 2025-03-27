@@ -33,7 +33,7 @@ const BottomTabNavigator = () => {
             />
           );
         },
-        tabBarActiveTintColor: COLORS.textColor,
+        tabBarActiveTintColor: COLORS.darkBlue,
         tabBarInactiveTintColor: COLORS.black,
       })}>
       <Tab.Screen name="Messages" component={ChatList} />

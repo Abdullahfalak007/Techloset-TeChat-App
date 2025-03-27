@@ -206,7 +206,7 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
                         onPress={handleLogout}>
                         <UserAvatar
                           source={ICONS.logout}
-                          style={gradientHeaderStyle.icon}
+                          style={gradientHeaderStyle.logoutIcon}
                         />
                       </TouchableOpacity>
                     </View>

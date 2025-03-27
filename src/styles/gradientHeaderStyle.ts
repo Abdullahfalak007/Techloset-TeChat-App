@@ -32,6 +32,12 @@ export const gradientHeaderStyle = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
+    tintColor: COLORS.white,
+    resizeMode: 'contain',
+  },
+  logoutIcon: {
+    width: 24,
+    height: 24,
     tintColor: COLORS.black,
     resizeMode: 'contain',
   },

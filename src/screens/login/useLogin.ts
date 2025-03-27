@@ -1,4 +1,3 @@
-// src/screens/login/useLogin.ts
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {LoginScreenNavigationProp} from '../../constants/types';
@@ -26,6 +25,7 @@ export const useLogin = () => {
   };
 
   const handleLogin = async (email: string, password: string) => {
+    // Basic validation: fields should not be empty
     if (!email || !password) {
       Toast.show({
         type: 'error',
@@ -38,11 +38,49 @@ export const useLogin = () => {
       });
       return;
     }
+
+    // Validate email format using a simple regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid Email',
+        text2: 'Please enter a valid email address.',
+      });
+      return;
+    }
+
+    // Validate password length (for example, at least 6 characters)
+    if (password.length < 6) {
+      Toast.show({
+        type: 'error',
+        text1: 'Password Too Short',
+        text2: 'Password must be at least 6 characters long.',
+      });
+      return;
+    }
+
     setLoginLoading(true);
     try {
-      await dispatch(loginWithEmail({email, password}));
-    } catch (error) {
-      // Thunk handles error via Toast
+      await dispatch(loginWithEmail({email, password})).unwrap();
+    } catch (error: any) {
+      if (
+        error &&
+        typeof error === 'string' &&
+        error.toLowerCase().includes('wrong-password')
+      ) {
+        Toast.show({
+          type: 'error',
+          text1: 'Wrong Password',
+          text2: 'Your password is incorrect.',
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Login Failed',
+          text2: error || 'An unknown error occurred.',
+        });
+      }
     } finally {
       setLoginLoading(false);
     }

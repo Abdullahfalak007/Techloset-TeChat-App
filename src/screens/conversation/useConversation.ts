@@ -8,13 +8,8 @@ import firestore from '@react-native-firebase/firestore';
 import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
 import {sendMessage} from '../../store/slices/chatSlice';
 import {useImagePicker} from '../../utils/useImagePicker';
-import {Message} from '../../constants/types';
+import {Message, MessageSection} from '../../constants/types';
 import {groupMessagesByDay} from '../../utils/chatUtils';
-
-export interface MessageSection {
-  title: string;
-  data: Message[];
-}
 
 export function useConversationLogic(conversationId: string) {
   const {user} = useAppSelector(state => state.auth);
@@ -102,18 +97,12 @@ export function useConversationLogic(conversationId: string) {
     resetUnreadIfNeeded();
   }, [conversationId, user?.uid]);
 
-  // Auto-scroll to the latest message when messages update.
   useEffect(() => {
-    if (sectionListRef.current && sections.length > 0) {
-      const lastSectionIndex = sections.length - 1;
-      const lastItemIndex = sections[lastSectionIndex].data.length - 1;
-      sectionListRef.current.scrollToLocation({
-        sectionIndex: lastSectionIndex,
-        itemIndex: lastItemIndex,
-        animated: true,
-        viewPosition: 0,
-      });
-    }
+    setTimeout(() => {
+      sectionListRef.current
+        ?.getScrollResponder()
+        ?.scrollToEnd({animated: true});
+    }, 300);
   }, [messages]);
 
   // Handle button click: Pick an image from the library using the reusable hook.

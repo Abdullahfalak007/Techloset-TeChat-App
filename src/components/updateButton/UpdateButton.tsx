@@ -18,7 +18,7 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({
       textStyle={styles.buttonText}
       colors={[COLORS.tabBarActiveTintColor, COLORS.tabBarActiveTintColor]}>
       <Text style={styles.buttonText}>{text}</Text>
-      {loading && <Loader style={{marginRight: 8}} />}
+      {loading && <Loader style={{marginLeft: 10}} />}
     </GradientButton>
   );
 };

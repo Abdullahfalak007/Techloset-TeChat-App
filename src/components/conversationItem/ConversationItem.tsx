@@ -19,7 +19,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
 
   const renderRightActions = () => {
     if (isDeleting) {
-      return <Loader />;
+      return <Loader style={{marginRight: 10}} />;
     }
     return (
       <TouchableOpacity

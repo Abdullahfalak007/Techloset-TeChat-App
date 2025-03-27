@@ -117,9 +117,19 @@ const Conversation: React.FC = () => {
         indicatorStyle="black"
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        onContentSizeChange={() => {
+          // Immediately scroll to the bottom when content changes
+          sectionListRef.current
+            ?.getScrollResponder()
+            ?.scrollToEnd({animated: false});
+        }}
+        onLayout={() => {
+          // Ensure that on initial layout, we are scrolled to the bottom
+          sectionListRef.current
+            ?.getScrollResponder()
+            ?.scrollToEnd({animated: false});
+        }}
         onScrollToIndexFailed={info => {
-          console.warn('Scroll to index failed: ', info);
-          // Retry scrolling after a delay.
           setTimeout(() => {
             sectionListRef.current?.scrollToLocation({
               sectionIndex: 0,

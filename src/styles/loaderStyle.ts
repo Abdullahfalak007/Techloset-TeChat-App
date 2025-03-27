@@ -5,13 +5,13 @@ export const loaderStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    width: 40,
-    height: 40,
-    borderRadius: 40,
+    width: 20,
+    height: 20,
+    borderRadius: 20,
   },
   loaderImage: {
     width: 40,
     height: 40,
-    borderRadius: 40,
+    borderRadius: 20,
   },
 });

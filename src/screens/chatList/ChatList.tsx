@@ -5,12 +5,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  Text,
 } from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
-import {useChatList, ConversationDoc, timeAgo} from './useChatList';
+import {useChatList, timeAgo} from './useChatList';
 import {chatListStyles} from '../../styles/chatlistStyle';
 import {COLORS} from '../../constants/colors';
 import ConversationItem from '../../components/conversationItem/ConversationItem';
+import {ConversationDoc} from '../../constants/types';
 
 const ChatList: React.FC = () => {
   const {
@@ -67,11 +69,19 @@ const ChatList: React.FC = () => {
           onSearchPress={handleSearchPress}
         />
         <View style={chatListStyles.roundedContainer}>
-          <FlatList
-            data={conversations}
-            keyExtractor={item => item.id}
-            renderItem={renderItem}
-          />
+          {conversations.length > 0 ? (
+            <FlatList
+              data={conversations}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+            />
+          ) : (
+            <View style={chatListStyles.emptyContainer}>
+              <Text style={chatListStyles.emptyText}>
+                No Conversations Yet!
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>

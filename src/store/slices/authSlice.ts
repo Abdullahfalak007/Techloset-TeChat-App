@@ -5,7 +5,6 @@ import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import {RootState} from '../store';
-import {ICONS} from '../../constants/icons';
 import {AuthState, User} from '../../constants/types';
 
 //

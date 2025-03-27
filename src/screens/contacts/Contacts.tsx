@@ -63,9 +63,15 @@ const Contacts: React.FC = () => {
         onSearchPress={handleSearchPress}
         onAddPress={handleAddPress}
       />
-      <ScrollView style={[contactsStyles.roundedContainer, {flex: 1}]}>
+      <ScrollView
+        style={contactsStyles.roundedContainer}
+        contentContainerStyle={{flexGrow: 1}}>
         {sections.length === 0 ? (
-          <Text>No other users found or all are in your chat list.</Text>
+          <View style={contactsStyles.emptyContainer}>
+            <Text style={contactsStyles.emptyText}>
+              No other users found or all are in your chat list.
+            </Text>
+          </View>
         ) : (
           <SectionList
             sections={sections}

@@ -8,7 +8,7 @@ export const changePasswordStyles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    marginTop: -20,
+    marginTop: -28,
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

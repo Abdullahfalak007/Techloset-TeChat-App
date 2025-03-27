@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, ScrollView} from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {useProfile} from './useProfile';
 import {profileStyles} from '../../styles/profileStyle';
@@ -20,65 +20,73 @@ const Profile: React.FC = () => {
     handleUpdateProfile,
     handleEditAvatar,
     navigation,
-    updating, // renaming loading to updating for clarity
+    updating,
   } = useProfile();
 
   return (
-    <View style={profileStyles.container}>
+    <>
       <GradientHeader
         title="Profile"
         isScreenWithBackArrow
         onBackPress={() => navigation.goBack()}
       />
+      <View style={profileStyles.container}>
+        <View style={profileStyles.scrollContainer}>
+          <ScrollView
+            style={{flex: 1}}
+            contentContainerStyle={profileStyles.contentContainer}>
+            <View style={profileStyles.avatarContainer}>
+              <UserAvatar
+                source={user?.photoURL ? user.photoURL : ICONS.avatar}
+                style={profileStyles.avatar}
+              />
+              <TouchableOpacity
+                style={profileStyles.editIconWrapper}
+                onPress={handleEditAvatar}>
+                <UserAvatar
+                  source={ICONS.edit}
+                  style={profileStyles.editIcon}
+                />
+              </TouchableOpacity>
+            </View>
 
-      <View style={profileStyles.contentContainer}>
-        <View style={profileStyles.avatarContainer}>
-          <UserAvatar
-            source={user?.photoURL ? user.photoURL : ICONS.avatar}
-            style={profileStyles.avatar}
-          />
-          <TouchableOpacity
-            style={profileStyles.editIconWrapper}
-            onPress={handleEditAvatar}>
-            <UserAvatar source={ICONS.edit} style={profileStyles.editIcon} />
-          </TouchableOpacity>
+            <InputField
+              label="Your name"
+              value={displayName}
+              onChangeText={setDisplayName}
+              containerStyle={profileStyles.infoGroup}
+              labelStyle={{color: profileStyles.label.color}}
+              inputStyle={profileStyles.valueInput}
+            />
+
+            <InputField
+              label="Your email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              containerStyle={profileStyles.infoGroup}
+              labelStyle={{color: profileStyles.label.color}}
+              inputStyle={profileStyles.valueInput}
+            />
+
+            <InputField
+              label="Your status"
+              value={status}
+              onChangeText={setStatus}
+              containerStyle={profileStyles.infoGroup}
+              labelStyle={{color: profileStyles.label.color}}
+              inputStyle={profileStyles.valueInput}
+            />
+
+            <UpdateButton
+              onPress={handleUpdateProfile}
+              text="Update Profile"
+              loading={updating}
+            />
+          </ScrollView>
         </View>
-
-        <InputField
-          label="Your name"
-          value={displayName}
-          onChangeText={setDisplayName}
-          containerStyle={profileStyles.infoGroup}
-          labelStyle={{color: profileStyles.label.color}}
-          inputStyle={profileStyles.valueInput}
-        />
-
-        <InputField
-          label="Your email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          containerStyle={profileStyles.infoGroup}
-          labelStyle={{color: profileStyles.label.color}}
-          inputStyle={profileStyles.valueInput}
-        />
-
-        <InputField
-          label="Your status"
-          value={status}
-          onChangeText={setStatus}
-          containerStyle={profileStyles.infoGroup}
-          labelStyle={{color: profileStyles.label.color}}
-          inputStyle={profileStyles.valueInput}
-        />
-
-        <UpdateButton
-          onPress={handleUpdateProfile}
-          text="Update Profile"
-          loading={updating}
-        />
       </View>
-    </View>
+    </>
   );
 };
 

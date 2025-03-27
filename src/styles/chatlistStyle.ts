@@ -13,7 +13,7 @@ export const chatListStyles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    marginTop: -20, // Overlap the gradient header.
+    marginTop: -28, // Overlap the gradient header.
     padding: 16,
   },
   itemContainer: {
@@ -97,5 +97,16 @@ export const chatListStyles = StyleSheet.create({
     width: 18,
     height: 18,
     tintColor: '#fff',
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    color: COLORS.greyTextSubtitle,
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

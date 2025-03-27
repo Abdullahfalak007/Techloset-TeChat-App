@@ -5,6 +5,9 @@ export const profileStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+    marginTop: -28,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   headerContainer: {
     height: 140,
@@ -18,16 +21,19 @@ export const profileStyles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  contentContainer: {
+  scrollContainer: {
     flex: 1,
-    marginTop: -20,
-    justifyContent: 'space-around',
-    backgroundColor: COLORS.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    overflow: 'hidden',
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 40,
+    paddingBottom: 20,
   },
   avatarContainer: {
     position: 'relative',

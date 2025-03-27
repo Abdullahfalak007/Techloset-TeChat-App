@@ -13,7 +13,7 @@ export const contactsStyles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    marginTop: -20, // Overlap the gradient header.
+    marginTop: -28, // Overlap the gradient header.
     padding: 16,
   },
   myContactLabel: {
@@ -72,5 +72,17 @@ export const contactsStyles = StyleSheet.create({
     width: 24,
     height: 24,
     tintColor: COLORS.black,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    color: COLORS.greyTextSubtitle,
+    fontSize: 16,
+    justifyContent: 'center',
+    textAlign: 'center',
   },
 });

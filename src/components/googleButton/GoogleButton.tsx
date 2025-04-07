@@ -1,4 +1,3 @@
-// src/components/googleButton/GoogleButton.tsx
 import React from 'react';
 import {TouchableOpacity, Image} from 'react-native';
 import {ICONS} from '../../constants/icons';

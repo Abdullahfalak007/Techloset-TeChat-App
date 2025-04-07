@@ -1,4 +1,3 @@
-// src/components/gradientButton/GradientButton.tsx
 import React, {FC} from 'react';
 import {TouchableOpacity, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';

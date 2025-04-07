@@ -1,4 +1,3 @@
-// src/screens/auth/useAuth.ts
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationProp} from '../../constants/types';
@@ -9,7 +8,6 @@ export const useAuth = () => {
   const navigation = useNavigation<AuthNavigationProp>();
   const dispatch = useAppDispatch();
 
-  // Local loading for the Google sign-up
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleGoogleSignUp = async () => {
@@ -17,7 +15,6 @@ export const useAuth = () => {
     try {
       await dispatch(signupWithGoogle());
     } catch (error) {
-      // Handled in thunk
     } finally {
       setGoogleLoading(false);
     }

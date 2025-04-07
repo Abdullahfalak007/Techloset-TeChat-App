@@ -1,4 +1,3 @@
-// src/store/slices/chatSlice.ts
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import {ChatState, Conversation} from '../../constants/types';
@@ -9,14 +8,12 @@ const initialState: ChatState = {
   conversations: [],
 };
 
-// Thunk to create a new conversation with initial unreadCounts and recipient details.
 export const createConversation = createAsyncThunk<
-  string, // returns conversationId
+  string,
   {uid: string; otherUid: string},
   {rejectValue: string}
 >('chat/createConversation', async ({uid, otherUid}, {rejectWithValue}) => {
   try {
-    // Check if a conversation already exists for the current user with the other user.
     const snapshot = await firestore()
       .collection('conversations')
       .where('participants', 'array-contains', uid)
@@ -31,18 +28,15 @@ export const createConversation = createAsyncThunk<
     });
     if (conversationId) return conversationId;
 
-    // Fetch recipient details from Firestore
     const userDoc = await firestore().collection('users').doc(otherUid).get();
     let recipientName = 'Unknown';
     let recipientPhoto: string | null = null;
     if (userDoc.exists) {
       const userData = userDoc.data();
-      // Use displayName if available, otherwise email
       recipientName = userData?.displayName || userData?.email || 'Unknown';
       recipientPhoto = userData?.photoURL || null;
     }
 
-    // Create a new conversation document with unreadCounts initialized to 0 for both.
     const convRef = await firestore()
       .collection('conversations')
       .add({
@@ -80,10 +74,8 @@ export const sendMessage = createAsyncThunk<
         .collection('conversations')
         .doc(conversationId);
 
-      // Only trim text if the message type is 'text'
       const messageText = type === 'text' ? text.trim() : text;
 
-      // Log the length to verify that the image base64 is complete
       if (type === 'image') {
         console.log(
           'Sending image message, base64 length:',
@@ -98,7 +90,6 @@ export const sendMessage = createAsyncThunk<
         timestamp: firestore.FieldValue.serverTimestamp(),
       });
 
-      // Retrieve current conversation data.
       const convSnap = await docRef.get();
       if (!convSnap.exists) throw new Error('Conversation does not exist');
       const convData = convSnap.data() || {};
@@ -128,7 +119,6 @@ export const sendMessage = createAsyncThunk<
   },
 );
 
-// Thunk to delete a conversation.
 export const deleteConversation = createAsyncThunk<
   void,
   {conversationId: string},
@@ -188,10 +178,7 @@ const chatSlice = createSlice({
       .addCase(deleteConversation.pending, state => {
         state.error = null;
       })
-      .addCase(deleteConversation.fulfilled, state => {
-        // Optionally, you might remove the conversation from state here,
-        // but Firestore's onSnapshot listener should update it.
-      })
+      .addCase(deleteConversation.fulfilled, state => {})
       .addCase(deleteConversation.rejected, (state, action) => {
         state.error = action.payload || 'Failed to delete conversation';
       });

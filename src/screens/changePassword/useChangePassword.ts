@@ -17,7 +17,6 @@ export const useChangePassword = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   const handleUpdatePassword = async () => {
-    // Basic form validation
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       Toast.show({
         type: 'error',
@@ -36,7 +35,6 @@ export const useChangePassword = () => {
       return;
     }
 
-    // Optionally, check for minimum password length (e.g., 6 characters)
     if (newPassword.length < 6) {
       Toast.show({
         type: 'error',

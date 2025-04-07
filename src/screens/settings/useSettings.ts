@@ -17,7 +17,6 @@ export const useSettings = () => {
   const nameToDisplay = user?.displayName || DEFAULT_USER_NAME;
   const statusToDisplay = user?.status || DEFAULT_USER_STATUS;
 
-  // Use useMemo to avoid re-creation on every render if needed.
   const settingsMenuItems = useMemo(() => SETTINGS_MENU_ITEMS, []);
 
   return {

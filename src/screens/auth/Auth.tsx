@@ -1,4 +1,3 @@
-// src/screens/auth/Auth.tsx
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,7 +24,6 @@ const Auth: React.FC = () => {
           family.
         </Text>
 
-        {/* Show loader in place of the icon if googleLoading is true */}
         {googleLoading ? (
           <View style={authStyle.iconContainer}>
             <Loader />
@@ -45,7 +43,6 @@ const Auth: React.FC = () => {
             COLORS.signupButtonBackground,
           ]}>
           <Text style={authStyle.buttonText}>Sign up with mail</Text>
-          {/* If you had a second button loading state, you'd handle it here */}
         </GradientButton>
 
         <View style={authStyle.existingAccountContainer}>

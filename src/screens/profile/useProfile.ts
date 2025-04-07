@@ -21,10 +21,8 @@ export const useProfile = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
-  // Reusable image picker hook.
   const {pickImage} = useImagePicker();
 
-  // On mount, if Firestore doesn't have a photoURL, update it with Firebase Auth's photoURL.
   useEffect(() => {
     const updatePhotoURLIfNeeded = async () => {
       if (user && !user.photoURL) {
@@ -45,10 +43,8 @@ export const useProfile = () => {
     updatePhotoURLIfNeeded();
   }, [user, dispatch]);
 
-  // Handle updating profile details (name, email, status)
   const handleUpdateProfile = async () => {
     if (!user?.uid) return;
-    // Basic form validation: name and email cannot be empty.
     if (!displayName.trim() || !email.trim()) {
       Toast.show({
         type: 'error',
@@ -82,7 +78,6 @@ export const useProfile = () => {
     }
   };
 
-  // Handle editing the avatar using the reusable image picker.
   const handleEditAvatar = async () => {
     if (!user?.uid) return;
     try {
@@ -132,6 +127,6 @@ export const useProfile = () => {
     handleUpdateProfile,
     handleEditAvatar,
     navigation,
-    updating, // added loading state as 'updating'
+    updating,
   };
 };

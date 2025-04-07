@@ -20,15 +20,12 @@ export function useConversationLogic(conversationId: string) {
   const [loading, setLoading] = useState(true);
   const sectionListRef = useRef<SectionList<Message, {title: string}>>(null);
 
-  // Read conversation details from the store.
   const conversation = useAppSelector(state =>
     state.chat.conversations.find(conv => conv.id === conversationId),
   );
 
-  // State to control the visibility of the scroll down button.
   const [showScrollDown, setShowScrollDown] = useState(false);
 
-  // Handler to check if the user is near the bottom of the list.
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
     const isAtBottom =
@@ -40,10 +37,8 @@ export function useConversationLogic(conversationId: string) {
     sectionListRef.current?.getScrollResponder()?.scrollToEnd({animated: true});
   };
 
-  // Group messages into sections by day.
   const sections: MessageSection[] = groupMessagesByDay(messages);
 
-  // Subscribe to real-time updates from Firebase.
   useEffect(() => {
     if (!conversationId) return;
     const unsubscribe = firestore()
@@ -75,7 +70,6 @@ export function useConversationLogic(conversationId: string) {
     return () => unsubscribe();
   }, [conversationId]);
 
-  // Reset unread counts when the conversation is opened.
   useEffect(() => {
     if (!conversationId || !user?.uid) return;
     const docRef = firestore().collection('conversations').doc(conversationId);
@@ -105,7 +99,6 @@ export function useConversationLogic(conversationId: string) {
     }, 300);
   }, [messages]);
 
-  // Handle button click: Pick an image from the library using the reusable hook.
   const handleAttach = async () => {
     try {
       const asset = await pickImage({
@@ -129,7 +122,6 @@ export function useConversationLogic(conversationId: string) {
     }
   };
 
-  // Handle button click: Capture an image using the camera via the reusable hook.
   const handleCamera = async () => {
     try {
       const asset = await captureImage({
@@ -153,7 +145,6 @@ export function useConversationLogic(conversationId: string) {
     }
   };
 
-  // Handle button click: Send a text message.
   const handleSend = async () => {
     if (!inputText.trim() || !user?.uid) return;
     try {
@@ -171,7 +162,6 @@ export function useConversationLogic(conversationId: string) {
     setInputText('');
   };
 
-  // Helper to format the timestamp for display.
   const formatTime = (timestamp: any) => {
     const time =
       timestamp && typeof timestamp.toDate === 'function'

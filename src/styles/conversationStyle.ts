@@ -28,7 +28,7 @@ export const conversationStyle = StyleSheet.create({
   },
   scrollDownButton: {
     position: 'absolute',
-    bottom: 80, // adjust based on your input bar height
+    bottom: 80,
     right: 200,
     backgroundColor: COLORS.lightGrey,
     padding: 8,

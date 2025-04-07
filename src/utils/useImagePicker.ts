@@ -5,9 +5,6 @@ import {
 } from 'react-native-image-picker';
 
 export const useImagePicker = () => {
-  /**
-   * Opens the image library and returns the first selected asset.
-   */
   const pickImage = async (
     options?: Partial<{
       mediaType: 'photo' | 'video';
@@ -33,9 +30,6 @@ export const useImagePicker = () => {
     }
   };
 
-  /**
-   * Opens the camera and returns the captured asset.
-   */
   const captureImage = async (
     options?: Partial<{
       mediaType: 'photo' | 'video';

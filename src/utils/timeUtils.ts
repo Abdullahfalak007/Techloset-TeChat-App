@@ -1,4 +1,3 @@
-// src/utils/timeUtils.ts
 export const timeAgo = (timestamp: any): string => {
   if (!timestamp) return '';
   const date = timestamp?.toDate?.() || new Date(timestamp);

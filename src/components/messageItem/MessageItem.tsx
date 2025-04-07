@@ -12,7 +12,6 @@ const MessageItem: React.FC<MessageItemProps> = ({
   senderName,
   formatTime,
 }) => {
-  // Show header if this is the first item in section or if sender changed.
   const showHeader =
     index === 0 || section.data[index - 1].senderId !== item.senderId;
 

@@ -1,4 +1,3 @@
-// src/components/divider/Divider.tsx
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {COLORS} from '../../constants/colors';

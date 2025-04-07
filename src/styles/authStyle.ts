@@ -22,7 +22,6 @@ export const authStyle = StyleSheet.create({
     marginBottom: 32,
   },
 
-  /* Google Button (Icon Only) */
   googleButton: {
     width: 60,
     height: 60,
@@ -53,7 +52,6 @@ export const authStyle = StyleSheet.create({
     marginBottom: 24,
   },
 
-  /* Divider Container */
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -69,7 +67,6 @@ export const authStyle = StyleSheet.create({
     color: COLORS.white,
   },
 
-  /* Sign Up Button */
   signUpButton: {
     backgroundColor: COLORS.signupButtonBackground,
     borderRadius: 20,
@@ -83,7 +80,6 @@ export const authStyle = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  /* Existing Account? Log in */
   existingAccountContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

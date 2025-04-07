@@ -9,7 +9,7 @@ export const gradientButtonStyle = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonContent: {
-    flexDirection: 'row', // so text and loader can be in a row
+    flexDirection: 'row',
     alignItems: 'center',
   },
   buttonText: {

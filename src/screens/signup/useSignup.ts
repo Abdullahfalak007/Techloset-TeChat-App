@@ -1,4 +1,3 @@
-// src/screens/signup/useSignup.ts
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {SignupScreenNavigationProp} from '../../constants/types';
@@ -10,14 +9,12 @@ export const useSignup = () => {
   const navigation = useNavigation<SignupScreenNavigationProp>();
   const dispatch = useAppDispatch();
 
-  // Input fields
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // Local loading state for the signup button
   const [signupLoading, setSignupLoading] = useState(false);
 
   const handleSignup = async () => {
@@ -43,9 +40,7 @@ export const useSignup = () => {
         signupWithEmail({email, password, name}),
       );
       if (signupWithEmail.fulfilled.match(resultAction)) {
-        // Immediately sign out the newly created user
         dispatch(signOut());
-        // Navigate to the Login screen
         navigation.replace('Login');
         Toast.show({
           type: 'success',

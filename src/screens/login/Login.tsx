@@ -1,4 +1,3 @@
-// src/screens/login/Login.tsx
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {loginStyle} from '../../styles/loginStyle';
@@ -34,7 +33,6 @@ const Login: React.FC = () => {
               continue.
             </Text>
 
-            {/* Google Button or Loader */}
             {googleLoading ? (
               <View style={loginStyle.iconContainer}>
                 <Loader />

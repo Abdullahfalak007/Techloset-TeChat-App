@@ -1,4 +1,3 @@
-// src/screens/forgotPassword/useForgotPassword.ts
 import {useState} from 'react';
 import {useNavigation, CommonActions} from '@react-navigation/native';
 import {ForgotPasswordNavigationProp} from '../../constants/types';
@@ -11,7 +10,6 @@ export const useForgotPassword = () => {
   const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState('');
-  // Local loading for the reset password button
   const [resetLoading, setResetLoading] = useState(false);
 
   const handlePasswordReset = async (email: string) => {

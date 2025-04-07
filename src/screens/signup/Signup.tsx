@@ -1,6 +1,5 @@
-// src/screens/signup/Signup.tsx
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text} from 'react-native';
 import {signupStyle} from '../../styles/signupStyle';
 import BackButton from '../../components/backButton/BackButton';
 import GradientButton from '../../components/gradientButton/GradientButton';

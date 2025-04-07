@@ -7,13 +7,12 @@ export const contactsStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // Updated container for the list
   roundedContainer: {
     flex: 1,
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    marginTop: -28, // Overlap the gradient header.
+    marginTop: -28,
     padding: 16,
   },
   myContactLabel: {

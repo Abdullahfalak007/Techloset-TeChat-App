@@ -1,4 +1,3 @@
-// src/hooks/useChatList.ts
 import {useState, useEffect, useMemo} from 'react';
 import {Keyboard} from 'react-native';
 import {useAppSelector, useAppDispatch} from '../../hooks/useStore';
@@ -41,22 +40,17 @@ export const useChatList = () => {
       >
     >();
 
-  // Listen for conversation changes using the global hook.
   useConversationListener(user?.uid);
 
-  // Additional UI state.
   const [searchActive, setSearchActive] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Local copy for UI rendering.
   const [localConversations, setLocalConversations] =
     useState<ConversationDoc[]>(conversations);
-  // Set to track IDs of conversations currently being deleted.
   const [deletingConversations, setDeletingConversations] = useState<
     Set<string>
   >(new Set());
 
-  // Sync local conversations with global state.
   useEffect(() => {
     setLocalConversations(conversations);
   }, [conversations]);
@@ -73,7 +67,6 @@ export const useChatList = () => {
   };
 
   const handleDeleteConversation = (conversationId: string) => {
-    // Mark as deleting so the loader shows.
     setDeletingConversations(prev => new Set(prev).add(conversationId));
 
     dispatch(deleteConversation({conversationId}))
@@ -83,8 +76,6 @@ export const useChatList = () => {
           type: 'success',
           text1: 'Conversation deleted successfully!',
         });
-        // No need to manually remove the conversation;
-        // Firestore's listener will update the list.
       })
       .catch(error => {
         Toast.show({
@@ -132,6 +123,6 @@ export const useChatList = () => {
     dismissKeyboard,
     navigation,
     timeAgo,
-    deletingConversations, // for UI use in component
+    deletingConversations,
   };
 };

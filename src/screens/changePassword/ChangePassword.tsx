@@ -65,7 +65,6 @@ const ChangePassword: React.FC = () => {
           </View>
         </View>
 
-        {/* Wrap the update button in a relative container */}
         <View>
           <UpdateButton
             onPress={handleUpdatePassword}

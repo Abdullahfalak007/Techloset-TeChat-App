@@ -1,4 +1,3 @@
-// src/navigation/AppNavigator.tsx
 import React from 'react';
 import {useAppSelector} from '../hooks/useStore';
 import AuthNavigator from './stack/auth/AuthNavigator';

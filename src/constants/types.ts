@@ -16,14 +16,14 @@ export type AuthStackParamList = {
 };
 
 export type MainStackParamList = {
-  MainTabs: undefined; // The bottom tab navigator container
+  MainTabs: undefined;
   Conversation: {conversationId: string};
-  Profile: undefined; // add this
+  Profile: undefined;
   ChangePassword: undefined;
 };
 
 export type BottomTabParamList = {
-  Messages: undefined; // This will render your ChatList
+  Messages: undefined;
   Contacts: undefined;
   Settings: undefined;
 };
@@ -98,7 +98,7 @@ export type EditableAvatarProps = {
 export type GoogleButtonProps = {
   onPress: () => void;
   style?: ViewStyle;
-  loading?: boolean; // Add loading prop
+  loading?: boolean;
 };
 
 export type GradientButtonProps = {
@@ -214,27 +214,27 @@ export type SignupScreenNavigationProp = StackNavigationProp<
 export type Message = {
   id: string;
   senderId: string;
-  text: string; // if type='image', this will hold base64
+  text: string;
   timestamp: any;
-  type?: 'text' | 'image'; // <--- new optional field
-  mimeType?: string; // new field to store the image MIME type
+  type?: 'text' | 'image';
+  mimeType?: string;
 };
 
 export type Conversation = {
   id: string;
   participants: string[];
   lastMessage: string;
-  updatedAt: any; // Firestore timestamp
+  updatedAt: any;
   recipientName: string;
   recipientPhoto?: string | null;
-  unreadCounts?: Record<string, number>; // e.g. { userUid1: 0, userUid2: 1 }
+  unreadCounts?: Record<string, number>;
 };
 
 export type User = {
   uid: string;
   email: string;
   displayName: string | null;
-  photoURL: string | null; // This field will hold either a normal URL or a base64 data URI.
+  photoURL: string | null;
   status: string | null;
 };
 

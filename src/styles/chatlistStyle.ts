@@ -7,13 +7,12 @@ export const chatListStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // Container for the list with rounded top corners.
   roundedContainer: {
     flex: 1,
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    marginTop: -28, // Overlap the gradient header.
+    marginTop: -28,
     padding: 16,
   },
   itemContainer: {
@@ -30,7 +29,6 @@ export const chatListStyles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  // In case of no image, a placeholder can be defined
   placeholderAvatar: {
     width: 40,
     height: 40,

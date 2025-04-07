@@ -9,7 +9,6 @@ export const useLogin = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();
   const dispatch = useAppDispatch();
 
-  // Local states for each button
   const [loginLoading, setLoginLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
@@ -18,14 +17,12 @@ export const useLogin = () => {
     try {
       await dispatch(loginWithGoogle());
     } catch (error) {
-      // Thunk handles error via Toast
     } finally {
       setGoogleLoading(false);
     }
   };
 
   const handleLogin = async (email: string, password: string) => {
-    // Basic validation: fields should not be empty
     if (!email || !password) {
       Toast.show({
         type: 'error',
@@ -39,7 +36,6 @@ export const useLogin = () => {
       return;
     }
 
-    // Validate email format using a simple regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Toast.show({
@@ -50,7 +46,6 @@ export const useLogin = () => {
       return;
     }
 
-    // Validate password length (for example, at least 6 characters)
     if (password.length < 6) {
       Toast.show({
         type: 'error',

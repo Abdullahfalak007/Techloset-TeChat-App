@@ -1,4 +1,3 @@
-// src/navigation/stack/auth/AuthNavigator.tsx
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStackParamList} from '../../../constants/types';

@@ -1,4 +1,3 @@
-// src/styles/loginStyle.ts
 import {StyleSheet} from 'react-native';
 import {COLORS} from '../constants/colors';
 
@@ -65,7 +64,7 @@ export const loginStyle = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: COLORS.transparentWhite, // or '#ffffff80'
+    backgroundColor: COLORS.transparentWhite,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',

@@ -1,4 +1,3 @@
-// src/screens/forgotPassword/ForgotPassword.tsx
 import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {forgotPasswordStyle} from '../../styles/forgotPasswordStyle';

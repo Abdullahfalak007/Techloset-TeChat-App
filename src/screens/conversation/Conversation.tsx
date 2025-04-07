@@ -41,7 +41,6 @@ const Conversation: React.FC = () => {
     scrollToBottom,
   } = useConversationLogic(conversationId);
 
-  // Render a single message using the MessageItem component.
   const renderMessage = ({
     item,
     index,
@@ -76,7 +75,6 @@ const Conversation: React.FC = () => {
     );
   };
 
-  // Render section header for grouping messages by day.
   const renderSectionHeader = ({
     section,
   }: {
@@ -118,13 +116,11 @@ const Conversation: React.FC = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
         onContentSizeChange={() => {
-          // Immediately scroll to the bottom when content changes
           sectionListRef.current
             ?.getScrollResponder()
             ?.scrollToEnd({animated: false});
         }}
         onLayout={() => {
-          // Ensure that on initial layout, we are scrolled to the bottom
           sectionListRef.current
             ?.getScrollResponder()
             ?.scrollToEnd({animated: false});

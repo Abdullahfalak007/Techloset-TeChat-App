@@ -1,4 +1,3 @@
-// src/hooks/useContacts.ts
 import {useEffect, useState, useMemo} from 'react';
 import {Keyboard} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
@@ -42,16 +41,13 @@ export const useContacts = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<ContactsNavProp>();
 
-  // Store all contacts fetched from Firestore.
   const [allContacts, setAllContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // States for search & add mode.
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddButtons, setShowAddButtons] = useState(false);
 
-  // New state to track which contacts are being added.
   const [addingContacts, setAddingContacts] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -83,7 +79,6 @@ export const useContacts = () => {
     return () => unsubscribe();
   }, [user?.uid]);
 
-  // Derive filtered contacts from raw contacts and conversations.
   const filteredContacts = useMemo(() => {
     const existingContactIds = new Set<string>();
     conversations.forEach(conv => {
@@ -106,7 +101,7 @@ export const useContacts = () => {
 
   const handleAddContact = async (otherUid: string) => {
     if (!user?.uid) return;
-    // Mark this contact as being added.
+
     setAddingContacts(prev => new Set(prev).add(otherUid));
     try {
       const resultAction = await dispatch(
@@ -118,7 +113,6 @@ export const useContacts = () => {
     } catch (error) {
       console.error('Failed to start conversation:', error);
     } finally {
-      // Remove the contact from the adding set regardless of success/failure.
       setAddingContacts(prev => {
         const newSet = new Set(prev);
         newSet.delete(otherUid);
@@ -164,6 +158,6 @@ export const useContacts = () => {
     handleAddPress,
     handleAddContact,
     dismissKeyboard,
-    addingContacts, // expose this set for UI use
+    addingContacts,
   };
 };

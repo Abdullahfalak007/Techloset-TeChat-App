@@ -1,4 +1,3 @@
-// src/store/slices/authSlice.ts
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -7,10 +6,6 @@ import Toast from 'react-native-toast-message';
 import {RootState} from '../store';
 import {AuthState, User} from '../../constants/types';
 
-//
-// 1) Define a User interface without base64Photo
-//
-
 const initialState: AuthState = {
   user: null,
   loading: false,
@@ -18,11 +13,6 @@ const initialState: AuthState = {
   idToken: null,
 };
 
-//
-// 2) Utility functions
-//
-
-/** Write or update the user doc in Firestore (using merge to avoid overwriting fields). */
 async function writeUserToFirestore(userObj: User) {
   await firestore()
     .collection('users')
@@ -30,10 +20,6 @@ async function writeUserToFirestore(userObj: User) {
     .set(userObj, {merge: true});
 }
 
-/**
- * Fetch the user's status from Firestore if it exists.
- * If not, return a default status.
- */
 async function fetchStatusFromFirestoreOrDefault(uid: string): Promise<string> {
   const docRef = firestore().collection('users').doc(uid);
   const docSnap = await docRef.get();
@@ -43,10 +29,9 @@ async function fetchStatusFromFirestoreOrDefault(uid: string): Promise<string> {
       return data.status;
     }
   }
-  return 'No Status Added Yet.'; // default status
+  return 'No Status Added Yet.';
 }
 
-//  async thunk for login with email
 export const loginWithEmail = createAsyncThunk(
   'auth/loginWithEmail',
   async (
@@ -66,7 +51,6 @@ export const loginWithEmail = createAsyncThunk(
       } = userCredential.user;
       const finalEmail = userEmail || '';
 
-      // Fetch Firestore data
       const docRef = firestore().collection('users').doc(uid);
       const docSnap = await docRef.get();
       let finalPhotoURL: string | null = null;
@@ -96,7 +80,7 @@ export const loginWithEmail = createAsyncThunk(
     }
   },
 );
-// async thunk for sign up with email
+
 export const signupWithEmail = createAsyncThunk(
   'auth/signupWithEmail',
   async (
@@ -150,12 +134,10 @@ export const loginWithGoogle = createAsyncThunk(
       const {uid, email, displayName, photoURL: authPhotoURL} = response.user;
       const finalEmail = email || '';
 
-      // Check Firestore to see if a user doc exists for this uid.
       const docRef = firestore().collection('users').doc(uid);
       const docSnap = await docRef.get();
       let userObj;
       if (docSnap.exists) {
-        // User exists in Firestore—use the stored data (which may contain an updated base64 image).
         const data = docSnap.data();
         userObj = {
           uid,
@@ -166,7 +148,6 @@ export const loginWithGoogle = createAsyncThunk(
             data?.status || (await fetchStatusFromFirestoreOrDefault(uid)),
         };
       } else {
-        // User does not exist in Firestore—create a new document.
         const status = await fetchStatusFromFirestoreOrDefault(uid);
         userObj = {
           uid,
@@ -190,8 +171,6 @@ export const loginWithGoogle = createAsyncThunk(
   },
 );
 
-// Async thunk for sign-up with google
-
 export const signupWithGoogle = createAsyncThunk(
   'auth/signupWithGoogle',
   async (_, {rejectWithValue}) => {
@@ -208,14 +187,12 @@ export const signupWithGoogle = createAsyncThunk(
       const {uid, email, displayName, photoURL: authPhotoURL} = response.user;
       const finalEmail = email || '';
 
-      // Query Firestore to check if a user with this email already exists.
       const querySnap = await firestore()
         .collection('users')
         .where('email', '==', finalEmail)
         .get();
 
       if (!querySnap.empty) {
-        // User already exists: notify and log in using existing data.
         Toast.show({
           type: 'info',
           text1: 'User Already Registered',
@@ -234,7 +211,6 @@ export const signupWithGoogle = createAsyncThunk(
         return existingUser;
       }
 
-      // If no document exists, proceed to create a new user doc.
       const status = await fetchStatusFromFirestoreOrDefault(uid);
       const userObj = {
         uid,
@@ -257,7 +233,6 @@ export const signupWithGoogle = createAsyncThunk(
   },
 );
 
-// Async thunk for password reset remains unchanged
 export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
   async ({email}: {email: string}, {rejectWithValue}) => {
@@ -273,18 +248,14 @@ export const resetPassword = createAsyncThunk(
   },
 );
 
-/**
- * Thunk to change the user's password by re-authenticating with the current password.
- */
 export const changeUserPassword = createAsyncThunk<
-  void, // Return type (on success)
-  {currentPassword: string; newPassword: string}, // Arg type
-  {rejectValue: string; state: RootState} // Rejection type + access to state
+  void,
+  {currentPassword: string; newPassword: string},
+  {rejectValue: string; state: RootState}
 >(
   'auth/changeUserPassword',
   async ({currentPassword, newPassword}, {rejectWithValue, getState}) => {
     try {
-      // 1) Get user from Redux state
       const {
         auth: {user},
       } = getState();
@@ -293,34 +264,25 @@ export const changeUserPassword = createAsyncThunk<
         throw new Error('No authenticated user or missing email.');
       }
 
-      // 2) Get the currently logged in Firebase user
       const currentAuthUser = auth().currentUser;
       if (!currentAuthUser) {
         throw new Error('No current Firebase user.');
       }
 
-      // 3) Re-authenticate the user with current password
       const credential = auth.EmailAuthProvider.credential(
         user.email,
         currentPassword,
       );
       await currentAuthUser.reauthenticateWithCredential(credential);
 
-      // 4) Update the password
       await currentAuthUser.updatePassword(newPassword);
-
-      // (Optional) Show a success toast here or do it in the UI after dispatch
     } catch (error: any) {
-      // If it’s a Firebase error, e.g. "auth/wrong-password"
       console.error('changeUserPassword error:', error);
       return rejectWithValue(error.message || 'Failed to update password.');
     }
   },
 );
 
-//
-// 4) Slice definition
-//
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -334,7 +296,6 @@ const authSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    // loginWithEmail
     builder.addCase(loginWithEmail.pending, state => {
       state.loading = true;
       state.error = null;
@@ -348,7 +309,6 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // signupWithEmail
     builder.addCase(signupWithEmail.pending, state => {
       state.loading = true;
       state.error = null;
@@ -362,7 +322,6 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // signInWithGoogle
     builder.addCase(signupWithGoogle.pending, state => {
       state.loading = true;
       state.error = null;
@@ -376,7 +335,6 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // signInWithGoogle
     builder.addCase(loginWithGoogle.pending, state => {
       state.loading = true;
       state.error = null;
@@ -390,7 +348,6 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // resetPassword
     builder.addCase(resetPassword.pending, state => {
       state.loading = true;
       state.error = null;
@@ -403,14 +360,12 @@ const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    //changeUserPassword
     builder.addCase(changeUserPassword.pending, state => {
       state.loading = true;
       state.error = null;
     });
     builder.addCase(changeUserPassword.fulfilled, (state, action) => {
       state.loading = false;
-      // no changes to state.user needed for a password update
     });
     builder.addCase(changeUserPassword.rejected, (state, action) => {
       state.loading = false;

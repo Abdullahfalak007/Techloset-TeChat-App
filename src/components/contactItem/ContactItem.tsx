@@ -12,7 +12,6 @@ const ContactItem: React.FC<ContactItemProps> = ({
   isAdding,
   onAddPress,
 }) => {
-  // Determine the avatar source based on base64Photo, photoURL, or fallback icon.
   const avatarSource =
     contact.base64Photo &&
     typeof contact.base64Photo === 'string' &&

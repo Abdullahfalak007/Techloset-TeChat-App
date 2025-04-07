@@ -36,7 +36,6 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
   const defaultAvatar = ICONS.avatar;
   const finalAvatarUri = avatarUri ?? user?.photoURL ?? defaultAvatar;
 
-  // Render the avatar using the UserAvatar component
   const renderAvatar = () => {
     return (
       <UserAvatar
@@ -82,10 +81,7 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
         <LinearGradient
           colors={[COLORS.gradientStart, COLORS.gradientEnd]}
           style={gradientHeaderStyle.headerContainer}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              /* stops propagation */
-            }}>
+          <TouchableWithoutFeedback onPress={() => {}}>
             <View style={gradientHeaderStyle.searchBarContainer}>
               <TextInput
                 style={gradientHeaderStyle.searchInputHeader}

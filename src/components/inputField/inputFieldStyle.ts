@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const inputFieldStyle = StyleSheet.create({
   container: {
@@ -12,7 +12,7 @@ export const inputFieldStyle = StyleSheet.create({
   },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: COLORS.black,
     paddingVertical: 8,
     fontSize: 14,
     color: COLORS.black,

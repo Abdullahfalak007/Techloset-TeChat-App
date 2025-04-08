@@ -12,11 +12,11 @@ export const useChangePassword = () => {
   const dispatch = useAppDispatch();
   const {loading} = useAppSelector(state => state.auth);
 
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState<string>('');
 
-  const handleUpdatePassword = async () => {
+  const handleUpdatePassword = async (): Promise<void> => {
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       Toast.show({
         type: 'error',
@@ -48,18 +48,21 @@ export const useChangePassword = () => {
       await dispatch(
         changeUserPassword({currentPassword, newPassword}),
       ).unwrap();
-
       Toast.show({
         type: 'success',
         text1: 'Password Updated',
         text2: 'Your password has been changed successfully.',
       });
       navigation.goBack();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let errorMessage = 'An unknown error occurred.';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
       Toast.show({
         type: 'error',
         text1: 'Failed to Update Password',
-        text2: error || 'An unknown error occurred.',
+        text2: errorMessage,
       });
     }
   };

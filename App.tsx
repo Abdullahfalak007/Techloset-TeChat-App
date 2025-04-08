@@ -26,13 +26,13 @@ const App = () => {
 
     async function initFirestore() {
       // 1. Terminate any running Firestore instance
-      await firestore().terminate();
+      await firestore()?.terminate();
 
       // 2. Clear persistence
-      await firestore().clearPersistence();
+      await firestore()?.clearPersistence();
 
       // 3. Set your Firestore settings after clearing
-      await firestore().settings({persistence: false});
+      await firestore()?.settings({persistence: false});
     }
 
     initFirestore();

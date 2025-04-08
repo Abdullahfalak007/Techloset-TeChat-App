@@ -2,17 +2,18 @@ import React, {useCallback} from 'react';
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {useSettings} from './useSettings';
-import {settingsStyles} from '../../styles/settingsStyle';
+import {settingsStyles} from './settingsStyle';
 import {ICONS} from '../../constants/icons';
 import UserAvatar from '../../components/userAvatar/UserAvatar';
+import {SettingsMenuItemProps} from '../../constants/types';
 import SettingsMenuItem from '../../components/settingsMenuItem/SettingsMenuItem';
 
-const Settings: React.FC = () => {
+const Settings = () => {
   const {navigation, user, nameToDisplay, statusToDisplay, settingsMenuItems} =
     useSettings();
 
   const renderMenuItem = useCallback(
-    ({item}: {item: any}) => {
+    ({item}: {item: SettingsMenuItemProps['item']}) => {
       const handlePress = () => {
         if (item.id === 'changePassword') {
           navigation.navigate('ChangePassword');

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 import GradientButton from '../gradientButton/GradientButton';
-import {updateButtonStyles as styles} from '../../styles/updateButtonStyle';
+import {updateButtonStyles as styles} from './updateButtonStyle';
 import {COLORS} from '../../constants/colors';
 import Loader from '../loader/Loader';
 import {UpdateButtonProps} from '../../constants/types';

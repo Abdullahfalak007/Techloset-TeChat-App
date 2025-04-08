@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const loginStyle = StyleSheet.create({
   container: {
@@ -46,14 +46,14 @@ export const loginStyle = StyleSheet.create({
   divider: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.lightGrey,
   },
   orText: {
-    color: '#666',
+    color: COLORS.greyText,
     marginHorizontal: 8,
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
   },

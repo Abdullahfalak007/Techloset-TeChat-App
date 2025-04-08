@@ -1,6 +1,15 @@
-export const timeAgo = (timestamp: any): string => {
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
+
+export const timeAgo = (
+  timestamp: FirebaseFirestoreTypes.Timestamp | Date | number | undefined,
+): string => {
   if (!timestamp) return '';
-  const date = timestamp?.toDate?.() || new Date(timestamp);
+  const date =
+    timestamp instanceof FirebaseFirestoreTypes.Timestamp
+      ? timestamp.toDate()
+      : timestamp instanceof Date
+      ? timestamp
+      : new Date(timestamp);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
 
@@ -17,8 +26,15 @@ export const timeAgo = (timestamp: any): string => {
   return date.toLocaleDateString();
 };
 
-export const formatTime = (timestamp: any): string => {
-  const date = timestamp?.toDate?.() || new Date(timestamp);
+export const formatTime = (
+  timestamp: FirebaseFirestoreTypes.Timestamp | Date | number | undefined,
+): string => {
+  const date =
+    timestamp instanceof FirebaseFirestoreTypes.Timestamp
+      ? timestamp.toDate()
+      : timestamp instanceof Date
+      ? timestamp
+      : new Date(timestamp ?? Date.now());
   return date
     .toLocaleTimeString([], {
       hour: '2-digit',

@@ -1,12 +1,14 @@
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {Message, MessageSection} from '../constants/types';
+
 export function groupMessagesByDay(messages: Message[]): MessageSection[] {
   const groups: {[key: string]: Message[]} = {};
   messages.forEach(message => {
     const date =
-      message.timestamp && typeof message.timestamp.toDate === 'function'
+      message.timestamp instanceof FirebaseFirestoreTypes.Timestamp
         ? message.timestamp.toDate()
         : new Date(message.timestamp);
-    const dateKey = date.toDateString();
+    const dateKey = new Date(date).toDateString();
     if (!groups[dateKey]) {
       groups[dateKey] = [];
     }

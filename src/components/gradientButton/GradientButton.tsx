@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {TouchableOpacity, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS} from '../../constants/colors';
-import {gradientButtonStyle} from '../../styles/gradientButtonStyle';
+import {gradientButtonStyle} from './gradientButtonStyle';
 import {GradientButtonProps} from '../../constants/types';
 
 const GradientButton: FC<GradientButtonProps> = ({

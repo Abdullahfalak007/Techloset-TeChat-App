@@ -14,10 +14,9 @@ export const useSignup = () => {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
   const [signupLoading, setSignupLoading] = useState(false);
 
-  const handleSignup = async () => {
+  const handleSignup = async (): Promise<void> => {
     if (!email.includes('@') || !email.includes('.')) {
       setEmailError('Invalid email address');
       return;
@@ -55,12 +54,14 @@ export const useSignup = () => {
             (resultAction.payload as string) || 'An unknown error occurred',
         });
       }
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: 'Signup Failed',
-        text2: error.message || 'An unknown error occurred',
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Signup Failed',
+          text2: error.message || 'An unknown error occurred',
+        });
+      }
     } finally {
       setSignupLoading(false);
     }

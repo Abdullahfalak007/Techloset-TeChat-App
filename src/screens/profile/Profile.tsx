@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, ScrollView} from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {useProfile} from './useProfile';
-import {profileStyles} from '../../styles/profileStyle';
+import {profileStyles} from './profileStyle';
 import {ICONS} from '../../constants/icons';
 import UserAvatar from '../../components/userAvatar/UserAvatar';
 import InputField from '../../components/inputField/InputField';

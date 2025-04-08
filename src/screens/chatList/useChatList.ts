@@ -12,10 +12,11 @@ import {
 import {deleteConversation} from '../../store/slices/chatSlice';
 import {useConversationListener} from '../../hooks/useConversationListener';
 import Toast from 'react-native-toast-message';
-
 export function timeAgo(updatedAt: any): string {
   if (!updatedAt) return '';
-  const date = updatedAt.toDate ? updatedAt.toDate() : new Date(updatedAt);
+
+  const date = updatedAt?.toDate ? updatedAt.toDate() : new Date(updatedAt);
+
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);
@@ -24,8 +25,9 @@ export function timeAgo(updatedAt: any): string {
   const diffHours = Math.floor(diffMins / 60);
   if (diffHours < 24) return `${diffHours} hr ago`;
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-  return date.toLocaleDateString();
+  return diffDays < 7
+    ? `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+    : date.toLocaleDateString();
 }
 
 export const useChatList = () => {
@@ -42,8 +44,8 @@ export const useChatList = () => {
 
   useConversationListener(user?.uid);
 
-  const [searchActive, setSearchActive] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchActive, setSearchActive] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const [localConversations, setLocalConversations] =
     useState<ConversationDoc[]>(conversations);
@@ -77,7 +79,7 @@ export const useChatList = () => {
           text1: 'Conversation deleted successfully!',
         });
       })
-      .catch(error => {
+      .catch((error: string) => {
         Toast.show({
           type: 'error',
           text1: 'Failed to delete conversation',

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {authStyle} from '../../styles/authStyle';
+import {authStyle} from './authStyle';
 import {COLORS} from '../../constants/colors';
 import {useAuth} from './useAuth';
 import GoogleButton from '../../components/googleButton/GoogleButton';

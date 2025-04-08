@@ -12,7 +12,7 @@ export const useForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
 
-  const handlePasswordReset = async (email: string) => {
+  const handlePasswordReset = async (email: string): Promise<void> => {
     setResetLoading(true);
     try {
       const resultAction = await dispatch(resetPassword({email}));
@@ -38,18 +38,20 @@ export const useForgotPassword = () => {
             (resultAction.payload as string) || 'An unknown error occurred',
         });
       }
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: 'Reset Failed',
-        text2: error.message || 'An unknown error occurred',
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Reset Failed',
+          text2: error.message || 'An unknown error occurred',
+        });
+      }
     } finally {
       setResetLoading(false);
     }
   };
 
-  const handleBackToLogin = () => {
+  const handleBackToLogin = (): void => {
     navigation.navigate('Login');
   };
 

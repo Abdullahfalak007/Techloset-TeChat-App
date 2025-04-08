@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, TextInput, TouchableOpacity, Image} from 'react-native';
 import {ICONS} from '../../constants/icons';
-import {inputBarStyles as styles} from '../../styles/inputBarStyle';
+import {inputBarStyles as styles} from './inputBarStyle';
 import {InputBarProps} from '../../constants/types';
+import {COLORS} from '../../constants/colors';
 
 const InputBar: React.FC<InputBarProps> = ({
   inputText,
@@ -20,7 +21,7 @@ const InputBar: React.FC<InputBarProps> = ({
         <TextInput
           style={styles.textInput}
           placeholder="Write your message"
-          placeholderTextColor="#999"
+          placeholderTextColor={COLORS.placeholderTextColor}
           value={inputText}
           onChangeText={setInputText}
         />

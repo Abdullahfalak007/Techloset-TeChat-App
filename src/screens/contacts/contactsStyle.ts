@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const contactsStyles = StyleSheet.create({
   centered: {
@@ -33,7 +33,7 @@ export const contactsStyles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: COLORS.lightGrey,
     justifyContent: 'space-between',
   },
   leftContainer: {

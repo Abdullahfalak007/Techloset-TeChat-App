@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
-import {conversationHeaderStyles} from '../../styles/conversationHeaderStyle';
+import {conversationHeaderStyles} from './conversationHeaderStyle';
 import {useConversationHeader} from '../../hooks/useConversationHeader';
 import {ICONS} from '../../constants/icons';
 import UserAvatar from '../userAvatar/UserAvatar';

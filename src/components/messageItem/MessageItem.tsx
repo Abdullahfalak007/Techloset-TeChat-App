@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
-import {messageItemStyles as styles} from '../../styles/messageItemStyle';
+import {messageItemStyles as styles} from './messageItemStyle';
 import {MessageItemProps} from '../../constants/types';
 
 const MessageItem: React.FC<MessageItemProps> = ({

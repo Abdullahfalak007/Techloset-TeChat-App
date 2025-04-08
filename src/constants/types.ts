@@ -1,6 +1,8 @@
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {
+  ImageSourcePropType,
   ImageStyle,
   StyleProp,
   TextInputProps,
@@ -69,7 +71,7 @@ export type ConversationHeaderProps = {
 export type ConversationDoc = {
   id: string;
   lastMessage: string;
-  updatedAt: any;
+  updatedAt: FirebaseFirestoreTypes.Timestamp | Date | number;
   participants: string[];
   recipientName: string;
   recipientPhoto?: string | null;
@@ -81,7 +83,9 @@ export type ConversationItemProps = {
   userId: string;
   onPress: () => void;
   onDelete: () => void;
-  timeAgo: (updatedAt: any) => string;
+  timeAgo: (
+    updatedAt: FirebaseFirestoreTypes.Timestamp | Date | number,
+  ) => string;
   isDeleting: boolean;
 };
 
@@ -131,33 +135,23 @@ export type InputBarProps = {
   handleCamera: () => void;
 };
 
-export interface InputFieldProps extends TextInputProps {
-  label: string;
-  error?: string;
-  containerStyle?: object;
-  labelStyle?: object;
-  inputStyle?: object;
-  errorTextStyle?: object;
-}
-
-export type LoaderProps = {
-  style?: ViewStyle;
-};
-
 export type MessageItemProps = {
   item: {
     id: string;
     senderId: string;
     text: string;
     type?: 'text' | 'image';
-    timestamp: any;
+    timestamp: FirebaseFirestoreTypes.Timestamp | Date | number;
   };
   index: number;
-  section: {title: string; data: readonly any[]};
+  section: {title: string; data: readonly Message[]};
   isOwnMessage: boolean;
-  senderAvatar: any;
+  senderAvatar: ImageSourcePropType; // Update type here
   senderName: string;
-  formatTime: (timestamp: any) => string;
+  timestamp: FirebaseFirestoreTypes.Timestamp | Date | number;
+  formatTime: (
+    timestamp: FirebaseFirestoreTypes.Timestamp | Date | number,
+  ) => string;
 };
 
 export type SettingsMenuItemProps = {
@@ -168,12 +162,6 @@ export type SettingsMenuItemProps = {
     icon?: string;
   };
   onPress: () => void;
-};
-
-export type UpdateButtonProps = {
-  onPress: () => void;
-  text: string;
-  loading?: boolean;
 };
 
 export type UserAvatarProps = {
@@ -191,11 +179,6 @@ export type ConversationRouteProp = RouteProp<
   'Conversation'
 >;
 
-export type MessageSection = {
-  title: string;
-  data: Message[];
-};
-
 export type ForgotPasswordNavigationProp = StackNavigationProp<
   AuthStackParamList,
   'ForgotPassword'
@@ -211,25 +194,6 @@ export type SignupScreenNavigationProp = StackNavigationProp<
   'Signup'
 >;
 
-export type Message = {
-  id: string;
-  senderId: string;
-  text: string;
-  timestamp: any;
-  type?: 'text' | 'image';
-  mimeType?: string;
-};
-
-export type Conversation = {
-  id: string;
-  participants: string[];
-  lastMessage: string;
-  updatedAt: any;
-  recipientName: string;
-  recipientPhoto?: string | null;
-  unreadCounts?: Record<string, number>;
-};
-
 export type User = {
   uid: string;
   email: string;
@@ -238,8 +202,52 @@ export type User = {
   status: string | null;
 };
 
+export type Conversation = {
+  id: string;
+  participants: string[];
+  lastMessage: string;
+  updatedAt: FirebaseFirestoreTypes.Timestamp | Date | number;
+  recipientName: string;
+  recipientPhoto?: string | null;
+  unreadCounts?: Record<string, number>;
+};
+
 export type ChatState = {
   loading: boolean;
   error: string | null;
   conversations: Conversation[];
+};
+
+export type Message = {
+  id: string;
+  senderId: string;
+  text: string;
+  timestamp: FirebaseFirestoreTypes.Timestamp | Date | number;
+  type?: 'text' | 'image';
+  mimeType?: string;
+};
+
+export type MessageSection = {
+  title: string;
+  data: Message[];
+};
+
+export type InputFieldProps = {
+  label: string;
+  error?: string;
+} & TextInputProps & {
+    containerStyle?: object;
+    labelStyle?: object;
+    inputStyle?: object;
+    errorTextStyle?: object;
+  };
+
+export type LoaderProps = {
+  style?: StyleProp<ImageStyle>;
+};
+
+export type UpdateButtonProps = {
+  onPress: () => void;
+  text: string;
+  loading?: boolean;
 };

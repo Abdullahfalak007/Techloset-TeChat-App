@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {loginStyle} from '../../styles/loginStyle';
+import {loginStyle} from './loginStyle';
 import BackButton from '../../components/backButton/BackButton';
 import GradientButton from '../../components/gradientButton/GradientButton';
 import InputField from '../../components/inputField/InputField';

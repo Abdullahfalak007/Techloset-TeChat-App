@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import UserAvatar from '../userAvatar/UserAvatar';
 import {ICONS} from '../../constants/icons';
-import {contactsStyles} from '../../styles/contactsStyle';
+import {contactsStyles} from '../../screens/contacts/contactsStyle';
 import Loader from '../loader/Loader';
 import {ContactItemProps} from '../../constants/types';
 

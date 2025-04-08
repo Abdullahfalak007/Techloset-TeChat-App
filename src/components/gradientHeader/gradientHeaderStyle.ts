@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const gradientHeaderStyle = StyleSheet.create({
   headerContainer: {
@@ -79,7 +79,7 @@ export const gradientHeaderStyle = StyleSheet.create({
     width: '90%',
     backgroundColor: COLORS.white,
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -109,7 +109,7 @@ export const gradientHeaderStyle = StyleSheet.create({
   },
   userEmail: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.black,
     marginBottom: 8,
     textAlign: 'center',
   },

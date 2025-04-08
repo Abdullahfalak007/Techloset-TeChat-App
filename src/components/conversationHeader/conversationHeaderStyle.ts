@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const conversationHeaderStyles = StyleSheet.create({
   headerContainer: {
@@ -9,7 +9,7 @@ export const conversationHeaderStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },

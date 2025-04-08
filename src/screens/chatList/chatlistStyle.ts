@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const chatListStyles = StyleSheet.create({
   centered: {
@@ -19,7 +19,7 @@ export const chatListStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    borderBottomColor: '#ccc',
+    borderBottomColor: COLORS.black,
     borderBottomWidth: 1,
     backgroundColor: COLORS.white,
   },
@@ -33,7 +33,7 @@ export const chatListStyles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.black,
     marginRight: 10,
   },
   textWrapper: {
@@ -52,7 +52,7 @@ export const chatListStyles = StyleSheet.create({
   },
   timeText: {
     fontSize: 12,
-    color: '#999',
+    color: COLORS.black,
     marginLeft: 8,
   },
   bottomRow: {
@@ -76,7 +76,7 @@ export const chatListStyles = StyleSheet.create({
     marginLeft: 8,
   },
   unreadBadgeText: {
-    color: '#fff',
+    color: COLORS.black,
     fontSize: 12,
     fontWeight: 'bold',
     paddingHorizontal: 4,
@@ -94,7 +94,7 @@ export const chatListStyles = StyleSheet.create({
   deleteIcon: {
     width: 18,
     height: 18,
-    tintColor: '#fff',
+    tintColor: COLORS.black,
   },
   emptyContainer: {
     flex: 1,

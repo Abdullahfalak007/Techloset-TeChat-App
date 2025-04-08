@@ -12,17 +12,19 @@ export const useLogin = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = async (): Promise<void> => {
     setGoogleLoading(true);
     try {
       await dispatch(loginWithGoogle());
-    } catch (error) {
     } finally {
       setGoogleLoading(false);
     }
   };
 
-  const handleLogin = async (email: string, password: string) => {
+  const handleLogin = async (
+    email: string,
+    password: string,
+  ): Promise<void> => {
     if (!email || !password) {
       Toast.show({
         type: 'error',
@@ -58,9 +60,8 @@ export const useLogin = () => {
     setLoginLoading(true);
     try {
       await dispatch(loginWithEmail({email, password})).unwrap();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (
-        error &&
         typeof error === 'string' &&
         error.toLowerCase().includes('wrong-password')
       ) {
@@ -69,11 +70,11 @@ export const useLogin = () => {
           text1: 'Wrong Password',
           text2: 'Your password is incorrect.',
         });
-      } else {
+      } else if (error instanceof Error) {
         Toast.show({
           type: 'error',
           text1: 'Login Failed',
-          text2: error || 'An unknown error occurred.',
+          text2: error.message || 'An unknown error occurred.',
         });
       }
     } finally {
@@ -81,7 +82,7 @@ export const useLogin = () => {
     }
   };
 
-  const handleForgotPassword = () => {
+  const handleForgotPassword = (): void => {
     navigation.navigate('ForgotPassword');
   };
 

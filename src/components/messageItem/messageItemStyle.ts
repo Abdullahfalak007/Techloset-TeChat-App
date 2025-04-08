@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const messageItemStyles = StyleSheet.create({
   messageWrapper: {
@@ -75,7 +75,7 @@ export const messageItemStyles = StyleSheet.create({
   },
   timestampOutside: {
     fontSize: 10,
-    color: '#999',
+    color: COLORS.black,
     marginTop: 4,
     textAlign: 'right',
   },

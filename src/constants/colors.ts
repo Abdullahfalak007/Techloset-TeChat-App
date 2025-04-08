@@ -15,4 +15,6 @@ export const COLORS = {
   greyTextSubtitle: 'rgba(121, 124, 123, 0.39)',
   lightGrey: '#F7F9FB',
   loaderBackground: '#e1f5ff',
+  placeholderTextColor: 'rgba(255,255,255,0.7)',
+  tintColor: '#9FA5C0',
 };

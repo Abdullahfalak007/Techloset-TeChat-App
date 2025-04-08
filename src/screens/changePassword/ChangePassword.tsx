@@ -4,7 +4,7 @@ import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import UpdateButton from '../../components/updateButton/UpdateButton';
 import InputField from '../../components/inputField/InputField';
 import {useChangePassword} from './useChangePassword';
-import {changePasswordStyles} from '../../styles/changePasswordStyle';
+import {changePasswordStyles} from './changePasswordStyle';
 
 const ChangePassword: React.FC = () => {
   const {

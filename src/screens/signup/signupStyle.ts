@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const signupStyle = StyleSheet.create({
   container: {
@@ -25,7 +25,7 @@ export const signupStyle = StyleSheet.create({
     textAlign: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
   },

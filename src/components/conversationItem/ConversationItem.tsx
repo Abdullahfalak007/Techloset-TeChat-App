@@ -3,7 +3,7 @@ import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import {Swipeable} from 'react-native-gesture-handler';
 import Loader from '../loader/Loader';
 import {ICONS} from '../../constants/icons';
-import {chatListStyles} from '../../styles/chatlistStyle';
+import {chatListStyles} from '../../screens/chatList/chatlistStyle';
 import {ConversationItemProps} from '../../constants/types';
 
 const ConversationItem: React.FC<ConversationItemProps> = ({

@@ -27,7 +27,7 @@ export const groupContactsByInitial = (contacts: Contact[]) => {
 
   return Object.keys(map)
     .sort()
-    .map(letter => ({
+    ?.map(letter => ({
       title: letter,
       data: map[letter],
     }));

@@ -14,7 +14,7 @@ import {ICONS} from '../../constants/icons';
 import {useAppDispatch, useAppSelector} from '../../hooks/useStore';
 import {signOut} from '../../store/slices/authSlice';
 import UserAvatar from '../userAvatar/UserAvatar';
-import {gradientHeaderStyle} from '../../styles/gradientHeaderStyle';
+import {gradientHeaderStyle} from './gradientHeaderStyle';
 import {GradientHeaderProps} from '../../constants/types';
 
 const GradientHeader: React.FC<GradientHeaderProps> = ({
@@ -90,7 +90,7 @@ const GradientHeader: React.FC<GradientHeaderProps> = ({
                 placeholder={
                   isContactsScreen ? 'Search contacts...' : 'Search messages...'
                 }
-                placeholderTextColor="rgba(255,255,255,0.7)"
+                placeholderTextColor={COLORS.placeholderTextColor}
                 autoFocus
                 onBlur={() => {
                   if (searchActive && onSearchPress) {

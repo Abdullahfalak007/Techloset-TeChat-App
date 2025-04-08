@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {JSX} from 'react';
 import {
   View,
   Text,
@@ -15,9 +15,14 @@ import ConversationHeader from '../../components/conversationHeader/Conversation
 import {useConversationLogic} from './useConversation';
 import MessageItem from '../../components/messageItem/MessageItem';
 import InputBar from '../../components/inputBar/InputBar';
-import {conversationStyle as styles} from '../../styles/conversationStyle';
+import {conversationStyle as styles} from './conversationStyle';
 import {useAppSelector} from '../../hooks/useStore';
-import {ConversationRouteProp} from '../../constants/types';
+import {
+  ConversationRouteProp,
+  Message,
+  Conversation as ConversationType,
+} from '../../constants/types';
+import {COLORS} from '../../constants/colors';
 
 const Conversation: React.FC = () => {
   const route = useRoute<ConversationRouteProp>();
@@ -46,21 +51,22 @@ const Conversation: React.FC = () => {
     index,
     section,
   }: {
-    item: any;
+    item: Message;
     index: number;
-    section: {title: string; data: readonly any[]};
-  }) => {
+    section: {title: string; data: readonly Message[]};
+  }): JSX.Element => {
     const isOwnMessage = item.senderId === user?.uid;
-    let senderAvatar = ICONS.avatar;
+    let senderAvatar;
     let senderName = '';
     if (isOwnMessage) {
       senderAvatar = user?.photoURL ? {uri: user.photoURL} : ICONS.avatar;
       senderName = user?.displayName || 'You';
     } else {
-      senderAvatar = conversation?.recipientPhoto
-        ? {uri: conversation.recipientPhoto}
+      senderAvatar = (conversation as ConversationType)?.recipientPhoto
+        ? {uri: (conversation as ConversationType).recipientPhoto!}
         : ICONS.avatar;
-      senderName = conversation?.recipientName || 'Unknown';
+      senderName =
+        (conversation as ConversationType)?.recipientName || 'Unknown';
     }
     return (
       <MessageItem
@@ -71,6 +77,7 @@ const Conversation: React.FC = () => {
         senderAvatar={senderAvatar}
         senderName={senderName}
         formatTime={formatTime}
+        timestamp={item.timestamp}
       />
     );
   };
@@ -78,8 +85,8 @@ const Conversation: React.FC = () => {
   const renderSectionHeader = ({
     section,
   }: {
-    section: {title: string; data: readonly any[]};
-  }) => (
+    section: {title: string; data: readonly Message[]};
+  }): JSX.Element => (
     <View style={styles.sectionHeaderContainer}>
       <Text style={styles.sectionHeaderText}>{section.title}</Text>
     </View>
@@ -88,7 +95,7 @@ const Conversation: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#000" />
+        <ActivityIndicator size="large" color={COLORS.black} />
       </View>
     );
   }
@@ -115,19 +122,19 @@ const Conversation: React.FC = () => {
         indicatorStyle="black"
         onScroll={handleScroll}
         scrollEventThrottle={16}
-        onContentSizeChange={() => {
-          sectionListRef.current
+        onContentSizeChange={() =>
+          sectionListRef?.current
             ?.getScrollResponder()
-            ?.scrollToEnd({animated: false});
-        }}
-        onLayout={() => {
-          sectionListRef.current
+            ?.scrollToEnd({animated: false})
+        }
+        onLayout={() =>
+          sectionListRef?.current
             ?.getScrollResponder()
-            ?.scrollToEnd({animated: false});
-        }}
+            ?.scrollToEnd({animated: false})
+        }
         onScrollToIndexFailed={info => {
           setTimeout(() => {
-            sectionListRef.current?.scrollToLocation({
+            sectionListRef?.current?.scrollToLocation({
               sectionIndex: 0,
               itemIndex: info.index,
               viewPosition: 0.5,

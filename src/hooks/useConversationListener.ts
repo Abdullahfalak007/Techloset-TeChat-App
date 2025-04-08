@@ -21,10 +21,10 @@ export const useConversationListener = (uid: string | undefined) => {
             return;
           }
 
-          const convs: Conversation[] = await Promise.all(
-            snapshot.docs.map(async doc => {
+          const convs: Conversation[] = await Promise?.all(
+            snapshot?.docs?.map(async doc => {
               const data = doc.data();
-              const recipientId = data.participants.find(
+              const recipientId = data?.participants?.find(
                 (p: string) => p !== uid,
               );
               let recipientName = 'Unknown';
@@ -35,20 +35,20 @@ export const useConversationListener = (uid: string | undefined) => {
                   .doc(recipientId)
                   .get();
                 if (userDoc.exists) {
-                  const userData = userDoc.data();
+                  const userData = userDoc?.data();
                   recipientName =
                     userData?.displayName || userData?.email || 'Unknown';
                   recipientPhoto = userData?.photoURL || null;
                 }
               }
               return {
-                id: doc.id,
-                lastMessage: data.lastMessage || '',
-                updatedAt: data.updatedAt,
-                participants: data.participants,
+                id: doc?.id,
+                lastMessage: data?.lastMessage || '',
+                updatedAt: data?.updatedAt,
+                participants: data?.participants,
                 recipientName,
                 recipientPhoto,
-                unreadCounts: data.unreadCounts || {},
+                unreadCounts: data?.unreadCounts || {},
               } as Conversation;
             }),
           );
@@ -61,5 +61,5 @@ export const useConversationListener = (uid: string | undefined) => {
       );
 
     return () => unsubscribe();
-  }, [uid, dispatch]);
+  }, [uid]);
 };

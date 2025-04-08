@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {useChatList, timeAgo} from './useChatList';
-import {chatListStyles} from '../../styles/chatlistStyle';
+import {chatListStyles} from './chatlistStyle';
 import {COLORS} from '../../constants/colors';
 import ConversationItem from '../../components/conversationItem/ConversationItem';
 import {ConversationDoc} from '../../constants/types';

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const conversationStyle = StyleSheet.create({
   container: {
@@ -23,7 +23,7 @@ export const conversationStyle = StyleSheet.create({
     borderRadius: 8,
   },
   sectionHeaderText: {
-    color: '#999',
+    color: COLORS.black,
     fontSize: 12,
   },
   scrollDownButton: {
@@ -37,6 +37,6 @@ export const conversationStyle = StyleSheet.create({
   arrowDownIcon: {
     width: 20,
     height: 20,
-    tintColor: '#000',
+    tintColor: COLORS.black,
   },
 });

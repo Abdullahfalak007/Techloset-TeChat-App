@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {useContacts} from './useContacts';
-import {contactsStyles} from '../../styles/contactsStyle';
+import {contactsStyles} from './contactsStyle';
 import GradientHeader from '../../components/gradientHeader/GradientHeader';
 import {COLORS} from '../../constants/colors';
 import ContactItem from '../../components/contactItem/ContactItem';
@@ -40,9 +40,11 @@ const Contacts: React.FC = () => {
     );
   };
 
-  const renderSectionHeader = ({section}: {section: any}) => (
-    <Text style={contactsStyles.sectionHeader}>{section.title}</Text>
-  );
+  const renderSectionHeader = ({
+    section,
+  }: {
+    section: {title: string; data: Contact[]};
+  }) => <Text style={contactsStyles.sectionHeader}>{section.title}</Text>;
 
   if (loading) {
     return (

@@ -1,7 +1,8 @@
 import React from 'react';
 import {View, Text, TextInput} from 'react-native';
-import {inputFieldStyle} from '../../styles/inputFieldStyle';
+import {inputFieldStyle} from './inputFieldStyle';
 import {InputFieldProps} from '../../constants/types';
+import {COLORS} from '../../constants/colors';
 
 const InputField: React.FC<InputFieldProps> = ({
   label,
@@ -17,7 +18,7 @@ const InputField: React.FC<InputFieldProps> = ({
       <Text style={[inputFieldStyle.label, labelStyle]}>{label}</Text>
       <TextInput
         style={[inputFieldStyle.input, inputStyle]}
-        placeholderTextColor="#999"
+        placeholderTextColor={COLORS.placeholderTextColor}
         {...textInputProps}
       />
       {error ? (

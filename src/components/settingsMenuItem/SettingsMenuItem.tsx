@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {settingsMenuItemStyles} from '../../styles/settingsMenuItemStyles';
+import {settingsMenuItemStyles} from './settingsMenuItemStyles';
 import UserAvatar from '../userAvatar/UserAvatar';
 import {SettingsMenuItemProps} from '../../constants/types';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {signupStyle} from '../../styles/signupStyle';
+import {signupStyle} from './signupStyle';
 import BackButton from '../../components/backButton/BackButton';
 import GradientButton from '../../components/gradientButton/GradientButton';
 import InputField from '../../components/inputField/InputField';

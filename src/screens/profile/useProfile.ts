@@ -20,7 +20,6 @@ export const useProfile = () => {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<MainStackParamList>>();
-
   const {pickImage} = useImagePicker();
 
   useEffect(() => {
@@ -32,20 +31,27 @@ export const useProfile = () => {
             await firestore()
               .collection('users')
               .doc(user.uid)
-              .set({photoURL: currentAuthUser.photoURL}, {merge: true});
-            dispatch(setUser({...user, photoURL: currentAuthUser.photoURL}));
-          } catch (error) {
-            console.error('Error updating photoURL in Firestore:', error);
+              .set({photoURL: currentAuthUser?.photoURL}, {merge: true});
+            dispatch(setUser({...user, photoURL: currentAuthUser?.photoURL}));
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              console.error(
+                'Error updating photoURL in Firestore:',
+                error.message,
+              );
+            } else {
+              console.error('Error updating photoURL in Firestore:', error);
+            }
           }
         }
       }
     };
     updatePhotoURLIfNeeded();
-  }, [user, dispatch]);
+  }, [user]);
 
-  const handleUpdateProfile = async () => {
+  const handleUpdateProfile = async (): Promise<void> => {
     if (!user?.uid) return;
-    if (!displayName.trim() || !email.trim()) {
+    if (!displayName?.trim() || !email?.trim()) {
       Toast.show({
         type: 'error',
         text1: 'Validation Error',
@@ -66,19 +72,22 @@ export const useProfile = () => {
         text1: 'Profile Updated',
         text2: 'Your profile has been updated successfully.',
       });
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: 'Update Failed',
-        text2: 'An error occurred while updating your profile.',
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Update Failed',
+          text2:
+            error.message || 'An error occurred while updating your profile.',
+        });
+      }
       console.error('Error updating profile:', error);
     } finally {
       setUpdating(false);
     }
   };
 
-  const handleEditAvatar = async () => {
+  const handleEditAvatar = async (): Promise<void> => {
     if (!user?.uid) return;
     try {
       const asset = await pickImage({
@@ -106,12 +115,14 @@ export const useProfile = () => {
           text2: 'Selected image did not return valid data.',
         });
       }
-    } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Update Failed',
-        text2: 'Unable to update avatar.',
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Update Failed',
+          text2: 'Unable to update avatar.',
+        });
+      }
       console.error('Error updating avatar:', error);
     }
   };

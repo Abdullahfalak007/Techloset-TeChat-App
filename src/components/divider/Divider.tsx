@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text} from 'react-native';
 import {COLORS} from '../../constants/colors';
-import {dividerStyle} from '../../styles/dividerStyle';
+import {dividerStyle} from './dividerStyle';
 import {DividerProps} from '../../constants/types';
 
 const Divider: React.FC<DividerProps> = ({

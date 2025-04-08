@@ -1,7 +1,7 @@
 import React, {FC, useRef, useEffect} from 'react';
 import {Animated, View, ViewStyle} from 'react-native';
 import {IMAGES} from '../../constants/icons';
-import {loaderStyle} from '../../styles/loaderStyle';
+import {loaderStyle} from './loaderStyle';
 import {LoaderProps} from '../../constants/types';
 
 const Loader: FC<LoaderProps> = ({style}) => {

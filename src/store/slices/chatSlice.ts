@@ -1,6 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import {ChatState, Conversation} from '../../constants/types';
+import {DocumentData} from '@firebase/firestore-types';
 
 const initialState: ChatState = {
   loading: false,
@@ -21,9 +22,9 @@ export const createConversation = createAsyncThunk<
 
     let conversationId: string | null = null;
     snapshot.forEach(doc => {
-      const data = doc.data();
+      const data = doc.data() as DocumentData;
       if (data.participants.includes(otherUid)) {
-        conversationId = doc.id;
+        conversationId = doc?.id;
       }
     });
     if (conversationId) return conversationId;
@@ -49,8 +50,9 @@ export const createConversation = createAsyncThunk<
         unreadCounts: {[uid]: 0, [otherUid]: 0},
       });
     return convRef.id;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) return rejectWithValue(error.message);
+    return rejectWithValue('An unknown error occurred');
   }
 });
 
@@ -73,48 +75,43 @@ export const sendMessage = createAsyncThunk<
       const docRef = firestore()
         .collection('conversations')
         .doc(conversationId);
-
       const messageText = type === 'text' ? text.trim() : text;
-
       if (type === 'image') {
         console.log(
           'Sending image message, base64 length:',
           messageText.length,
         );
       }
-
       await docRef.collection('messages').add({
         senderId,
         text: messageText,
         type,
         timestamp: firestore.FieldValue.serverTimestamp(),
       });
-
       const convSnap = await docRef.get();
       if (!convSnap.exists) throw new Error('Conversation does not exist');
-      const convData = convSnap.data() || {};
+      const convData = convSnap.data() || ({} as DocumentData);
       const participants: string[] = convData.participants || [];
       const existingUnread: Record<string, number> =
         convData.unreadCounts || {};
-
       const newUnreadCounts: Record<string, number> = {...existingUnread};
-      participants.forEach(uid => {
+      participants.forEach((uid: string) => {
         if (uid === senderId) {
           newUnreadCounts[uid] = 0;
         } else {
           newUnreadCounts[uid] = (newUnreadCounts[uid] || 0) + 1;
         }
       });
-
       const lastMessage = type === 'image' ? 'Photo' : messageText;
       await docRef.update({
         lastMessage,
         updatedAt: firestore.FieldValue.serverTimestamp(),
         unreadCounts: newUnreadCounts,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending message:', error);
-      return rejectWithValue(error.message);
+      if (error instanceof Error) return rejectWithValue(error.message);
+      return rejectWithValue('Failed to send message');
     }
   },
 );
@@ -133,9 +130,10 @@ export const deleteConversation = createAsyncThunk<
     });
     batch.delete(convRef);
     await batch.commit();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting conversation:', error);
-    return rejectWithValue(error.message);
+    if (error instanceof Error) return rejectWithValue(error.message);
+    return rejectWithValue('Failed to delete conversation');
   }
 });
 

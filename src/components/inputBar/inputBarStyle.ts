@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const inputBarStyles = StyleSheet.create({
   inputBar: {
@@ -21,7 +21,7 @@ export const inputBarStyles = StyleSheet.create({
   iconOutsideImage: {
     width: 18,
     height: 18,
-    tintColor: '#9FA5C0',
+    tintColor: COLORS.tintColor,
     resizeMode: 'contain',
   },
   inputContainer: {

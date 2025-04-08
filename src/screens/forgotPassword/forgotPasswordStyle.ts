@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import {COLORS} from '../../constants/colors';
 
 export const forgotPasswordStyle = StyleSheet.create({
   container: {
@@ -12,7 +12,7 @@ export const forgotPasswordStyle = StyleSheet.create({
   },
 
   buttonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
   },

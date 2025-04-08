@@ -2,7 +2,7 @@ import React from 'react';
 import {TouchableOpacity, Image} from 'react-native';
 import {ICONS} from '../../constants/icons';
 import Loader from '../loader/Loader';
-import {googleButtonStyle} from '../../styles/googleButtonStyle';
+import {googleButtonStyle} from './googleButtonStyle';
 import {GoogleButtonProps} from '../../constants/types';
 
 const GoogleButton: React.FC<GoogleButtonProps> = ({
